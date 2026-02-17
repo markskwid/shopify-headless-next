@@ -8,8 +8,6 @@ export const FRAGMENT_PRODUCT_FIELDS = `
       totalInventory
       featuredImage{
         id
-        width
-        height
         url
       }
       priceRange {
@@ -36,4 +34,16 @@ export const FRAGMENT_PRODUCT_FIELDS = `
     }
 `;
 
-//fragments for variant
+//fragments for menu items
+export const FRAGMENT_MENU_ITEMS = `
+    fragment MENU_ITEM_FIELDS on MenuItem {
+    id
+    title
+    url
+    items {
+        id
+        url
+        title
+    }
+    }
+`;
