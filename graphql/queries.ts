@@ -113,3 +113,19 @@ export const FETCH_COLLECTION_BY_HANDLE = `
     }
 
 `;
+
+
+//get customer
+export const GET_CUSTOMER_INFO = `
+query GET_CUSTOMER($token: String!){
+  customer(customerAccessToken: $token){
+    id
+    firstName
+    lastName
+    email
+    acceptsMarketing
+    phone
+    createdAt
+  }
+}
+`;
