@@ -11,24 +11,24 @@ export interface PRODUCT_LISTING {
   priceRange: {
     minVariantPrice: {
       amount: string;
-      currenyCode: string;
+      currencyCode: string;
     };
 
     maxVariantPrice: {
       amount: string;
-      currenyCode: string;
+      currencyCode: string;
     };
   };
 
   compareAtPriceRange?: {
     minVariantPrice: {
       amount: string;
-      currenyCode: string;
+      currencyCode: string;
     };
 
     maxVariantPrice: {
       amount: string;
-      currenyCode: string;
+      currencyCode: string;
     };
   };
 

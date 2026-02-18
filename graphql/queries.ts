@@ -69,30 +69,23 @@ export const GET_MENU_BY_HANDLE = `
 
 //get collections
 export const FETCH_COLLECTIONS = `
-    ${FRAGMENT_PRODUCT_FIELDS}
-
     query GET_COLLECTIONS {
         collections(first: 10) {
-          edges {
+            edges {
             node {
                 title
                 description
                 handle
-                image{
+                image {
                 altText
                 url
-                }
-                products(first: 15) {
-                    nodes {
-                        ...ProductFields
-                    }
                 }
             }
             }
             pageInfo {
-                endCursor
-                hasNextPage
-                hasPreviousPage
+            endCursor
+            hasNextPage
+            hasPreviousPage
             }
         }
     }
