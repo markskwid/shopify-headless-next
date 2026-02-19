@@ -28,4 +28,4 @@ export const COLLECTION_DETAIL_SCHEMA = COLLECTION_SCHEMA.extend({
   products: z.object({
     nodes: z.array(PRODUCT_SCHEMA),
   }),
-});
+}).nullable();

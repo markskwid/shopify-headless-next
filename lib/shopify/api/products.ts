@@ -8,48 +8,103 @@ import {
 
 //Get all products
 export const getProducts = cache(async () => {
-  const { data, errors } = await client.request(FETCH_PRODUCTS);
+  try {
+    const { data, errors } = await client.request(FETCH_PRODUCTS);
 
-  if (Array.isArray(errors) && errors.length > 0) {
-    console.log("Graphql Errors", errors);
-    return [];
-  }
+    if (Array.isArray(errors) && errors.length > 0) {
+      console.log("Graphql Errors", errors);
+      return {
+        success: false,
+        products: [],
+        pageInfo: null,
+        errors,
+      };
+    }
 
-  const parsed = PRODUCTS_CONNECTION_SCHEMA.safeParse(data.products);
+    const parsed = PRODUCTS_CONNECTION_SCHEMA.safeParse(data.products);
 
-  if (!parsed.success) {
-    console.error(parsed.error);
+    if (!parsed.success) {
+      console.error(parsed.error);
+      return {
+        success: false,
+        products: [],
+        pageInfo: null,
+        errors: parsed.error,
+      };
+    }
+
     return {
+      success: true,
+      products: parsed.data.edges.map((edge) => edge.node),
+      pageInfo: parsed.data.pageInfo,
+    };
+  } catch (error: unknown) {
+    let formattedError: unknown = error;
+    if (error instanceof Error) {
+      console.error(error.message);
+      formattedError = error.message;
+    }
+
+    return {
+      success: false,
       products: [],
       pageInfo: null,
+      errors: formattedError,
     };
   }
-
-  return {
-    products: parsed.data.edges.map((edge) => edge.node),
-    pageInfo: parsed.data.pageInfo,
-  };
 });
 
 //Get product by handle
 export const getProductByHandle = cache(async (handle: string) => {
-  const { data, errors } = await client.request(FETCH_PRODUCT_BY_HANDLE, {
-    variables: {
-      handle,
-    },
-  });
+  try {
+    const { data, errors } = await client.request(FETCH_PRODUCT_BY_HANDLE, {
+      variables: {
+        handle,
+      },
+    });
 
-  if (Array.isArray(errors) && errors.length > 0) {
-    console.log("Graphql Errors", errors);
-    return [];
+    if (data.products === null) {
+      return {
+        success: false,
+        product: null,
+      };
+    }
+
+    if (Array.isArray(errors) && errors.length > 0) {
+      console.log("Graphql Errors", errors);
+      return {
+        success: false,
+        errors,
+        product: null,
+      };
+    }
+
+    const parsed = PRODUCT_DETAIL_SCHEMA.safeParse(data.product);
+
+    if (!parsed.success) {
+      console.log("Invalid value", parsed.error);
+      return {
+        success: false,
+        errors: parsed.error,
+        product: null,
+      };
+    }
+
+    return {
+      success: true,
+      product: parsed.data,
+    };
+  } catch (error: unknown) {
+    let formattedError: unknown = error;
+    if (error instanceof Error) {
+      console.error(error.message);
+      formattedError = error.message;
+    }
+
+    return {
+      success: false,
+      product: null,
+      errors: formattedError,
+    };
   }
-
-  const parsed = PRODUCT_DETAIL_SCHEMA.safeParse(data.product);
-
-  if (!parsed.success) {
-    console.log("Invalid value", parsed.error);
-    return [];
-  }
-
-  return parsed.data;
 });

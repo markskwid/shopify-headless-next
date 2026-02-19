@@ -44,4 +44,4 @@ export const PRODUCTS_CONNECTION_SCHEMA = z.object({
 //schema for product page - pdp
 export const PRODUCT_DETAIL_SCHEMA = PRODUCT_SCHEMA.extend({
   variants: VARIANT_SCHEMA,
-});
+}).nullable();
