@@ -1,4 +1,3 @@
-import { custom, success, z } from "zod";
 import { client } from "../client";
 import { CREATE_CUSTOMER, CUSTOMER_LOGIN } from "@/graphql/mutations";
 import {
@@ -6,15 +5,30 @@ import {
   CUSTOMER_INPUT_SCHEMA,
   CUSTOMER_LOGIN_RESPONSE_SCHEMA,
 } from "@/lib/schema/customerSchema";
+import {
+  CUSTOMER_TYPE,
+  CUSTOMER_ACCESS_TOKEN_TYPE,
+} from "@/types/customerTypes";
+import { API_RESPONSE } from "@/types/responseTypes";
+import { normalizeError } from "@/utils/normalizeErrors";
 
-export const createCustomer = async (input: unknown) => {
+export const createCustomer = async (input: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}): Promise<API_RESPONSE<CUSTOMER_TYPE>> => {
   try {
     //validate user input
     const parsedInput = CUSTOMER_INPUT_SCHEMA.safeParse(input);
 
     if (!parsedInput.success) {
       console.log("Invalid customer input", parsedInput.error);
-      return { success: false, errors: parsedInput.error.format() };
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(parsedInput.error.format()),
+      };
     }
 
     const { data, errors } = await client.request(CREATE_CUSTOMER, {
@@ -23,12 +37,12 @@ export const createCustomer = async (input: unknown) => {
       },
     });
 
-    if (Array.isArray(errors) && errors.length > 0) {
-      console.log("Graphql Errors", errors);
+    if (errors) {
+      console.log("Graphql Errors", errors.graphQLErrors);
       return {
         success: false,
-        customer: null,
-        errors,
+        data: null,
+        errors: normalizeError(errors),
       };
     }
 
@@ -38,35 +52,38 @@ export const createCustomer = async (input: unknown) => {
       console.log("Invalid data", parsed.error);
       return {
         success: false,
-        customer: null,
-        errors: parsed.error,
+        data: null,
+        errors: normalizeError(parsed.error),
       };
     }
 
     const customer = parsed.data.customerCreate?.customer ?? null;
+    const userErrors = parsed.data.customerCreate?.customerUserErrors?.map(
+      (e) => e.message,
+    );
 
     return {
       success: customer ? true : false,
-      customer,
-      errors: customer ? null : parsed.data.customerCreate?.customerUserErrors,
+      data: customer ? customer : null,
+      errors: userErrors ? userErrors : null,
     };
   } catch (error: unknown) {
-    let formattedError: unknown = error;
-
     if (error instanceof Error) {
       console.error(error.message);
-      formattedError = error.message;
     }
 
     return {
       success: false,
-      customer: null,
-      errors: formattedError,
+      data: null,
+      errors: normalizeError(error),
     };
   }
 };
 
-export const loginCustomer = async (input: unknown) => {
+export const loginCustomer = async (input: {
+  email: string;
+  password: string;
+}): Promise<API_RESPONSE<CUSTOMER_ACCESS_TOKEN_TYPE>> => {
   try {
     const { data, errors } = await client.request(CUSTOMER_LOGIN, {
       variables: {
@@ -74,13 +91,12 @@ export const loginCustomer = async (input: unknown) => {
       },
     });
 
-    if (Array.isArray(errors) && errors.length > 0) {
+    if (errors) {
       console.log("Graphql Errors", errors);
       return {
         success: false,
-        customerToken: null,
-        expiresAt: null,
-        errors,
+        data: null,
+        errors: normalizeError(errors),
       };
     }
 
@@ -90,35 +106,31 @@ export const loginCustomer = async (input: unknown) => {
       console.log("Invalid data", parsed.error);
       return {
         success: false,
-        customerToken: null,
-        expiresAt: null,
-        errors: parsed.error,
+        data: null,
+        errors: normalizeError(parsed.error),
       };
     }
 
     const customerToken =
       parsed.data?.customerAccessTokenCreate.customerAccessToken;
+    const userErrors = parsed.data.customerAccessTokenCreate.customerUserErrors
+      .map((e) => e?.message)
+      .filter((msg): msg is string => !!msg);
 
     return {
       success: !!customerToken,
-      customerToken: customerToken ? customerToken.accessToken : null,
-      expiresAt: customerToken ? customerToken.expiresAt : null,
-      errors: customerToken
-        ? null
-        : parsed.data?.customerAccessTokenCreate.customerUserErrors,
+      data: customerToken ? customerToken : null,
+      errors: userErrors.length > 0 ? userErrors : null,
     };
   } catch (error: unknown) {
-    let formattedError: unknown = error;
     if (error instanceof Error) {
       console.error(error.message);
-      formattedError = error.message;
     }
 
     return {
       success: false,
-      customerAccessToken: null,
-      expiresAt: null,
-      errors: formattedError,
+      data: null,
+      errors: normalizeError(error),
     };
   }
 };

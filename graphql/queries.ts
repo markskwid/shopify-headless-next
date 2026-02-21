@@ -114,7 +114,6 @@ export const FETCH_COLLECTION_BY_HANDLE = `
 
 `;
 
-
 //get customer
 export const GET_CUSTOMER_INFO = `
 query GET_CUSTOMER($token: String!){
@@ -129,3 +128,45 @@ query GET_CUSTOMER($token: String!){
   }
 }
 `;
+
+//get user cart
+export const GET_CART = `
+ query GET_CART($cartId: ID!) {
+  cart(id: $cartId) {
+    id
+    totalQuantity
+    lines(first: 15) {
+      edges {
+        node {
+          id
+          quantity
+          merchandise {
+            ... on ProductVariant {
+              sku
+              title
+              selectedOptions {
+                name
+                value
+              }
+              image{
+                url
+                altText
+              }
+              price {
+                amount
+                currencyCode
+              }
+            }
+          }
+        }
+      }
+    }
+    cost {
+      totalAmount {
+        amount
+        currencyCode
+      }
+    }
+    checkoutUrl
+  }
+}`;

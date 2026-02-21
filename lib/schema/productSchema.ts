@@ -32,7 +32,7 @@ export const PRODUCT_SCHEMA = z.object({
 });
 
 // connection for graphql response
-export const PRODUCTS_CONNECTION_SCHEMA = z.object({
+export const PRODUCT_LISTING_RESPONSE_SCHEMA = z.object({
   edges: z.array(z.object({ node: PRODUCT_SCHEMA })),
   pageInfo: z.object({
     hasPreviousPage: z.boolean(),
@@ -45,3 +45,7 @@ export const PRODUCTS_CONNECTION_SCHEMA = z.object({
 export const PRODUCT_DETAIL_SCHEMA = PRODUCT_SCHEMA.extend({
   variants: VARIANT_SCHEMA,
 }).nullable();
+
+export const PRODUCT_DETAIL_RESPONSE_SCHEMA = z.object({
+  product: PRODUCT_DETAIL_SCHEMA,
+});

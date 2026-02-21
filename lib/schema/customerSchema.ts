@@ -8,10 +8,17 @@ export const CUSTOMER_INPUT_SCHEMA = z.object({
 });
 
 export const CUSTOMER_SCHEMA = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   firstName: z.string(),
   lastName: z.string(),
   email: z.string(),
+  acceptsMarketing: z.boolean().optional(),
+  phone: z.string().optional(),
+});
+
+export const CUSTOMER_ACCESS_TOKEN_SCHEMA = z.object({
+  accessToken: z.string(),
+  expiresAt: z.string(),
 });
 
 export const CUSTOMER_CREATE_RESPONSE_SCHEMA = z.object({
@@ -33,12 +40,7 @@ export const CUSTOMER_CREATE_RESPONSE_SCHEMA = z.object({
 
 export const CUSTOMER_LOGIN_RESPONSE_SCHEMA = z.object({
   customerAccessTokenCreate: z.object({
-    customerAccessToken: z
-      .object({
-        accessToken: z.string(),
-        expiresAt: z.string(),
-      })
-      .nullable(),
+    customerAccessToken: CUSTOMER_ACCESS_TOKEN_SCHEMA.nullable(),
     customerUserErrors: z.array(
       z
         .object({

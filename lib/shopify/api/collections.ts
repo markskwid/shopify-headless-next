@@ -5,112 +5,123 @@ import {
   FETCH_COLLECTIONS,
 } from "@/graphql/queries";
 import {
+  COLLECTION_DETAIL_RESPONSE_SCHEMA,
   COLLECTION_DETAIL_SCHEMA,
-  COLLECTION_CONNECTION_SCHEMA,
+  COLLECTION_LISTING_RESPONSE_SCHEMA,
 } from "../../schema/collectionSchema";
+import { API_RESPONSE } from "@/types/responseTypes";
 import {
-  COLLECTION_BY_HANDLE_RESULT,
+  COLLECTION_DETAIL_TYPE,
   COLLECTION_LISTING_TYPE,
 } from "@/types/collectionTypes";
+import { normalizeError } from "@/utils/normalizeErrors";
 
 //Get all collections
-export const getCollections = cache(async () => {
-  try {
-    const { data, errors } = await client.request(FETCH_COLLECTIONS);
+export const getCollections = cache(
+  async (): Promise<API_RESPONSE<COLLECTION_LISTING_TYPE[]>> => {
+    try {
+      const { data, errors } = await client.request(FETCH_COLLECTIONS);
 
-    if (Array.isArray(errors) && errors.length > 0) {
-      console.log("Graphql Errors", errors);
+      if (errors) {
+        console.log("Graphql Errors", errors);
+        return {
+          success: false,
+          data: [],
+          pageInfo: null,
+          errors: normalizeError(errors),
+        };
+      }
+
+      console.log(data);
+
+      const parsed = COLLECTION_LISTING_RESPONSE_SCHEMA.safeParse(data);
+
+      if (!parsed.success) {
+        console.log("Invalid data: ", parsed.error);
+        return {
+          success: false,
+          data: [],
+          pageInfo: null,
+          errors: normalizeError(parsed.error),
+        };
+      }
+
+      const collections = parsed.data.collections;
+
+      return {
+        success: !!collections,
+        data: collections.edges.map((e) => e.node),
+        pageInfo: parsed.data.collections.pageInfo
+          ? parsed.data.collections.pageInfo
+          : null,
+        errors: null,
+      };
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      }
+
       return {
         success: false,
-        collections: [],
+        data: [],
         pageInfo: null,
-        errors,
+        errors: normalizeError(error),
       };
     }
-
-    const parsed = COLLECTION_CONNECTION_SCHEMA.safeParse(data.collections);
-
-    if (!parsed.success) {
-      console.log("Invalid data: ", parsed.error);
-      return {
-        success: false,
-        collections: [],
-        pageInfo: null,
-        errors: parsed.error,
-      };
-    }
-
-    return {
-      success: true,
-      collections: parsed.data.edges.map((e) => e.node),
-      pageInfo: parsed.data.pageInfo,
-    };
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    }
-
-    return {
-      success: false,
-      collections: [],
-      pageInfo: null,
-    };
-  }
-});
+  },
+);
 
 //Get all collections
-export const getCollectionByHandle = cache(async (handle: string) => {
-  try {
-    const { data, errors } = await client.request(FETCH_COLLECTION_BY_HANDLE, {
-      variables: {
-        handle,
-      },
-    });
+export const getCollectionByHandle = cache(
+  async (handle: string): Promise<API_RESPONSE<COLLECTION_DETAIL_TYPE>> => {
+    try {
+      const { data, errors } = await client.request(
+        FETCH_COLLECTION_BY_HANDLE,
+        {
+          variables: {
+            handle,
+          },
+        },
+      );
 
-    if (data.collection === null) {
-      console.log("Collection Null: ", errors);
+      if (errors) {
+        console.log("Graphql Errors", errors);
+        return {
+          success: false,
+          data: null,
+          errors: normalizeError(errors),
+        };
+      }
+
+      console.log(data);
+      const parsed = COLLECTION_DETAIL_RESPONSE_SCHEMA.safeParse(data);
+
+      if (!parsed.success) {
+        console.log("Invalid Data: ", parsed.error);
+        return {
+          success: false,
+          data: null,
+          errors: normalizeError(parsed.error),
+        };
+      }
+
+      const collection = parsed.data.collection;
+
+      return {
+        success: !!collection,
+        data: collection,
+        errors: null,
+      };
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      }
+
       return {
         success: false,
-        collection: null,
-        errors,
+        data: null,
+        errors: normalizeError(error),
       };
     }
-
-    if (Array.isArray(errors) && errors.length > 0) {
-      console.log("Graphql Errors", errors);
-      return {
-        success: false,
-        collection: null,
-        errors,
-      };
-    }
-
-    const parsed = COLLECTION_DETAIL_SCHEMA.safeParse(data.collection);
-
-    if (!parsed.success) {
-      console.log("Invalid Data: ", parsed.error);
-      return {
-        success: false,
-        collection: null,
-        errors: parsed.error,
-      };
-    }
-
-    return {
-      success: true,
-      collection: parsed.data,
-    };
-  } catch (error: unknown) {
-    let formattedError: unknown = error;
-    if (error instanceof Error) {
-      console.error(error.message);
-      formattedError = error.message;
-    }
-
-    return {
-      success: false,
-      collection: null,
-      errors: formattedError,
-    };
-  }
-});
+  },
+);

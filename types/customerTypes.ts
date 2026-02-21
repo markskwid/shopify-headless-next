@@ -1,17 +1,10 @@
-export interface CUSTOMER_CREATE {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
+import {
+  CUSTOMER_ACCESS_TOKEN_SCHEMA,
+  CUSTOMER_SCHEMA,
+} from "@/lib/schema/customerSchema";
+import { z } from "zod";
 
-export interface CUSTOMER_TOKEN {
-  accessToken: string;
-  expiresAt: string;
-}
-
-export interface CUSTOMER_INFO extends Omit<CUSTOMER_CREATE, "password"> {
-  id?: string;
-  acceptsMarketing?: boolean;
-  phone?: string;
-}
+export type CUSTOMER_TYPE = z.infer<typeof CUSTOMER_SCHEMA>;
+export type CUSTOMER_ACCESS_TOKEN_TYPE = z.infer<
+  typeof CUSTOMER_ACCESS_TOKEN_SCHEMA
+>;

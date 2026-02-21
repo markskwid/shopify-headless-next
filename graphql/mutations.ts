@@ -39,3 +39,80 @@ mutation CUSTOMER_LOGIN($input: CustomerAccessTokenCreateInput!) {
   }
 }
 `;
+
+//**
+// =================================
+/**
+ * cart mutations
+ */
+//===================================
+//
+
+export const CREATE_CART = `
+mutation createCart($input: CartInput){
+  cartCreate(input: $input){
+    cart{
+      id
+      totalQuantity
+      checkoutUrl
+    }
+    
+    userErrors{
+      field
+      message
+    }
+    
+    warnings{
+      message
+      code
+    }
+  }
+}`;
+
+export const ADD_TO_CART = `
+mutation addToCart($cartId: ID!, $lines: [CartLineInput!]!) {
+  cartLinesAdd(cartId: $cartId, lines: $lines) {
+    cart {
+      id
+      lines(first: 10) {
+        nodes {
+          id
+          merchandise {
+            ...on ProductVariant {
+              id
+              title
+              image {
+                url
+                altText
+              }
+              price {
+                amount
+                currencyCode
+              }
+              selectedOptions {
+                value
+                name
+              }
+            }
+          }
+          cost {
+            totalAmount {
+              amount
+              currencyCode
+            }
+          }
+          quantity
+        }
+      }
+      totalQuantity
+    }
+    userErrors {
+      field
+      message
+    }
+    warnings {
+      code
+      message
+    }
+  }
+}`;
