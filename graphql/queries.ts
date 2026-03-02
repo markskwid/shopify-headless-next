@@ -1,11 +1,11 @@
-import { FRAGMENT_PRODUCT_FIELDS, FRAGMENT_MENU_ITEMS } from "./fragments";
+import { FRAGMENT_PRODUCT_FIELDS, FRAGMENT_MENU_ITEMS, FRAGMENT_CART_ITEM} from "./fragments";
 
 // fetch products for listing
 export const FETCH_PRODUCTS = `
     ${FRAGMENT_PRODUCT_FIELDS}
 
     query FetchProducts {
-    products(first: 15) {
+    products(first: 12) {
         edges {
         node {
             ...ProductFields
@@ -131,42 +131,9 @@ query GET_CUSTOMER($token: String!){
 
 //get user cart
 export const GET_CART = `
+${FRAGMENT_CART_ITEM}
  query GET_CART($cartId: ID!) {
   cart(id: $cartId) {
-    id
-    totalQuantity
-    lines(first: 15) {
-      edges {
-        node {
-          id
-          quantity
-          merchandise {
-            ... on ProductVariant {
-              sku
-              title
-              selectedOptions {
-                name
-                value
-              }
-              image{
-                url
-                altText
-              }
-              price {
-                amount
-                currencyCode
-              }
-            }
-          }
-        }
-      }
-    }
-    cost {
-      totalAmount {
-        amount
-        currencyCode
-      }
-    }
-    checkoutUrl
+     ...CART_FIELD
   }
 }`;

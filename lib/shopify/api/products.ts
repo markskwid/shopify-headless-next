@@ -13,53 +13,53 @@ import {
 } from "@/types/productsTypes";
 
 //Get all products
-export const getProducts = cache(
-  async (): Promise<API_RESPONSE<PRODUCT_LISTING_TYPE[]>> => {
-    try {
-      const { data, errors } = await client.request(FETCH_PRODUCTS);
+export const getProducts = async (): Promise<
+  API_RESPONSE<PRODUCT_LISTING_TYPE[]>
+> => {
+  try {
+    const { data, errors } = await client.request(FETCH_PRODUCTS);
 
-      if (errors) {
-        console.log("Graphql Errors", errors);
-        return {
-          success: false,
-          data: [],
-          pageInfo: null,
-          errors: normalizeError(errors),
-        };
-      }
-
-      const parsed = PRODUCT_LISTING_RESPONSE_SCHEMA.safeParse(data.products);
-
-      if (!parsed.success) {
-        console.error(parsed.error);
-        return {
-          success: false,
-          data: [],
-          pageInfo: null,
-          errors: normalizeError(parsed.error),
-        };
-      }
-
-      return {
-        success: true,
-        data: parsed.data.edges.map((edge) => edge.node),
-        pageInfo: parsed.data.pageInfo ? parsed.data.pageInfo : null,
-        errors: null,
-      };
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error(error.message);
-      }
-
+    if (errors) {
+      console.log("Graphql Errors", errors);
       return {
         success: false,
         data: [],
         pageInfo: null,
-        errors: normalizeError(error),
+        errors: normalizeError(errors),
       };
     }
-  },
-);
+
+    const parsed = PRODUCT_LISTING_RESPONSE_SCHEMA.safeParse(data.products);
+
+    if (!parsed.success) {
+      console.error(parsed.error);
+      return {
+        success: false,
+        data: [],
+        pageInfo: null,
+        errors: normalizeError(parsed.error),
+      };
+    }
+
+    return {
+      success: true,
+      data: parsed.data.edges.map((edge) => edge.node),
+      pageInfo: parsed.data.pageInfo ? parsed.data.pageInfo : null,
+      errors: null,
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+
+    return {
+      success: false,
+      data: [],
+      pageInfo: null,
+      errors: normalizeError(error),
+    };
+  }
+};
 
 //Get product by handle
 export const getProductByHandle = cache(

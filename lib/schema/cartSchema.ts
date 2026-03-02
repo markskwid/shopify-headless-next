@@ -1,37 +1,43 @@
 import { z } from "zod";
 import { MONEY_SCHEMA } from "./moneySchema";
 
-export const CART_SCHEMA = z.object({
+export const CART_LINE_SCHEMA = z.object({
   id: z.string(),
-  checkoutUrl: z.url(),
+  quantity: z.number(),
   cost: z.object({
     totalAmount: MONEY_SCHEMA,
   }),
-  totalQuantity: z.number(),
-  lines: z.object({
-    edges: z.array(
+  merchandise: z.object({
+    image: z.object({
+      url: z.string(),
+      altText: z.string().nullable().optional(),
+    }),
+    product: z.object({
+      title: z.string(),
+    }),
+    price: MONEY_SCHEMA,
+    sku: z.string().nullable(),
+    title: z.string(),
+    selectedOptions: z.array(
       z.object({
-        node: z.object({
-          id: z.string(),
-          quantity: z.number(),
-          merchandise: z.object({
-            image: z.object({
-              url: z.string(),
-              altText: z.string().nullable().optional(),
-            }),
-            price: MONEY_SCHEMA,
-            sku: z.string().nullable(),
-            title: z.string(),
-            selectedOptions: z.array(
-              z.object({
-                title: z.string().optional(),
-                value: z.string(),
-              }),
-            ),
-          }),
-        }),
+        name: z.string(),
+        value: z.string(),
       }),
     ),
+  }),
+});
+
+export const CART_SCHEMA = z.object({
+  id: z.string(),
+  checkoutUrl: z.string(),
+  totalQuantity: z.number(),
+  cost: z.object({
+    subtotalAmount: MONEY_SCHEMA.nullable(),
+    totalTaxAmount: MONEY_SCHEMA.nullable(),
+    totalAmount: MONEY_SCHEMA.nullable(),
+  }),
+  lines: z.object({
+    nodes: z.array(CART_LINE_SCHEMA),
   }),
 });
 
@@ -67,39 +73,78 @@ export const CREATE_CART_RESPONSE_SCHEMA = z.object({
   }),
 });
 
-export const ADD_TO_CART_LINE_SCHEMA = z.object({
-  id: z.string(),
-  totalQuantity: z.number(),
-  lines: z.object({
-    nodes: z.array(
-      z.object({
-        id: z.string(),
-        quantity: z.number(),
-        cost: z.object({
-          totalAmount: MONEY_SCHEMA,
+export const ADD_TO_CART_RESPONSE_SCHEMA = z.object({
+  cartLinesAdd: z.object({
+    cart: CART_SCHEMA.nullable(),
+    userErrors: z
+      .array(
+        z.object({
+          field: z.array(z.string()),
+          message: z.string(),
         }),
-        merchandise: z.object({
-          id: z.string(),
-          image: z.object({
-            url: z.string(),
-            altText: z.string().nullable(),
-          }),
-          price: MONEY_SCHEMA,
-          selectedOptions: z.array(
-            z.object({
-              value: z.string(),
-              name: z.string(),
-            }),
-          ),
+      )
+      .nullable(),
+    warnings: z
+      .array(
+        z.object({
+          code: z.string(),
+          message: z.string(),
         }),
-      }),
-    ),
+      )
+      .nullable(),
   }),
 });
 
-export const ADD_TO_CART_RESPONSE_SCHEMA = z.object({
-  cartLinesAdd: z.object({
-    cart: ADD_TO_CART_LINE_SCHEMA.nullable(),
+//cart lines remove
+export const REMOVE_ITEM_CART_RESPONSE_SCHEMA = z.object({
+  cartLinesRemove: z.object({
+    cart: CART_SCHEMA.nullable(),
+    userErrors: z
+      .array(
+        z.object({
+          field: z.array(z.string()),
+          message: z.string(),
+        }),
+      )
+      .nullable(),
+    warnings: z
+      .array(
+        z.object({
+          code: z.string(),
+          message: z.string(),
+        }),
+      )
+      .nullable(),
+  }),
+});
+
+//cart lines update
+export const UPDATE_ITEM_CART_RESPONSE_SCHEMA = z.object({
+  cartLinesUpdate: z.object({
+    cart: CART_SCHEMA.nullable(),
+    userErrors: z
+      .array(
+        z.object({
+          field: z.array(z.string()),
+          message: z.string(),
+        }),
+      )
+      .nullable(),
+    warnings: z
+      .array(
+        z.object({
+          code: z.string(),
+          message: z.string(),
+        }),
+      )
+      .nullable(),
+  }),
+});
+
+//cart update note
+export const UPDATE_CART_NOTE_RESPONSE_SCHEMA = z.object({
+  cartNoteUpdate: z.object({
+    cart: CART_SCHEMA.nullable(),
     userErrors: z
       .array(
         z.object({

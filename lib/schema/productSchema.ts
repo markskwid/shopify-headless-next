@@ -17,6 +17,9 @@ export const PRODUCT_SCHEMA = z.object({
     })
     .optional()
     .nullable(),
+  variants: z.object({
+    nodes: z.array(VARIANT_SCHEMA),
+  }),
   priceRange: z.object({
     minVariantPrice: MONEY_SCHEMA,
     maxVariantPrice: MONEY_SCHEMA,

@@ -1,68 +1,71 @@
-import { ADD_TO_CART, CREATE_CART } from "@/graphql/mutations";
+import {
+  CART_LINES_REMOVE,
+  CART_LINES_UPDATE,
+  CART_UPDATE_NOTE,
+} from "@/graphql/mutations";
+import { CART_LINES_ADD, CREATE_CART } from "@/graphql/mutations";
 import { client } from "../client";
 import {
   ADD_TO_CART_RESPONSE_SCHEMA,
   CREATE_CART_RESPONSE_SCHEMA,
   GET_CART_RESPONSE_SCHEMA,
+  REMOVE_ITEM_CART_RESPONSE_SCHEMA,
+  UPDATE_CART_NOTE_RESPONSE_SCHEMA,
+  UPDATE_ITEM_CART_RESPONSE_SCHEMA,
 } from "@/lib/schema/cartSchema";
-import { cache } from "react";
 import { GET_CART } from "@/graphql/queries";
 import { normalizeError } from "@/utils/normalizeErrors";
 import { API_RESPONSE } from "@/types/responseTypes";
-import {
-  ADD_TO_CART_LINE_TYPE,
-  CART_TYPE,
-  CREATED_CART_TYPE,
-} from "@/types/cartTypes";
+import { CART_TYPE, CREATED_CART_TYPE } from "@/types/cartTypes";
 
-export const getCart = cache(
-  async (cartId: string): Promise<API_RESPONSE<CART_TYPE>> => {
-    try {
-      const { data, errors } = await client.request(GET_CART, {
-        variables: {
-          cartId,
-        },
-      });
+export const getCart = async (
+  cartId: string,
+): Promise<API_RESPONSE<CART_TYPE>> => {
+  try {
+    const { data, errors } = await client.request(GET_CART, {
+      variables: {
+        cartId,
+      },
+    });
 
-      if (errors) {
-        return {
-          success: false,
-          data: null,
-          errors: normalizeError(errors),
-        };
-      }
-
-      const parsed = GET_CART_RESPONSE_SCHEMA.safeParse(data);
-
-      if (!parsed.success) {
-        console.log("Invalid Data", parsed.error);
-        return {
-          success: false,
-          data: null,
-          errors: normalizeError(parsed.error),
-        };
-      }
-
-      const cart = parsed.data.cart;
-
-      return {
-        success: !!cart,
-        data: cart ? cart : null,
-        errors: null,
-      };
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error(error.message);
-      }
-
+    if (errors) {
       return {
         success: false,
         data: null,
-        errors: normalizeError(error),
+        errors: normalizeError(errors),
       };
     }
-  },
-);
+
+    const parsed = GET_CART_RESPONSE_SCHEMA.safeParse(data);
+
+    if (!parsed.success) {
+      console.log("Invalid Data", parsed.error);
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(parsed.error),
+      };
+    }
+
+    const cart = parsed.data.cart;
+
+    return {
+      success: !!cart,
+      data: cart ? cart : null,
+      errors: null,
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+
+    return {
+      success: false,
+      data: null,
+      errors: normalizeError(error),
+    };
+  }
+};
 
 export const createCart = async (): Promise<
   API_RESPONSE<CREATED_CART_TYPE>
@@ -129,19 +132,19 @@ export const createCart = async (): Promise<
 
 export const addToCart = async (
   cartId: string,
-  input: {
+  lines: {
     variantId: string;
     quantity: number;
   },
-): Promise<API_RESPONSE<ADD_TO_CART_LINE_TYPE>> => {
+): Promise<API_RESPONSE<CART_TYPE>> => {
   try {
-    const { data, errors } = await client.request(ADD_TO_CART, {
+    const { data, errors } = await client.request(CART_LINES_ADD, {
       variables: {
         cartId: cartId,
         lines: [
           {
-            merchandiseId: input.variantId as string,
-            quantity: input.quantity,
+            merchandiseId: lines.variantId as string,
+            quantity: lines.quantity,
           },
         ],
       },
@@ -170,15 +173,194 @@ export const addToCart = async (
     }
 
     const items = parsed.data.cartLinesAdd.cart;
-    const userErrors = parsed.data.cartLinesAdd.userErrors?.map(
-      (e) => e.message,
-    );
+    const userErrors =
+      parsed.data.cartLinesAdd.userErrors?.map((e) => e.message) ?? [];
     //if okay return data
     return {
       success: !!items,
       data: items,
       errors: userErrors ? userErrors : null,
       warnings: parsed.data.cartLinesAdd.warnings,
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+
+    return {
+      success: false,
+      data: null,
+      errors: normalizeError(error),
+      warnings: null,
+    };
+  }
+};
+
+export const removeItemInCart = async (
+  cartId: string,
+  ids: string[],
+): Promise<API_RESPONSE<CART_TYPE>> => {
+  try {
+    const { data, errors } = await client.request(CART_LINES_REMOVE, {
+      variables: {
+        cartId: cartId,
+        lineIds: ids,
+      },
+    });
+
+    console.log("INPUT", typeof ids, ids);
+
+    if (errors) {
+      console.log("Graphql error", errors);
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(errors),
+        warnings: null,
+      };
+    }
+
+    const parsed = REMOVE_ITEM_CART_RESPONSE_SCHEMA.safeParse(data);
+
+    if (!parsed.success) {
+      console.log("Invalid data", parsed.error);
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(parsed.error),
+        warnings: null,
+      };
+    }
+
+    const items = parsed.data.cartLinesRemove.cart;
+    const userErrors =
+      parsed.data.cartLinesRemove.userErrors?.map((e) => e.message) ?? [];
+    //if okay return data
+    return {
+      success: userErrors.length === 0,
+      data: items,
+      errors: userErrors ? userErrors : null,
+      warnings: parsed.data.cartLinesRemove.warnings,
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+
+    return {
+      success: false,
+      data: null,
+      errors: normalizeError(error),
+      warnings: null,
+    };
+  }
+};
+
+export const updateItemInCart = async (
+  cartId: string,
+  lines: { id: string; quantity: number },
+): Promise<API_RESPONSE<CART_TYPE>> => {
+  try {
+    const { data, errors } = await client.request(CART_LINES_UPDATE, {
+      variables: {
+        cartId: cartId,
+        lines: [lines],
+      },
+    });
+
+    if (errors) {
+      console.log("Graphql error", errors);
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(errors),
+        warnings: null,
+      };
+    }
+
+    console.log(data);
+
+    const parsed = UPDATE_ITEM_CART_RESPONSE_SCHEMA.safeParse(data);
+
+    if (!parsed.success) {
+      console.log("Invalid data", parsed.error);
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(parsed.error),
+        warnings: null,
+      };
+    }
+
+    const items = parsed.data.cartLinesUpdate.cart;
+    const userErrors =
+      parsed.data.cartLinesUpdate.userErrors?.map((e) => e.message) ?? [];
+    //if okay return data
+    return {
+      success: userErrors.length === 0,
+      data: items,
+      errors: userErrors ? userErrors : null,
+      warnings: parsed.data.cartLinesUpdate.warnings,
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+
+    return {
+      success: false,
+      data: null,
+      errors: normalizeError(error),
+      warnings: null,
+    };
+  }
+};
+
+export const updateCartNote = async (
+  cartId: string,
+  note: string,
+): Promise<API_RESPONSE<CART_TYPE>> => {
+  try {
+    const { data, errors } = await client.request(CART_UPDATE_NOTE, {
+      variables: {
+        cartId: cartId,
+        note: note as string,
+      },
+    });
+
+    if (errors) {
+      console.log("Graphql error", errors);
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(errors),
+        warnings: null,
+      };
+    }
+
+    console.log(data);
+
+    const parsed = UPDATE_CART_NOTE_RESPONSE_SCHEMA.safeParse(data);
+
+    if (!parsed.success) {
+      console.log("Invalid data", parsed.error);
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(parsed.error),
+        warnings: null,
+      };
+    }
+
+    const items = parsed.data.cartNoteUpdate.cart;
+    const userErrors =
+      parsed.data.cartNoteUpdate.userErrors?.map((e) => e.message) ?? [];
+    //if okay return data
+    return {
+      success: userErrors.length === 0,
+      data: items,
+      errors: userErrors ? userErrors : null,
+      warnings: parsed.data.cartNoteUpdate.warnings,
     };
   } catch (error: unknown) {
     if (error instanceof Error) {

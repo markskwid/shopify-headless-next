@@ -1,0 +1,44 @@
+"use server";
+
+import { getCart } from "@/lib/shopify/api/carts";
+import { cookies } from "next/headers";
+
+export const getCartAction = async () => {
+  try {
+    let cookieStore = await cookies();
+
+    let cartId = cookieStore.get("cartId")?.value as string;
+
+    let cart = await getCart(cartId);
+
+    if (!cart.success) {
+      console.log("Error getting cart", cart.errors);
+      return {
+        success: false,
+        data: null,
+        errors: cart.errors,
+        warnings: null,
+      };
+    }
+
+    const cartData = cart.data;
+
+    return {
+      success: true,
+      data: cartData,
+      errors: null,
+      warnings: null,
+    };
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error(err.message);
+    }
+
+    return {
+      success: false,
+      data: null,
+      errors: err instanceof Error ? [err.message] : ["Unknown error"],
+      warnings: null,
+    };
+  }
+};

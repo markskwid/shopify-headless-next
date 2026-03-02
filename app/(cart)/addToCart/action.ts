@@ -14,17 +14,23 @@ export const addToCartAction = async (formData: FormData) => {
     if (!cartId) {
       const newCart = await createCart();
 
-      if (!newCart.success || !newCart.cart) {
+      if (!newCart.success || !newCart.data) {
         console.log("Error creating a new cart");
-        return newCart;
+        return {
+          success: false,
+          data: null,
+          errors: newCart.errors,
+          warnings: null,
+        };
       }
 
-      cartId = newCart.cart.id;
+      cartId = newCart.data.id;
 
       cookieStore.set("cartId", cartId, {
         secure: true,
         sameSite: "lax",
         httpOnly: true,
+        maxAge: 60 * 60 * 24 * 30,
       });
     }
 
@@ -37,9 +43,21 @@ export const addToCartAction = async (formData: FormData) => {
 
     if (!updatedCart.success) {
       console.log("Error adding new item on cart", updatedCart.errors);
+
+      return {
+        success: false,
+        data: null,
+        errors: updatedCart.errors,
+        warnings: null,
+      };
     }
 
-    return updatedCart;
+    return {
+      success: true,
+      data: updatedCart.data,
+      errors: null,
+      warnings: null,
+    };
   } catch (err: unknown) {
     if (err instanceof Error) {
       console.error(err.message);
@@ -47,8 +65,7 @@ export const addToCartAction = async (formData: FormData) => {
 
     return {
       success: false,
-      cartId: null,
-      items: [],
+      data: null,
       errors: err instanceof Error ? [err.message] : ["Unknown error"],
       warnings: null,
     };

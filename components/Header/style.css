@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+.mobile-navigation-wrapper {
+  @apply flex justify-between items-center border-black space-x-3;
+}
+
+.mobile-navigation-wrapper i {
+  @apply text-2xl;
+}
+
+.mobile-nav {
+}
+
+@theme {
+  --animate-pullDown: pullDown 2s ease-in linear;
+  --animate-pullUp: pullUp 2s ease-in linear;
+  
+  @keyframes pullDown {
+    from {
+      transform: translateY(0);
+    }
+
+    to {
+      transform: translateY(100%);
+    }
+  }
+
+  @keyframes pullUp {
+    from {
+      transform: translateY(-100%);
+    }
+
+    to {
+      transform: translateY(0);
+    }
+  }
+}

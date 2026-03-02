@@ -10,6 +10,19 @@ export const FRAGMENT_PRODUCT_FIELDS = `
         id
         url
       }
+
+      variants(first: 5) {
+        nodes {
+          id
+          title
+          availableForSale
+          image {
+            url
+            altText
+          }
+        }
+      }
+        
       priceRange {
         minVariantPrice {
           amount
@@ -46,4 +59,61 @@ export const FRAGMENT_MENU_ITEMS = `
         title
     }
     }
+`;
+
+export const FRAGMENT_CART_ITEM = `
+fragment CART_FIELD on Cart {
+  id
+  note
+  totalQuantity
+  checkoutUrl
+  cost {
+    subtotalAmount {
+      amount
+      currencyCode
+    }
+    totalTaxAmount {
+      amount
+      currencyCode
+   }
+    totalAmount {
+      amount
+      currencyCode
+    }
+  }
+  lines(first: 10) {
+    nodes {
+      id
+      quantity
+      merchandise {
+        ... on ProductVariant {
+          id
+          sku
+          title
+          product{
+            title
+          }
+          image{
+           url
+           altText
+          }
+          price {
+            amount
+            currencyCode
+          }
+          selectedOptions {
+            value
+            name
+          }
+        }
+      }
+      cost {
+        totalAmount {
+          amount
+          currencyCode
+        }
+      }
+    }
+  }
+}
 `;

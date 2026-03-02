@@ -1,25 +1,42 @@
-import { addToCart, createCart, getCart } from "@/lib/shopify/api/carts";
-import {
-  getCollectionByHandle,
-  getCollections,
-} from "@/lib/shopify/api/collections";
-import { createCustomer, loginCustomer } from "@/lib/shopify/api/customer";
-import { getMenuByHandle } from "@/lib/shopify/api/menus";
-import { getProductByHandle, getProducts } from "@/lib/shopify/api/products";
+import { PageWrapper } from "@/components/PageWrapper";
+import { ProductCard } from "@/components/ProductCard/ProductCard";
+import { getProducts } from "@/lib/shopify/api/products";
+import { PRODUCT_LISTING_TYPE } from "@/types/productsTypes";
+import { API_RESPONSE } from "@/types/responseTypes";
+import { formatPrice } from "@/utils/formatPricing";
+import { unstable_cache } from "next/cache";
+import { AiOutlineHeart } from "react-icons/ai";
+
+const cache_products_listing: () => Promise<
+  API_RESPONSE<PRODUCT_LISTING_TYPE[]>
+> = unstable_cache(
+  async () => {
+    return getProducts();
+  },
+  ["homepage-products"],
+  {
+    tags: ["products"],
+    revalidate: 300,
+  },
+);
 
 export default async function Home() {
-  const cart = await addToCart(
-    "gid://shopify/Cart/hWN9251dzL1CwYDX9393yu2u?key=9e7aa0eef7e1099f69f98fc2ed6f59d4",
-    { variantId: "gid://shopify/ProductVariant/48174651080959", quantity: 1 },
-  );
+  const productListResponse = await cache_products_listing();
 
-  console.log(cart);
+  if (!productListResponse.success) {
+    return <p>Failed to fetch products...</p>;
+  }
 
-  // const products = await createCart();
+  const products = productListResponse.data ?? [];
+
   // console.log(products);
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <h1>Test</h1>
-    </div>
+    <PageWrapper>
+      <div className="flex flex-wrap justify-start items-start space-x-2 space-y-5">
+        {products.map((product: PRODUCT_LISTING_TYPE) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+    </PageWrapper>
   );
 }

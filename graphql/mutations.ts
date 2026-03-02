@@ -1,3 +1,5 @@
+import { FRAGMENT_CART_ITEM } from "./fragments";
+
 //mutation create customer
 
 //**
@@ -49,7 +51,7 @@ mutation CUSTOMER_LOGIN($input: CustomerAccessTokenCreateInput!) {
 //
 
 export const CREATE_CART = `
-mutation createCart($input: CartInput){
+mutation CREATE_CART($input: CartInput){
   cartCreate(input: $input){
     cart{
       id
@@ -69,42 +71,68 @@ mutation createCart($input: CartInput){
   }
 }`;
 
-export const ADD_TO_CART = `
-mutation addToCart($cartId: ID!, $lines: [CartLineInput!]!) {
+export const CART_LINES_ADD = `
+${FRAGMENT_CART_ITEM}
+mutation ADD_TO_CART($cartId: ID!, $lines: [CartLineInput!]!) {
   cartLinesAdd(cartId: $cartId, lines: $lines) {
     cart {
-      id
-      lines(first: 10) {
-        nodes {
-          id
-          merchandise {
-            ...on ProductVariant {
-              id
-              title
-              image {
-                url
-                altText
-              }
-              price {
-                amount
-                currencyCode
-              }
-              selectedOptions {
-                value
-                name
-              }
-            }
-          }
-          cost {
-            totalAmount {
-              amount
-              currencyCode
-            }
-          }
-          quantity
-        }
-      }
-      totalQuantity
+      ...CART_FIELD
+    }
+    userErrors {
+      field
+      message
+    }
+    warnings {
+      code
+      message
+    }
+  }
+}`;
+
+export const CART_LINES_REMOVE = `
+${FRAGMENT_CART_ITEM}
+mutation REMOVE_ITEM($cartId: ID!, $lineIds: [ID!]!) {
+  cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+    cart{
+      ...CART_FIELD
+    }
+    userErrors {
+      field
+      message
+    }
+    warnings {
+      code
+      message
+    }
+  }
+}
+`;
+
+
+export const CART_LINES_UPDATE = `
+${FRAGMENT_CART_ITEM}
+mutation UPDATE_ITEM($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
+  cartLinesUpdate(cartId: $cartId, lines: $lines) {
+    cart {
+      ...CART_FIELD
+    }
+    userErrors {
+      field
+      message
+    }
+    warnings {
+      code
+      message
+    }
+  }
+}`;
+
+export const CART_UPDATE_NOTE = `
+${FRAGMENT_CART_ITEM}
+mutation UPDATE_CART_NOTE($cartId: ID!, $note: String!) {
+  cartNoteUpdate(cartId: $cartId, note: $note) {
+    cart {
+      ...CART_FIELD
     }
     userErrors {
       field
