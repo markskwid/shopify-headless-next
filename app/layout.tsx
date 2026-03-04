@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/Header/Header";
 import { CartProvider } from "@/context/CartContext";
 import { getCartAction } from "./(cart)/getCart/action";
+import { CartSlider } from "@/components/CartSlider/CartSlider";
 
 const interFont = Inter({
   variable: "--font-google",
@@ -34,6 +35,7 @@ export default async function RootLayout({
       >
         <CartProvider initialCart={cart.data}>
           <Header />
+          <CartSlider />
           {children}
         </CartProvider>
       </body>

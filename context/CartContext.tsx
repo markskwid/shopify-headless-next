@@ -1,11 +1,24 @@
 "use client";
+import { addToCartAction } from "@/app/(cart)/addToCart/action";
+import { removeItemAction } from "@/app/(cart)/removeItem/action";
+import { updateItemAction } from "@/app/(cart)/updateItem/action";
 import { CART_TYPE } from "@/types/cartTypes";
-import { createContext, useContext, ReactNode, useReducer } from "react";
+import {
+  createContext,
+  useContext,
+  ReactNode,
+  useReducer,
+  useState,
+} from "react";
 
 type CART_CONTEXT_TYPE = {
   cart: CART_TYPE | null;
+  isOpen: boolean;
+  isAdding: boolean;
+  toggleCart: () => void;
   setCart: (cart: CART_TYPE) => void;
-  addItem: (variantId: string, quantity: number) => void;
+  addItem: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  updateItem: (variantId: string, quantity: string, action: string) => void;
   deleteItem: (id: string) => void;
 };
 
@@ -39,9 +52,65 @@ export const CartProvider = ({
   children,
 }: CART_PROVIDER_PROPS) => {
   const [cart, dispatch] = useReducer(CART_REDUCER, initialCart);
+  const [isAdding, setIsAdding] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const addItem = (id: string, quantity: number) => {};
-  const deleteItem = (id: string) => {};
+  const addItem = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setIsAdding((prev) => !prev);
+    const variantId = (e.currentTarget as HTMLButtonElement).dataset
+      .variantId as string;
+    const formData = new FormData();
+    formData.append("variantId", variantId);
+    formData.append("quantity", "1");
+
+    const res = await addToCartAction(formData);
+
+    if (!res.success || !res.data) {
+      console.error(res.errors);
+      return;
+    }
+
+    setCart(res.data);
+    setTimeout(() => {
+      setIsAdding((prev) => !prev);
+      setIsOpen((prev) => !prev);
+    }, 300);
+  };
+
+  const deleteItem = async (id: string) => {
+    const formData = new FormData();
+    formData.append("line-id", id);
+
+    const res = await removeItemAction(formData);
+
+    if (!res.success || !res.data) {
+      console.error(res.errors);
+      return;
+    }
+
+    setCart(res.data);
+  };
+
+  const updateItem = async (id: string, quantity: string, action: string) => {
+    const formData = new FormData();
+    formData.append("line-id", id);
+    let newQuantity = Number(quantity);
+    if (action === "desc") {
+      newQuantity -= 1;
+    } else {
+      newQuantity += 1;
+    }
+    formData.append("quantity", newQuantity.toString());
+
+    const res = await updateItemAction(formData);
+
+    if (!res.success || !res.data) {
+      return;
+    }
+
+    setCart(res.data);
+  };
 
   const setCart = (cart: CART_TYPE) => {
     dispatch({
@@ -49,13 +118,19 @@ export const CartProvider = ({
       payload: cart,
     });
   };
+
+  const toggleCart = () => setIsOpen((prev) => !prev);
   return (
     <CartContext.Provider
       value={{
         cart,
+        isAdding,
+        isOpen,
+        toggleCart,
         setCart,
         deleteItem,
         addItem,
+        updateItem,
       }}
     >
       {children}

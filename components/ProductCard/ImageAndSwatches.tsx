@@ -1,15 +1,10 @@
 "use client";
 
-import { addToCartAction } from "@/app/(cart)/addToCart/action";
 import { useCart } from "@/context/CartContext";
-import { CART_TYPE } from "@/types/cartTypes";
-import {
-  PRODUCT_LISTING_TYPE,
-  PRODUCT_VARIANT_TYPE,
-} from "@/types/productsTypes";
+import { PRODUCT_LISTING_TYPE } from "@/types/productsTypes";
 import Link from "next/link";
 import { useState } from "react";
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiOutlineHeart, AiOutlineLoading } from "react-icons/ai";
 
 type SELECTED_VARIANT_TYPE = {
   variant: string;
@@ -21,8 +16,8 @@ export const ImageAndSwatches = ({
 }: {
   product: PRODUCT_LISTING_TYPE;
 }) => {
+  const { addItem, isAdding } = useCart();
   const firstVariant = product.variants.nodes[0];
-  const cart = useCart();
   const [selectedVariant, setSelectedVariant] = useState<SELECTED_VARIANT_TYPE>(
     {
       variant: "",
@@ -35,24 +30,6 @@ export const ImageAndSwatches = ({
       variant,
       image: img,
     });
-  };
-
-  const addToCartProduct = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const variantId = (e.currentTarget as HTMLButtonElement).dataset
-      .variantId as string;
-    const formData = new FormData();
-    formData.append("variantId", variantId);
-    formData.append("quantity", "1");
-
-    const response = await addToCartAction(formData);
-
-    if (!response.success || !response.data) {
-      console.error(response.errors);
-      return;
-    }
-
-    cart.setCart(response.data);
   };
 
   return (
@@ -90,9 +67,16 @@ export const ImageAndSwatches = ({
                     : firstVariant.id
                 }
                 className="cursor-pointer p-2 font-semibold text-center text-white rounded-full bg-black w-full"
-                onClick={(e) => addToCartProduct(e)}
+                onClick={(e) => addItem(e)}
               >
-                Add to Cart
+                {isAdding ? (
+                  <AiOutlineLoading
+                    className="animate-spin text-center inline-block"
+                    size={30}
+                  />
+                ) : (
+                  "Add to Cart"
+                )}
               </button>
             </div>
           </figcaption>

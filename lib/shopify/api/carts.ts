@@ -208,8 +208,6 @@ export const removeItemInCart = async (
       },
     });
 
-    console.log("INPUT", typeof ids, ids);
-
     if (errors) {
       console.log("Graphql error", errors);
       return {
@@ -277,8 +275,6 @@ export const updateItemInCart = async (
         warnings: null,
       };
     }
-
-    console.log(data);
 
     const parsed = UPDATE_ITEM_CART_RESPONSE_SCHEMA.safeParse(data);
 

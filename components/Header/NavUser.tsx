@@ -8,16 +8,9 @@ import {
   AiOutlineUser,
 } from "react-icons/ai";
 import { useCart } from "@/context/CartContext";
-import { CartSlider } from "../CartSlider/CartSlider";
-import { useState } from "react";
 
 export const NavUser = ({ menu }: { menu: MENU_TYPE[] }) => {
-  const cart = useCart();
-  const [openCart, setOpenCart] = useState(false);
-
-  const toggleCart = () => {
-    setOpenCart(!openCart);
-  };
+  const { cart, toggleCart } = useCart();
 
   return (
     <div className="flex justify-end items-center gap-3 [&_i]:text-2xl">
@@ -45,15 +38,14 @@ export const NavUser = ({ menu }: { menu: MENU_TYPE[] }) => {
           <AiOutlineShoppingCart />
         </i>
 
-        {cart.cart?.totalQuantity !== null && (
+        {cart?.totalQuantity !== null && (
           <span className="absolute -top-2 -right-2 bg-black text-white! rounded-full w-5 h-5 flex items-center justify-center text-xs">
-            {cart.cart?.totalQuantity}
+            {cart?.totalQuantity}
           </span>
         )}
       </button>
 
       <MobileNavigation menu={menu} />
-      {openCart && <CartSlider isOpen={openCart} toggleCart={toggleCart} />}
     </div>
   );
 };

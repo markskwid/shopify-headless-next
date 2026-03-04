@@ -5,32 +5,15 @@ import { CART_LINE_TYPE } from "@/types/cartTypes";
 import { formatPrice } from "@/utils/formatPricing";
 import { AiFillDelete, AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import Image from "next/image";
-import { removeItemAction } from "@/app/(cart)/removeItem/action";
 export const LineItems = () => {
-  const cart = useCart();
-
-  const deleteItem = async (id: string) => {
-    const formData = new FormData();
-    formData.append("line-id", id);
-
-    const res = await removeItemAction(formData);
-
-    console.log(formData);
-    if (!res.success || !res.data) {
-      console.error(res.errors);
-      return;
-    }
-
-    console.log("item deleted");
-    cart.setCart(res.data);
-  };
+  const { cart, deleteItem, updateItem } = useCart();
 
   return (
     <div className="w-full flex-1 overflow-y-auto no-scrollbar pr-1">
-      {cart.cart?.lines.nodes ? (
+      {cart?.lines.nodes ? (
         <ul>
-          {cart.cart.lines.nodes.map((item: CART_LINE_TYPE) => (
-            <li key={item.id} className="w-full">
+          {cart?.lines.nodes.map((item: CART_LINE_TYPE) => (
+            <li key={item.id} className="w-full relative">
               <div className="flex my-4 relative">
                 <div className="w-20 mr-2 h-20 border border-gray-200 bg-gray-200 rounded-md overflow-hidden">
                   <Image
@@ -69,11 +52,21 @@ export const LineItems = () => {
                     className="flex items-center justify-between gap-2 mt-1 border border-gray-400 rounded-full w-25 py-1 px-2"
                     data-variant-id={item.id}
                   >
-                    <button>
+                    <button
+                      data-variant-id={item.id}
+                      onClick={() =>
+                        updateItem(item.id, item.quantity.toString(), "asc")
+                      }
+                    >
                       <AiOutlinePlus />
                     </button>
                     <span>{item.quantity}</span>
-                    <button>
+                    <button
+                      data-variant-id={item.id}
+                      onClick={() =>
+                        updateItem(item.id, item.quantity.toString(), "desc")
+                      }
+                    >
                       <AiOutlineMinus />
                     </button>
                   </div>
