@@ -6,6 +6,7 @@ import { PRODUCT_LISTING_TYPE } from "@/types/productsTypes";
 import Link from "next/link";
 import { useState } from "react";
 import { AiOutlineHeart, AiOutlineLoading } from "react-icons/ai";
+import Image from "next/image";
 
 type SELECTED_VARIANT_TYPE = {
   variant: string;
@@ -37,18 +38,17 @@ export const ImageAndSwatches = ({
     <>
       <Link href={product.handle}>
         <figure className="min-h-42 h-100 p-4 bg-gray-400/20 rounded-sm relative overflow-hidden">
-          <img
-            className="h-full w-full object-cover object-center"
-            src={
-              selectedVariant.image
-                ? selectedVariant.image
-                : product.featuredImage?.url
-            }
-            alt={product.title}
-            width={200}
-            height={200}
-          />
-
+          <div className="absolute inset-2">
+            <Image
+              fill
+              className="object-cover object-center rounded-sm"
+              src={selectedVariant.image || product.featuredImage?.url || ""}
+              alt={product.title}
+              sizes="(max-width: 768px) 100vw, 400px"
+              placeholder="blur"
+              blurDataURL="https://cdn.shopify.com/s/files/1/0805/0642/1503/files/blur.avif?v=1773318451"
+            />
+          </div>
           <figcaption
             className={`h-full rounded-b-md absolute bottom-0 left-0 right-0 transition-transform duration-300 ease-out translate-y-0 group-hover:translate-y-0 group-hover:z-20`}
           >
