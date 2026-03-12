@@ -1,11 +1,15 @@
-import { FRAGMENT_PRODUCT_FIELDS, FRAGMENT_MENU_ITEMS, FRAGMENT_CART_ITEM} from "./fragments";
+import {
+  FRAGMENT_PRODUCT_FIELDS,
+  FRAGMENT_MENU_ITEMS,
+  FRAGMENT_CART_ITEM,
+} from "./fragments";
 
 // fetch products for listing
 export const FETCH_PRODUCTS = `
     ${FRAGMENT_PRODUCT_FIELDS}
 
-    query FetchProducts {
-    products(first: 12) {
+    query FetchProducts($sortKey: ProductSortKeys, $reverse: Boolean) {
+    products(first: 12, sortKey: $sortKey, reverse: $reverse) {
         edges {
         node {
             ...ProductFields
@@ -90,6 +94,38 @@ export const FETCH_COLLECTIONS = `
         }
     }
 `;
+
+/**
+ * get featured collection 
+ * this require a metaobject type featured-collection
+ * field name must be Collections and type is list of collections
+ */
+
+export const FETCH_FEATURED_COLLECTIONS = `
+query FeaturedCollections {
+  metaobjects(type: "featured_collection", first: 1) {
+    nodes {
+      id
+      handle
+      fields {
+        key
+        references(first: 10) {
+          nodes {
+            ... on Collection {
+              id
+              title
+              description
+              handle
+              image {
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}`;
 
 //get collection by handle
 export const FETCH_COLLECTION_BY_HANDLE = `

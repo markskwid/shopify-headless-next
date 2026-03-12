@@ -4,13 +4,15 @@ import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/utils/formatPricing";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { LineItems } from "./LineItems";
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
+import { useUI } from "@/context/UiContext";
 
 export const CartSlider = () => {
-  const { cart, isOpen, toggleCart } = useCart();
+  const { cart } = useCart();
+  const { toggleCart, isCartOpen, handleOverlayClick } = useUI();
 
   useEffect(() => {
-    if (isOpen) {
+    if (isCartOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -19,14 +21,15 @@ export const CartSlider = () => {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isOpen]);
+  }, [isCartOpen]);
 
   return (
     <div
-      className={`flex justify-end items-start min-h-screen w-full fixed left-0 right-0 top-0 transition-opacity duration-75 bg-black/30 ease-out z-100 ${isOpen ? "opacity-100 pointer-events-auto delay-0" : "opacity-0 pointer-events-none delay-200"}`}
+      onClick={handleOverlayClick}
+      className={`flex justify-end items-start min-h-screen w-full fixed left-0 right-0 top-0 transition-opacity duration-75 bg-black/30 ease-out z-100 ${isCartOpen ? "opacity-100 pointer-events-auto delay-0" : "opacity-0 pointer-events-none delay-200"}`}
     >
       <div
-        className={`absolute right-0 top-0 h-full w-full md:w-100 lg:w-105 bg-white p-4 flex flex-col justify-start items-start transition-transform duration-200 ease-out ${isOpen ? "translate-x-0 delay-100" : "translate-x-full delay-0"}`}
+        className={`absolute right-0 top-0 h-full w-full md:w-100 lg:w-105 bg-white p-4 flex flex-col justify-start items-start transition-transform duration-200 ease-out ${isCartOpen ? "translate-x-0 delay-100" : "translate-x-full delay-0"}`}
       >
         <div className="">
           <h3 className="font-bold text-xl mb-2 w-full flex items-center">

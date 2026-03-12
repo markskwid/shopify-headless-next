@@ -8,9 +8,11 @@ import {
   AiOutlineUser,
 } from "react-icons/ai";
 import { useCart } from "@/context/CartContext";
+import { useUI } from "@/context/UiContext";
 
 export const NavUser = ({ menu }: { menu: MENU_TYPE[] }) => {
-  const { cart, toggleCart } = useCart();
+  const { cart } = useCart();
+  const { toggleCart } = useUI();
 
   return (
     <div className="flex justify-end items-center gap-3 [&_i]:text-2xl">

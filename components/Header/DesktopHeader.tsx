@@ -4,8 +4,8 @@ import Link from "next/link";
 import { NavUser } from "./NavUser";
 export const DesktopHeader = ({ menu }: { menu: MENU_TYPE[] }) => {
   return (
-    <header className="sticky top-0 backdrop-blur-md  text-black drop-shadow-2xl shadow-white z-100">
-      <div className="px-5 py-5 flex justify-between items-center max-w-360 mx-auto">
+    <header className="sticky top-0 text-black backdrop-blur-md z-100 will-change-transform">
+      <div className="px-5 py-5 flex justify-between items-center max-w-360 mx-auto ">
         <div>
           <h1 className="font-bold text-2xl text-black">Mark Store</h1>
         </div>

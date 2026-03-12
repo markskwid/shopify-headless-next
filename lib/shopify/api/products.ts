@@ -1,3 +1,5 @@
+import "server-only";
+
 import { API_RESPONSE } from "./../../../types/responseTypes";
 import { FETCH_PRODUCT_BY_HANDLE, FETCH_PRODUCTS } from "@/graphql/queries";
 import { client } from "../client";
@@ -11,55 +13,73 @@ import {
   PRODUCT_DETAIL_TYPE,
   PRODUCT_LISTING_TYPE,
 } from "@/types/productsTypes";
+import { unstable_cache } from "next/cache";
+
+//cached get all products
+const getProductsCached = unstable_cache(
+  async (
+    sortKey?: string,
+    reverse?: boolean,
+  ): Promise<API_RESPONSE<PRODUCT_LISTING_TYPE[]>> => {
+    const sortKeyF = sortKey === "name" ? "TITLE" : undefined;
+    try {
+      console.log(sortKey, reverse);
+      const { data, errors } = await client.request(FETCH_PRODUCTS, {
+        variables: {
+          sortKey: sortKeyF,
+          reverse,
+        },
+      });
+
+      if (errors) {
+        console.log("Graphql Errors", errors);
+        return {
+          success: false,
+          data: [],
+          pageInfo: null,
+          errors: normalizeError(errors),
+        };
+      }
+
+      const parsed = PRODUCT_LISTING_RESPONSE_SCHEMA.safeParse(data.products);
+
+      if (!parsed.success) {
+        console.error(parsed.error);
+        return {
+          success: false,
+          data: [],
+          pageInfo: null,
+          errors: normalizeError(parsed.error),
+        };
+      }
+
+      return {
+        success: true,
+        data: parsed.data.edges.map((edge) => edge.node),
+        pageInfo: parsed.data.pageInfo ? parsed.data.pageInfo : null,
+        errors: null,
+      };
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      }
+
+      return {
+        success: false,
+        data: [],
+        pageInfo: null,
+        errors: normalizeError(error),
+      };
+    }
+  },
+  ["products"],
+  {
+    revalidate: 600,
+  },
+);
 
 //Get all products
-export const getProducts = async (): Promise<
-  API_RESPONSE<PRODUCT_LISTING_TYPE[]>
-> => {
-  try {
-    const { data, errors } = await client.request(FETCH_PRODUCTS);
-
-    if (errors) {
-      console.log("Graphql Errors", errors);
-      return {
-        success: false,
-        data: [],
-        pageInfo: null,
-        errors: normalizeError(errors),
-      };
-    }
-
-    const parsed = PRODUCT_LISTING_RESPONSE_SCHEMA.safeParse(data.products);
-
-    if (!parsed.success) {
-      console.error(parsed.error);
-      return {
-        success: false,
-        data: [],
-        pageInfo: null,
-        errors: normalizeError(parsed.error),
-      };
-    }
-
-    return {
-      success: true,
-      data: parsed.data.edges.map((edge) => edge.node),
-      pageInfo: parsed.data.pageInfo ? parsed.data.pageInfo : null,
-      errors: null,
-    };
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    }
-
-    return {
-      success: false,
-      data: [],
-      pageInfo: null,
-      errors: normalizeError(error),
-    };
-  }
-};
+export const getProducts = getProductsCached;
 
 //Get product by handle
 export const getProductByHandle = cache(

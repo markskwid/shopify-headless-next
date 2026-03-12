@@ -1,6 +1,7 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
+import { useUI } from "@/context/UiContext";
 import { PRODUCT_LISTING_TYPE } from "@/types/productsTypes";
 import Link from "next/link";
 import { useState } from "react";
@@ -16,7 +17,7 @@ export const ImageAndSwatches = ({
 }: {
   product: PRODUCT_LISTING_TYPE;
 }) => {
-  const { addItem, isAdding } = useCart();
+  const { addItem, isProductAdding } = useCart();
   const firstVariant = product.variants.nodes[0];
   const [selectedVariant, setSelectedVariant] = useState<SELECTED_VARIANT_TYPE>(
     {
@@ -61,15 +62,17 @@ export const ImageAndSwatches = ({
             </button>
             <div className="p-3 bg-neutral-500/10 absolute bottom-0 left-0 right-0 translate-y-full transition-transform ease-out duration-200 group-hover:translate-y-0">
               <button
-                data-variant-id={
-                  selectedVariant.variant
-                    ? selectedVariant.variant
-                    : firstVariant.id
-                }
                 className="cursor-pointer p-2 font-semibold text-center text-white rounded-full bg-black w-full"
-                onClick={(e) => addItem(e)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  addItem(
+                    selectedVariant.variant
+                      ? selectedVariant.variant
+                      : firstVariant.id,
+                  );
+                }}
               >
-                {isAdding ? (
+                {isProductAdding ? (
                   <AiOutlineLoading
                     className="animate-spin text-center inline-block"
                     size={30}

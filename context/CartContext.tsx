@@ -10,14 +10,13 @@ import {
   useReducer,
   useState,
 } from "react";
+import { useUI } from "./UiContext";
 
 type CART_CONTEXT_TYPE = {
   cart: CART_TYPE | null;
-  isOpen: boolean;
-  isAdding: boolean;
-  toggleCart: () => void;
+  isProductAdding: boolean;
   setCart: (cart: CART_TYPE) => void;
-  addItem: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  addItem: (id: string) => void;
   updateItem: (variantId: string, quantity: string, action: string) => void;
   deleteItem: (id: string) => void;
 };
@@ -52,14 +51,12 @@ export const CartProvider = ({
   children,
 }: CART_PROVIDER_PROPS) => {
   const [cart, dispatch] = useReducer(CART_REDUCER, initialCart);
-  const [isAdding, setIsAdding] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isProductAdding, setIsProductAdding] = useState(false);
+  const { toggleCart } = useUI();
 
-  const addItem = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setIsAdding((prev) => !prev);
-    const variantId = (e.currentTarget as HTMLButtonElement).dataset
-      .variantId as string;
+  const addItem = async (id: string) => {
+    setIsProductAdding(true);
+    const variantId = id as string;
     const formData = new FormData();
     formData.append("variantId", variantId);
     formData.append("quantity", "1");
@@ -72,10 +69,8 @@ export const CartProvider = ({
     }
 
     setCart(res.data);
-    setTimeout(() => {
-      setIsAdding((prev) => !prev);
-      setIsOpen((prev) => !prev);
-    }, 300);
+    setIsProductAdding(false);
+    toggleCart();
   };
 
   const deleteItem = async (id: string) => {
@@ -119,14 +114,11 @@ export const CartProvider = ({
     });
   };
 
-  const toggleCart = () => setIsOpen((prev) => !prev);
   return (
     <CartContext.Provider
       value={{
         cart,
-        isAdding,
-        isOpen,
-        toggleCart,
+        isProductAdding,
         setCart,
         deleteItem,
         addItem,
