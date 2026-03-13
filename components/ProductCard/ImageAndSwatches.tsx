@@ -1,16 +1,16 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
-import { useUI } from "@/context/UiContext";
 import { PRODUCT_LISTING_TYPE } from "@/types/productsTypes";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineHeart, AiOutlineLoading } from "react-icons/ai";
 import Image from "next/image";
 
 type SELECTED_VARIANT_TYPE = {
   variant: string;
   image: string;
+  inStock?: boolean;
 };
 
 export const ImageAndSwatches = ({
@@ -22,15 +22,21 @@ export const ImageAndSwatches = ({
   const firstVariant = product.variants.nodes[0];
   const [selectedVariant, setSelectedVariant] = useState<SELECTED_VARIANT_TYPE>(
     {
-      variant: "",
+      variant: firstVariant.id,
       image: firstVariant.image?.url ?? product.featuredImage?.url ?? "",
+      inStock: firstVariant.availableForSale,
     },
   );
 
-  const setVariantSelected = (variant: string, img: string) => {
+  const setVariantSelected = (
+    variant: string,
+    img: string,
+    inStock: boolean,
+  ) => {
     setSelectedVariant({
       variant,
       image: img,
+      inStock,
     });
   };
 
@@ -60,28 +66,30 @@ export const ImageAndSwatches = ({
                 <AiOutlineHeart color="white" className="align-middle" />
               </i>
             </button>
-            <div className="p-3 bg-neutral-500/10 absolute bottom-0 left-0 right-0 translate-y-full transition-transform ease-out duration-200 group-hover:translate-y-0">
-              <button
-                className="cursor-pointer p-2 font-semibold text-center text-white rounded-full bg-black w-full"
-                onClick={(e) => {
-                  e.preventDefault();
-                  addItem(
-                    selectedVariant.variant
-                      ? selectedVariant.variant
-                      : firstVariant.id,
-                  );
-                }}
-              >
-                {isProductAdding ? (
-                  <AiOutlineLoading
-                    className="animate-spin text-center inline-block"
-                    size={30}
-                  />
-                ) : (
-                  "Add to Cart"
-                )}
-              </button>
-            </div>
+            {selectedVariant.inStock && (
+              <div className="p-3 bg-neutral-500/10 absolute bottom-0 left-0 right-0 translate-y-full transition-transform ease-out duration-200 group-hover:translate-y-0">
+                <button
+                  className="cursor-pointer p-2 font-semibold text-center text-white rounded-full bg-black w-full"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    addItem(
+                      selectedVariant.variant
+                        ? selectedVariant.variant
+                        : firstVariant.id,
+                    );
+                  }}
+                >
+                  {isProductAdding ? (
+                    <AiOutlineLoading
+                      className="animate-spin text-center inline-block"
+                      size={30}
+                    />
+                  ) : (
+                    "Add to Cart"
+                  )}
+                </button>
+              </div>
+            )}
           </figcaption>
         </figure>
       </Link>
@@ -89,11 +97,12 @@ export const ImageAndSwatches = ({
         {product.variants.nodes.length > 1 &&
           product.variants.nodes.map((variant) => (
             <button
-              onClick={() =>
+              onClick={() => {
+                const isInStock = variant.availableForSale;
                 variant.image?.url
-                  ? setVariantSelected(variant.id, variant.image.url)
-                  : undefined
-              }
+                  ? setVariantSelected(variant.id, variant.image.url, isInStock)
+                  : undefined;
+              }}
               key={variant.id}
               className={`border border-gray-300 rounded-full h-10 w-10 p-2 text-center font-bold ${variant.id === selectedVariant.variant ? "bg-gray-300" : ""} hover:bg-gray-300`}
             >
@@ -101,6 +110,11 @@ export const ImageAndSwatches = ({
             </button>
           ))}
       </div>
+      {!selectedVariant.inStock && (
+        <span className="text-center w-full mt-2 inline-block font-bold text-xs text-orange-800!">
+          No stock available for the selected variant
+        </span>
+      )}
     </>
   );
 };

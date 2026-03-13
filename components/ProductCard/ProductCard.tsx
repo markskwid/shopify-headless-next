@@ -15,7 +15,7 @@ export const ProductCard = ({ product }: { product: PRODUCT_LISTING_TYPE }) => {
           product.priceRange.minVariantPrice.amount,
           product.priceRange.minVariantPrice.currencyCode,
         )}{" "}
-        -{" "}
+        &ndash;{" "}
         {formatPrice(
           product.priceRange.maxVariantPrice.amount,
           product.priceRange.maxVariantPrice.currencyCode,

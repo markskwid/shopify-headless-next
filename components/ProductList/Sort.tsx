@@ -31,6 +31,8 @@ export const Sort = () => {
       <option value="">Sort Products</option>
       <option value="name-asc">Name Ascending</option>
       <option value="name-desc">Name Descending</option>
+      <option value="price-asc">Price Ascending</option>
+      <option value="price-desc">Price Descending</option>
     </select>
   );
 };

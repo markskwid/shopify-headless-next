@@ -1,7 +1,6 @@
 import { PRODUCT_LISTING_TYPE } from "@/types/productsTypes";
 import { ProductCard } from "../ProductCard/ProductCard";
 import { Sort } from "./Sort";
-
 export const ProductList = ({
   products,
 }: {
@@ -13,7 +12,7 @@ export const ProductList = ({
         <Sort />
       </div>
       <div className="flex flex-wrap justify-start items-start space-x-2 space-y-5">
-        {products.map((product: PRODUCT_LISTING_TYPE) => (
+        {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>

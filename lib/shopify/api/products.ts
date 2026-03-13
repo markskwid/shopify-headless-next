@@ -21,12 +21,10 @@ const getProductsCached = unstable_cache(
     sortKey?: string,
     reverse?: boolean,
   ): Promise<API_RESPONSE<PRODUCT_LISTING_TYPE[]>> => {
-    const sortKeyF = sortKey === "name" ? "TITLE" : undefined;
     try {
-      console.log(sortKey, reverse);
       const { data, errors } = await client.request(FETCH_PRODUCTS, {
         variables: {
-          sortKey: sortKeyF,
+          sortKey,
           reverse,
         },
       });

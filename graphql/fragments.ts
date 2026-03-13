@@ -16,6 +16,8 @@ export const FRAGMENT_PRODUCT_FIELDS = `
           id
           title
           availableForSale
+          quantityAvailable
+          currentlyNotInStock
           image {
             url
             altText

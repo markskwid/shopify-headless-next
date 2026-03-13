@@ -10,6 +10,8 @@ export const VARIANT_SCHEMA = z.object({
   title: z.string(),
   sku: z.string().nullable().optional(),
   availableForSale: z.boolean(),
+  quantityAvaiable: z.number().optional().nullable(),
+  currentlyNotInStock: z.boolean().optional().nullable(),
   image: z
     .object({
       url: z.string(),
