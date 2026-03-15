@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MONEY_SCHEMA } from "./moneySchema";
+import { MONEY_SCHEMA } from "./money";
 
 /**
  * Zod reusable schema

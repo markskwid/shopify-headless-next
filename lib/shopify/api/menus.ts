@@ -1,9 +1,9 @@
 import { cache } from "react";
 import { client } from "../client";
 import { GET_MENU_BY_HANDLE } from "@/graphql/queries";
-import { MENU_RESPONSE_SCHEMA } from "@/lib/schema/menuSchema";
-import { API_RESPONSE } from "@/types/responseTypes";
-import { MENU_TYPE } from "@/types/menuTypes";
+import { MENU_RESPONSE_SCHEMA } from "@/lib/schema/menu";
+import { API_RESPONSE } from "@/types/response";
+import { MENU_TYPE } from "@/types/menu";
 import { normalizeError } from "@/utils/normalizeErrors";
 
 export const getMenuByHandle = cache(

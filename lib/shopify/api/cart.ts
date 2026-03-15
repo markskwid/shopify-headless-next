@@ -12,11 +12,11 @@ import {
   REMOVE_ITEM_CART_RESPONSE_SCHEMA,
   UPDATE_CART_NOTE_RESPONSE_SCHEMA,
   UPDATE_ITEM_CART_RESPONSE_SCHEMA,
-} from "@/lib/schema/cartSchema";
+} from "@/lib/schema/cart";
 import { GET_CART } from "@/graphql/queries";
 import { normalizeError } from "@/utils/normalizeErrors";
-import { API_RESPONSE } from "@/types/responseTypes";
-import { CART_TYPE, CREATED_CART_TYPE } from "@/types/cartTypes";
+import { API_RESPONSE } from "@/types/response";
+import { CART_TYPE, CREATED_CART_TYPE } from "@/types/cart";
 
 export const getCart = async (
   cartId: string,

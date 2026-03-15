@@ -1,6 +1,6 @@
 "use server";
 
-import { getCart } from "@/lib/shopify/api/carts";
+import { getCart } from "@/lib/shopify/api/cart";
 import { cookies } from "next/headers";
 
 export const getCartAction = async () => {

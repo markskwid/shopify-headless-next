@@ -1,9 +1,9 @@
 "use client";
 
-import { useCart } from "@/context/CartContext";
-import { PRODUCT_LISTING_TYPE } from "@/types/productsTypes";
+import { useCart } from "@/context/Cart";
+import { PRODUCT_LISTING_TYPE } from "@/types/product";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AiOutlineHeart, AiOutlineLoading } from "react-icons/ai";
 import Image from "next/image";
 
@@ -18,11 +18,11 @@ export const ImageAndSwatches = ({
 }: {
   product: PRODUCT_LISTING_TYPE;
 }) => {
-  const { addItem, isProductAdding } = useCart();
+  const { addItem, addingVariant } = useCart();
   const firstVariant = product.variants.nodes[0];
   const [selectedVariant, setSelectedVariant] = useState<SELECTED_VARIANT_TYPE>(
     {
-      variant: firstVariant.id,
+      variant: "",
       image: firstVariant.image?.url ?? product.featuredImage?.url ?? "",
       inStock: firstVariant.availableForSale,
     },
@@ -39,6 +39,9 @@ export const ImageAndSwatches = ({
       inStock,
     });
   };
+
+  const activeVariantId = selectedVariant.variant || firstVariant.id;
+  const isThisProductAdding = addingVariant === activeVariantId;
 
   return (
     <>
@@ -79,7 +82,7 @@ export const ImageAndSwatches = ({
                     );
                   }}
                 >
-                  {isProductAdding ? (
+                  {isThisProductAdding ? (
                     <AiOutlineLoading
                       className="animate-spin text-center inline-block"
                       size={30}
@@ -100,7 +103,11 @@ export const ImageAndSwatches = ({
               onClick={() => {
                 const isInStock = variant.availableForSale;
                 variant.image?.url
-                  ? setVariantSelected(variant.id, variant.image.url, isInStock)
+                  ? setVariantSelected(
+                      variant.id,
+                      variant.image.url ?? selectedVariant.image,
+                      isInStock,
+                    )
                   : undefined;
               }}
               key={variant.id}

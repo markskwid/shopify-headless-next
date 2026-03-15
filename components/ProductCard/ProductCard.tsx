@@ -1,4 +1,4 @@
-import { PRODUCT_LISTING_TYPE } from "@/types/productsTypes";
+import { PRODUCT_LISTING_TYPE } from "@/types/product";
 import { formatPrice } from "@/utils/formatPricing";
 import { ImageAndSwatches } from "./ImageAndSwatches";
 

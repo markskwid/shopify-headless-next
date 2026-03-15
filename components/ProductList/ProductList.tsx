@@ -1,4 +1,4 @@
-import { PRODUCT_LISTING_TYPE } from "@/types/productsTypes";
+import { PRODUCT_LISTING_TYPE } from "@/types/product";
 import { ProductCard } from "../ProductCard/ProductCard";
 import { Sort } from "./Sort";
 export const ProductList = ({

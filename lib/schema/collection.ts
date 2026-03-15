@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PRODUCT_SCHEMA } from "./productSchema";
+import { PRODUCT_SCHEMA } from "./product";
 
 export const COLLECTION_SCHEMA = z.object({
   title: z.string(),

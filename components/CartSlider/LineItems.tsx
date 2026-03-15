@@ -1,7 +1,7 @@
 "use client";
 
-import { useCart } from "@/context/CartContext";
-import { CART_LINE_TYPE } from "@/types/cartTypes";
+import { useCart } from "@/context/Cart";
+import { CART_LINE_TYPE } from "@/types/cart";
 import { formatPrice } from "@/utils/formatPricing";
 import { AiFillDelete, AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import Image from "next/image";
@@ -55,7 +55,7 @@ export const LineItems = () => {
                     <button
                       data-variant-id={item.id}
                       onClick={() =>
-                        updateItem(item.id, item.quantity.toString(), "asc")
+                        updateItem(item.id, item.quantity.toString(), "inc")
                       }
                     >
                       <AiOutlinePlus />
@@ -64,7 +64,7 @@ export const LineItems = () => {
                     <button
                       data-variant-id={item.id}
                       onClick={() =>
-                        updateItem(item.id, item.quantity.toString(), "desc")
+                        updateItem(item.id, item.quantity.toString(), "dec")
                       }
                     >
                       <AiOutlineMinus />

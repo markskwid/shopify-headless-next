@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { MONEY_SCHEMA } from "./moneySchema";
-import { VARIANT_SCHEMA } from "./variantSchema";
+import { MONEY_SCHEMA } from "./money";
+import { VARIANT_SCHEMA } from "./variant";
 
 //schema for product listing
 export const PRODUCT_SCHEMA = z.object({

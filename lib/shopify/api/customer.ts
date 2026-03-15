@@ -4,12 +4,9 @@ import {
   CUSTOMER_CREATE_RESPONSE_SCHEMA,
   CUSTOMER_INPUT_SCHEMA,
   CUSTOMER_LOGIN_RESPONSE_SCHEMA,
-} from "@/lib/schema/customerSchema";
-import {
-  CUSTOMER_TYPE,
-  CUSTOMER_ACCESS_TOKEN_TYPE,
-} from "@/types/customerTypes";
-import { API_RESPONSE } from "@/types/responseTypes";
+} from "@/lib/schema/customer";
+import { CUSTOMER_TYPE, CUSTOMER_ACCESS_TOKEN_TYPE } from "@/types/customer";
+import { API_RESPONSE } from "@/types/response";
 import { normalizeError } from "@/utils/normalizeErrors";
 
 export const createCustomer = async (input: {

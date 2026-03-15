@@ -1,5 +1,5 @@
 "use server";
-import { updateItemInCart } from "@/lib/shopify/api/carts";
+import { updateItemInCart } from "@/lib/shopify/api/cart";
 import { cookies } from "next/headers";
 
 export const updateItemAction = async (formData: FormData) => {

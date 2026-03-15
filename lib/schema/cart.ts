@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MONEY_SCHEMA } from "./moneySchema";
+import { MONEY_SCHEMA } from "./money";
 
 export const CART_LINE_SCHEMA = z.object({
   id: z.string(),

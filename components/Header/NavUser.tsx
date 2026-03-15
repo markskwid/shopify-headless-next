@@ -1,14 +1,14 @@
 "use client";
 
-import { MENU_TYPE } from "@/types/menuTypes";
+import { MENU_TYPE } from "@/types/menu";
 import { MobileNavigation } from "./MobileNavigation";
 import {
   AiOutlineSearch,
   AiOutlineShoppingCart,
   AiOutlineUser,
 } from "react-icons/ai";
-import { useCart } from "@/context/CartContext";
-import { useUI } from "@/context/UiContext";
+import { useCart } from "@/context/Cart";
+import { useUI } from "@/context/UserInterface";
 
 export const NavUser = ({ menu }: { menu: MENU_TYPE[] }) => {
   const { cart } = useCart();
@@ -40,7 +40,7 @@ export const NavUser = ({ menu }: { menu: MENU_TYPE[] }) => {
           <AiOutlineShoppingCart />
         </i>
 
-        {cart?.totalQuantity !== null && (
+        {(cart?.totalQuantity ?? 0) > 0 && (
           <span className="absolute -top-2 -right-2 bg-black text-white! rounded-full w-5 h-5 flex items-center justify-center text-xs">
             {cart?.totalQuantity}
           </span>

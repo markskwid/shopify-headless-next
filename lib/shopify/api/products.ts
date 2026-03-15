@@ -1,18 +1,15 @@
 import "server-only";
 
-import { API_RESPONSE } from "./../../../types/responseTypes";
+import { API_RESPONSE } from "../../../types/response";
 import { FETCH_PRODUCT_BY_HANDLE, FETCH_PRODUCTS } from "@/graphql/queries";
 import { client } from "../client";
 import { cache } from "react";
 import {
   PRODUCT_DETAIL_RESPONSE_SCHEMA,
   PRODUCT_LISTING_RESPONSE_SCHEMA,
-} from "../../schema/productSchema";
+} from "../../schema/product";
 import { normalizeError } from "@/utils/normalizeErrors";
-import {
-  PRODUCT_DETAIL_TYPE,
-  PRODUCT_LISTING_TYPE,
-} from "@/types/productsTypes";
+import { PRODUCT_DETAIL_TYPE, PRODUCT_LISTING_TYPE } from "@/types/product";
 import { unstable_cache } from "next/cache";
 
 //cached get all products

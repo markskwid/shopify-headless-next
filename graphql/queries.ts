@@ -96,7 +96,30 @@ export const FETCH_COLLECTIONS = `
 `;
 
 /**
- * get featured collection 
+ * get social medias
+ * this require a metaobject type social_media
+ * field 
+ * -Platform
+ * -URL
+ */
+
+export const FETCH_SOCIAL_MEDIA = `
+query SocialMedia {
+  metaobjects(type: "social_media", first: 10) {
+    nodes {
+      id
+      handle
+      fields {
+        key
+        value
+      }
+    }
+  }
+}`;
+
+
+/**
+ * get featured collection
  * this require a metaobject type featured-collection
  * field name must be Collections and type is list of collections
  */

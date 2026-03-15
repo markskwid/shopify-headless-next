@@ -1,7 +1,7 @@
 import {
   COLLECTION_DETAIL_SCHEMA,
   COLLECTION_SCHEMA,
-} from "@/lib/schema/collectionSchema";
+} from "@/lib/schema/collection";
 import { z } from "zod";
 
 export type COLLECTION_TYPE = z.infer<typeof COLLECTION_SCHEMA>;

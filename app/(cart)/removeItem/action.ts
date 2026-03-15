@@ -1,5 +1,5 @@
 "use server";
-import { removeItemInCart } from "@/lib/shopify/api/carts";
+import { removeItemInCart } from "@/lib/shopify/api/cart";
 import { cookies } from "next/headers";
 
 export const removeItemAction = async (formData: FormData) => {

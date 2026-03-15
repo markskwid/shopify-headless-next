@@ -1,11 +1,11 @@
 "use client";
 
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/context/Cart";
 import { formatPrice } from "@/utils/formatPricing";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { LineItems } from "./LineItems";
 import { ReactNode, useEffect } from "react";
-import { useUI } from "@/context/UiContext";
+import { useUI } from "@/context/UserInterface";
 
 export const CartSlider = () => {
   const { cart } = useCart();

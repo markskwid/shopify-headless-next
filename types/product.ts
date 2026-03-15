@@ -2,8 +2,8 @@ import {
   PRODUCT_DETAIL_SCHEMA,
   PRODUCT_SCHEMA,
   PRODUCT_LISTING_RESPONSE_SCHEMA,
-} from "@/lib/schema/productSchema";
-import { VARIANT_SCHEMA } from "@/lib/schema/variantSchema";
+} from "@/lib/schema/product";
+import { VARIANT_SCHEMA } from "@/lib/schema/variant";
 import { z } from "zod";
 
 export type PRODUCT_LISTING_TYPE = z.infer<typeof PRODUCT_SCHEMA>;

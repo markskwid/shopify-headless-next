@@ -1,4 +1,4 @@
-import { MENU_TYPE } from "@/types/menuTypes";
+import { MENU_TYPE } from "@/types/menu";
 import z from "zod";
 
 export const MENU_SCHEMA: z.ZodType<any> = z.lazy(() =>
