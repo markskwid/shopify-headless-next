@@ -24,17 +24,17 @@ export const registerThenLoginAction = async (formData: FormData) => {
 
       if (loginResult.success) {
         const cookieStore = await cookies();
-        cookieStore.set("customerAccessToken", loginResult.customerToken!, {
+        cookieStore.set("customerAccessToken", loginResult.data?.accessToken!, {
           httpOnly: true,
           secure: true,
           sameSite: "lax",
-          expires: new Date(loginResult.expiresAt!),
+          expires: new Date(loginResult.data?.expiresAt!),
         });
 
         return {
           success: true,
-          customerToken: loginResult.customerToken,
-          expiresAt: loginResult.expiresAt,
+          customerToken: loginResult.data?.accessToken,
+          expiresAt: loginResult.data?.expiresAt,
           errors: null,
         };
         

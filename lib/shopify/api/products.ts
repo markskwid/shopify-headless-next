@@ -10,71 +10,65 @@ import {
 } from "../../schema/product";
 import { normalizeError } from "@/utils/normalizeErrors";
 import { PRODUCT_DETAIL_TYPE, PRODUCT_LISTING_TYPE } from "@/types/product";
-import { unstable_cache } from "next/cache";
+import { cacheLife, cacheTag, unstable_cache } from "next/cache";
 
-//cached get all products
-const getProductsCached = unstable_cache(
-  async (
-    sortKey?: string,
-    reverse?: boolean,
-  ): Promise<API_RESPONSE<PRODUCT_LISTING_TYPE[]>> => {
-    try {
-      const { data, errors } = await client.request(FETCH_PRODUCTS, {
-        variables: {
-          sortKey,
-          reverse,
-        },
-      });
+//Get all products
+export const getProducts = async (
+  sortKey?: string,
+  reverse?: boolean,
+): Promise<API_RESPONSE<PRODUCT_LISTING_TYPE[]>> => {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("products");
+  try {
+    const { data, errors } = await client.request(FETCH_PRODUCTS, {
+      variables: {
+        sortKey,
+        reverse,
+      },
+    });
 
-      if (errors) {
-        console.log("Graphql Errors", errors);
-        return {
-          success: false,
-          data: [],
-          pageInfo: null,
-          errors: normalizeError(errors),
-        };
-      }
-
-      const parsed = PRODUCT_LISTING_RESPONSE_SCHEMA.safeParse(data.products);
-
-      if (!parsed.success) {
-        console.error(parsed.error);
-        return {
-          success: false,
-          data: [],
-          pageInfo: null,
-          errors: normalizeError(parsed.error),
-        };
-      }
-
-      return {
-        success: true,
-        data: parsed.data.edges.map((edge) => edge.node),
-        pageInfo: parsed.data.pageInfo ? parsed.data.pageInfo : null,
-        errors: null,
-      };
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error(error.message);
-      }
-
+    if (errors) {
+      console.log("Graphql Errors", errors);
       return {
         success: false,
         data: [],
         pageInfo: null,
-        errors: normalizeError(error),
+        errors: normalizeError(errors),
       };
     }
-  },
-  ["products"],
-  {
-    revalidate: 600,
-  },
-);
 
-//Get all products
-export const getProducts = getProductsCached;
+    const parsed = PRODUCT_LISTING_RESPONSE_SCHEMA.safeParse(data.products);
+
+    if (!parsed.success) {
+      console.error(parsed.error);
+      return {
+        success: false,
+        data: [],
+        pageInfo: null,
+        errors: normalizeError(parsed.error),
+      };
+    }
+
+    return {
+      success: true,
+      data: parsed.data.edges.map((edge) => edge.node),
+      pageInfo: parsed.data.pageInfo ? parsed.data.pageInfo : null,
+      errors: null,
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+
+    return {
+      success: false,
+      data: [],
+      pageInfo: null,
+      errors: normalizeError(error),
+    };
+  }
+};
 
 //Get product by handle
 export const getProductByHandle = cache(

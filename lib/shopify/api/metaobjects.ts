@@ -2,29 +2,14 @@ import "server-only";
 import { client } from "../client";
 import { normalizeError } from "@/utils/normalizeErrors";
 import { FETCH_SOCIAL_MEDIA } from "@/graphql/queries";
-import { z } from "zod";
-
-const METAOBJECT_SCHEMA = z.object({
-  fields: z
-    .array(
-      z.object({
-        key: z.string(),
-        value: z.string(),
-      }),
-    )
-    .default([])
-    .nullable(),
-  handle: z.string(),
-  id: z.string(),
-});
-
-const SOCIAL_MEDIA_RESPONSE_SCHEMA = z.object({
-  metaobjects: z.object({
-    nodes: z.array(METAOBJECT_SCHEMA).default([]).nullable(),
-  }),
-});
+import { cacheTag, cacheLife } from "next/cache";
+import { SOCIAL_MEDIA_RESPONSE_SCHEMA } from "@/lib/schema/metaobjects";
 
 export const getSocialMedias = async () => {
+  "use cache";
+  cacheLife("weeks");
+  cacheTag("social-medias");
+
   try {
     const { data, errors } = await client.request(FETCH_SOCIAL_MEDIA);
 

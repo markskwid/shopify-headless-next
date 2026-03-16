@@ -2,7 +2,11 @@
 import { MENU_TYPE } from "@/types/menu";
 import Link from "next/link";
 import { useState } from "react";
-import { AiFillCaretDown, AiOutlineArrowLeft } from "react-icons/ai";
+import {
+  AiFillCaretDown,
+  AiOutlineArrowLeft,
+  AiOutlineClose,
+} from "react-icons/ai";
 import { AiOutlineMenu } from "react-icons/ai";
 export const MobileNavigation = ({ menu }: { menu: MENU_TYPE[] }) => {
   const [openNavId, setOpenNavId] = useState<string | null>();
@@ -16,25 +20,24 @@ export const MobileNavigation = ({ menu }: { menu: MENU_TYPE[] }) => {
 
   return (
     <>
-      <button onClick={toggleNavigation} className="inline-block md:hidden">
+      <button onClick={toggleNavigation} className="inline-block lg:hidden">
         <i>
           <AiOutlineMenu />
         </i>
       </button>
       <div
-        className={`md:hidden min-h-screen z-10 w-screen fixed top-0 left-0 right-0 bg-black/20 delay-150 duration-700 transition-normal ${openNavigation ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+        className={`lg:hidden min-h-screen z-10 w-screen fixed top-0 left-0 right-0 bg-black/20 duration-75 transition-normal ${openNavigation ? "opacity-100 pointer-events-auto delay-0" : "opacity-0 pointer-events-none delay-200"}`}
       >
         <div
-          className={`bg-white absolute bottom-0 ${openNavigation ? "translate-x-0" : "-translate-x-full"} pb-10 h-full w-75 max-w-125 px-5 rounded-r-3xl transition-normal delay-150 duration-300 ease-in-out`}
+          className={`bg-white absolute bottom-0 ${openNavigation ? "translate-x-0 delay-100" : "-translate-x-full delay-0"} pb-10 h-full w-75 max-w-125 px-5 transition-normal duration-200 ease-out`}
         >
           <button
             onClick={toggleNavigation}
-            className="mt-5 text-sm uppercase text-red-400 flex justify-start items-center gap-1"
+            className="mt-5 text-sm uppercase text-red-400 flex justify-start items-center gap-1 border border-black bg-black"
           >
             <i>
-              <AiOutlineArrowLeft />
+              <AiOutlineClose size={20} />
             </i>
-            Close Menu
           </button>
           <nav>
             {menu && (

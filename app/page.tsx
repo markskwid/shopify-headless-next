@@ -6,7 +6,6 @@ import { getProducts } from "@/lib/shopify/api/products";
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { getSocialMedias } from "@/lib/shopify/api/metaobjects";
 
 export default async function Home({
   searchParams,
@@ -21,29 +20,27 @@ export default async function Home({
         ? "PRICE"
         : undefined;
   const reverse = params.order === "desc";
-  const [products, collections, socialMedias] = await Promise.all([
+  const [products, collections] = await Promise.all([
     getProducts(sortKey, reverse),
     getFeaturedCollections(),
-    getSocialMedias(),
   ]);
 
-  console.log(socialMedias);
 
   return (
     <PageWrapper>
       <Suspense fallback={<ProductListSkeleton />}>
         <ProductList products={products.data ?? []} />
         <section className="mt-20" aria-label="Featured Categories">
-          <div className="flex-start items-start lg:flex lg:space-x-5">
+          <div className="flex-start items-start flex flex-col space-y-10 lg:flex-row lg:space-x-5">
             {collections.data &&
               collections.data.map((collection) => (
                 <Link
                   key={collection.title}
-                  href={collection.handle}
-                  className="group category w-1/2"
+                  href="#"
+                  className="group category w-full lg:w-1/2"
                 >
                   <article>
-                    <figure className="relative min-h-180 w-full overflow-hidden rounded-md">
+                    <figure className="relative min-h-52 lg:min-h-180 w-full overflow-hidden rounded-md">
                       <Image
                         fill
                         quality={100}

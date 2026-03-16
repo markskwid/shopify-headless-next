@@ -12,17 +12,17 @@ export const loginAction = async (formData: FormData) => {
 
     if (result.success) {
       const cookieStore = await cookies();
-      cookieStore.set("customerAccessToken", result.customerToken!, {
+      cookieStore.set("customerAccessToken", result.data?.accessToken!, {
         httpOnly: true,
         secure: true,
         sameSite: "lax",
-        expires: new Date(result.expiresAt!),
+        expires: new Date(result.data?.expiresAt!),
       });
 
       return {
         success: true,
-        customerToken: result.customerToken,
-        expiresAt: result.expiresAt,
+        customerToken: result.data?.accessToken,
+        expiresAt: result.data?.expiresAt,
         errors: null,
       };
     }

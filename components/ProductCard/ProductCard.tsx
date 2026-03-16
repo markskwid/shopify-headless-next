@@ -4,7 +4,7 @@ import { ImageAndSwatches } from "./ImageAndSwatches";
 
 export const ProductCard = ({ product }: { product: PRODUCT_LISTING_TYPE }) => {
   return (
-    <div key={product.id} className="group md:flex-[48%] lg:flex-[24%] z-10">
+    <div key={product.id} className="group flex-[100%] md:flex-[48%] lg:flex-[24%] z-10">
       <ImageAndSwatches product={product} />
       <h3 className="text-center font-semibold mt-2 text-xl">
         {product.title}

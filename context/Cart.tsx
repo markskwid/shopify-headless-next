@@ -23,14 +23,14 @@ const CartContext = createContext<CART_CONTEXT_TYPE | undefined>(undefined);
 
 interface CART_PROVIDER_PROPS {
   children: ReactNode;
-  initialCart: CART_TYPE;
+  initialCart: CART_TYPE | null;
 }
 
 export const CartProvider = ({
   initialCart,
   children,
 }: CART_PROVIDER_PROPS) => {
-  const [cart, setCartState] = useState<CART_TYPE>(initialCart);
+  const [cart, setCartState] = useState<CART_TYPE | null>(initialCart);
   const [addingVariant, setAddingVariant] = useState<string | null>(null);
   const { toggleCart } = useUI();
 

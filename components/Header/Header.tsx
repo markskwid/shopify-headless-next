@@ -1,4 +1,4 @@
-import { getMenuByHandle } from "@/lib/shopify/api/menus";
+import { getMenuByHandle } from "@/lib/shopify/api/menu";
 import { MENU_TYPE } from "@/types/menu";
 import { API_RESPONSE } from "@/types/response";
 

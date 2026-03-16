@@ -14,7 +14,7 @@ import {
 import { API_RESPONSE } from "@/types/response";
 import { COLLECTION_DETAIL_TYPE, COLLECTION_TYPE } from "@/types/collection";
 import { normalizeError } from "@/utils/normalizeErrors";
-import { unstable_cache } from "next/cache";
+import { cacheLife, cacheTag, unstable_cache } from "next/cache";
 
 //Get all collections
 export const getCollections = async (): Promise<
@@ -123,61 +123,57 @@ export const getCollectionByHandle = async (
   }
 };
 
-// cached featured collections
-export const getFeaturedCollectionsCached = unstable_cache(
-  async (): Promise<API_RESPONSE<COLLECTION_TYPE[]>> => {
-    try {
-      const { data, errors } = await client.request(FETCH_FEATURED_COLLECTIONS);
+// get featured collections
+export const getFeaturedCollections = async (): Promise<
+  API_RESPONSE<COLLECTION_TYPE[]>
+> => {
+  "use cache";
+  cacheLife("weeks");
+  cacheTag("featured-collections");
+  try {
+    const { data, errors } = await client.request(FETCH_FEATURED_COLLECTIONS);
 
-      if (errors) {
-        console.log("Graphql Errors", errors);
-        return {
-          success: false,
-          data: [],
-          pageInfo: null,
-          errors: normalizeError(errors),
-        };
-      }
-
-      const parsed = COLLECTION_FEATURED_RESPONSE_SCHEMA.safeParse(data);
-
-      if (!parsed.success || !parsed.data) {
-        console.error("Error getting collections", parsed.error);
-        return {
-          success: false,
-          data: null,
-          errors: normalizeError(parsed.error),
-          warnings: null,
-        };
-      }
-
-      const featuredCollections =
-        parsed.data.metaobjects.nodes[0].fields[0].references.nodes;
-
-      return {
-        success: !!parsed.data,
-        data: featuredCollections ?? null,
-        errors: null,
-        warnings: null,
-      };
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error(error.message);
-      }
-
+    if (errors) {
+      console.log("Graphql Errors", errors);
       return {
         success: false,
         data: [],
         pageInfo: null,
-        errors: normalizeError(error),
+        errors: normalizeError(errors),
       };
     }
-  },
-  ["featured-collections"],
-  {
-    revalidate: 600,
-  },
-);
 
-// get featured collections
-export const getFeaturedCollections = getFeaturedCollectionsCached;
+    const parsed = COLLECTION_FEATURED_RESPONSE_SCHEMA.safeParse(data);
+
+    if (!parsed.success || !parsed.data) {
+      console.error("Error getting collections", parsed.error);
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(parsed.error),
+        warnings: null,
+      };
+    }
+
+    const featuredCollections =
+      parsed.data.metaobjects.nodes[0].fields[0].references.nodes;
+
+    return {
+      success: !!parsed.data,
+      data: featuredCollections ?? null,
+      errors: null,
+      warnings: null,
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+
+    return {
+      success: false,
+      data: [],
+      pageInfo: null,
+      errors: normalizeError(error),
+    };
+  }
+};
