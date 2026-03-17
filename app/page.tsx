@@ -18,13 +18,12 @@ export default async function Home({
       ? "TITLE"
       : params.orderBy === "price"
         ? "PRICE"
-        : undefined;
+        : "CREATED_AT";
   const reverse = params.order === "desc";
   const [products, collections] = await Promise.all([
     getProducts(sortKey, reverse),
     getFeaturedCollections(),
   ]);
-
 
   return (
     <PageWrapper>

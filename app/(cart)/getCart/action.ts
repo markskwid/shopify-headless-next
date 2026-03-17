@@ -6,13 +6,20 @@ import { cookies } from "next/headers";
 export const getCartAction = async () => {
   try {
     let cookieStore = await cookies();
-
     let cartId = cookieStore.get("cartId")?.value as string;
+
+    if (!cartId) {
+      return {
+        success: false,
+        data: null,
+        errors: ["No cart id"],
+        warnings: null,
+      };
+    }
 
     let cart = await getCart(cartId);
 
     if (!cart.success) {
-      console.log("Error getting cart", cart.errors);
       return {
         success: false,
         data: null,

@@ -6,7 +6,7 @@ import { CartProvider } from "@/context/Cart";
 import { getCartAction } from "./(cart)/getCart/action";
 import { CartSlider } from "@/components/CartSlider/CartSlider";
 import { UIProvider } from "@/context/UserInterface";
-import { Footer } from "@/components/Footer";
+import { Footer } from "@/components/Footer/Footer";
 import { Suspense } from "react";
 
 const interFont = Inter({
@@ -23,7 +23,6 @@ export const metadata: Metadata = {
 async function CartInitializer({ children }: { children: React.ReactNode }) {
   const cart = await getCartAction();
   if (!cart.success || !cart.data) {
-    console.log("No cart id");
   }
 
   const initialCartData = cart.data;

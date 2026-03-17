@@ -49,9 +49,18 @@ export const getCart = async (
 
     const cart = parsed.data.cart;
 
+    if (!cart) {
+      console.log("ERRRRORRR");
+      return {
+        success: false,
+        data: null,
+        errors: ["Cart not found or expired"],
+      };
+    }
+
     return {
-      success: !!cart,
-      data: cart ? cart : null,
+      success: true,
+      data: cart,
       errors: null,
     };
   } catch (error: unknown) {

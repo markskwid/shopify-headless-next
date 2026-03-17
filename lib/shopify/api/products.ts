@@ -19,7 +19,7 @@ export const getProducts = async (
 ): Promise<API_RESPONSE<PRODUCT_LISTING_TYPE[]>> => {
   "use cache";
   cacheLife("hours");
-  cacheTag("products");
+  cacheTag(`products-${sortKey}-${String(reverse)}`);
   try {
     const { data, errors } = await client.request(FETCH_PRODUCTS, {
       variables: {
