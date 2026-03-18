@@ -43,7 +43,7 @@ export const Footer = async () => {
   };
 
   return (
-    <footer className="w-full p-5 pb-2 border-t-2">
+    <footer className="w-full p-5 pb-2 border-t-2 min-h-52">
       <div className="max-w-360 mx-auto my-5 pb-8 flex flex-col justify-start items-start lg:flex-row [&>div]:my-5 [&>div]:lg:my-0">
         <div className="w-full flex-[100%] lg:flex-[33.33%]">
           <div className="social-icons flex justify-start items-center space-x-1.5">

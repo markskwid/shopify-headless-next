@@ -10,7 +10,7 @@ import {
 } from "../../schema/product";
 import { normalizeError } from "@/utils/normalizeErrors";
 import { PRODUCT_DETAIL_TYPE, PRODUCT_LISTING_TYPE } from "@/types/product";
-import { cacheLife, cacheTag, unstable_cache } from "next/cache";
+import { cacheLife, cacheTag, revalidateTag } from "next/cache";
 
 //Get all products
 export const getProducts = async (
@@ -18,8 +18,9 @@ export const getProducts = async (
   reverse?: boolean,
 ): Promise<API_RESPONSE<PRODUCT_LISTING_TYPE[]>> => {
   "use cache";
-  cacheLife("hours");
-  cacheTag(`products-${sortKey}-${String(reverse)}`);
+  cacheLife("minutes");
+  const key = `products-${sortKey ?? "CREATED_AT"}-${reverse ?? false}`;
+  cacheTag(key);
   try {
     const { data, errors } = await client.request(FETCH_PRODUCTS, {
       variables: {

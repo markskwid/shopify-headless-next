@@ -2,7 +2,7 @@ const PAGE_SIZE = 12;
 
 export const ProductListSkeleton = () => {
   return (
-    <div className="flex flex-wrap justify-start items-start space-x-2 space-y-5">
+    <div className="flex flex-wrap justify-start items-start space-x-2 space-y-5 min-h-screen">
       {Array.from({ length: PAGE_SIZE }).map((_, index) => (
         <div
           key={index}

@@ -1,32 +1,53 @@
 "use client";
+
 import { useSearchParams, useRouter } from "next/navigation";
+import { useState, useEffect, useTransition } from "react";
 
 export const Sort = () => {
   const router = useRouter();
   const params = useSearchParams();
+  const [isPending, startTransition] = useTransition();
+
+  const getValueFromParams = () => {
+    return params.get("orderBy") && params.get("order")
+      ? `${params.get("orderBy")}-${params.get("order")}`
+      : "";
+  };
+
+  const [localValue, setLocalValue] = useState(getValueFromParams());
+
+  useEffect(() => {
+    setLocalValue(getValueFromParams());
+  }, [params]);
 
   const handleSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const optionEl = e.target.value;
+    const value = e.target.value;
+    setLocalValue(value);
+
     const newParams = new URLSearchParams(params.toString());
 
-    if (!optionEl) {
+    if (!value) {
       newParams.delete("orderBy");
       newParams.delete("order");
     } else {
-      const [field, value] = e.target.value.split("-");
+      const [field, order] = value.split("-");
       newParams.set("orderBy", field);
-      newParams.set("order", value);
+      newParams.set("order", order);
     }
 
-    router.replace(`/?${newParams.toString()}`);
+    startTransition(() => {
+      router.replace(`/?${newParams.toString()}`, { scroll: false });
+    });
   };
+
   return (
     <select
+      value={localValue}
       name="sort-products"
       id="sort-products"
-      className="border rounded-md px-4 py-2"
+      disabled={isPending}
+      className={`border rounded-md px-4 py-2 ${isPending ? "opacity-50 cursor-not-allowed" : ""}`}
       onChange={handleSort}
-      defaultValue={params.get("order") ?? ""}
     >
       <option value="">Sort Products</option>
       <option value="name-asc">Name Ascending</option>

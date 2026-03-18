@@ -7,7 +7,7 @@ export const ProductList = ({
   products: PRODUCT_LISTING_TYPE[];
 }) => {
   return (
-    <section aria-label="Product Listing" className="">
+    <section aria-label="Product Listing" className="min-h-screen">
       <div className="w-full mb-5 flex justify-end items-center px-2">
         <Sort />
       </div>

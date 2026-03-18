@@ -44,7 +44,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${interFont.variable} font-sans antialiased`}>
         <UIProvider>
-          <Suspense fallback={null}>
+          <Suspense fallback={<div className="min-h-screen"></div>}>
             <CartInitializer>{children}</CartInitializer>
           </Suspense>
         </UIProvider>
