@@ -1,3 +1,4 @@
+import "server-only";
 import { client } from "../client";
 import { CREATE_CUSTOMER, CUSTOMER_LOGIN } from "@/graphql/mutations";
 import {

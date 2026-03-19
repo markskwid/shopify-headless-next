@@ -98,7 +98,29 @@ export const FETCH_COLLECTIONS = `
 /**
  * get social medias
  * this require a metaobject type social_media
- * field 
+ * field
+ * -Platform
+ * -URL
+ */
+
+export const FETCH_HOMEPAGE_BANNER = `
+query HomepageBanner {
+  metaobjects(type: "homepage_banner", first: 10) {
+    nodes {
+      id
+      handle
+      fields {
+        key
+        value
+      }
+    }
+  }
+}`;
+
+/**
+ * get social medias
+ * this require a metaobject type social_media
+ * field
  * -Platform
  * -URL
  */
@@ -116,7 +138,6 @@ query SocialMedia {
     }
   }
 }`;
-
 
 /**
  * get featured collection
@@ -194,5 +215,28 @@ ${FRAGMENT_CART_ITEM}
  query GET_CART($cartId: ID!) {
   cart(id: $cartId) {
      ...CART_FIELD
+  }
+}`;
+
+//predictive search result
+export const PREDICTIVE_SEARCH = `
+query PredictiveProductSearch($query: String!, $limit: Int = 10) {
+  predictiveSearch(
+    query: $query
+    limit: $limit
+    types: [PRODUCT]
+  ) {
+    products {
+      id
+      title
+      handle
+      featuredImage {
+        id
+        url
+        altText
+      }
+
+      availableForSale
+    }
   }
 }`;

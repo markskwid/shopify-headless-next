@@ -4,8 +4,10 @@ import { createContext, useState, ReactNode, useContext } from "react";
 
 type UI_CONTEXT_TYPE = {
   isCartOpen: boolean;
+  isMobileMenuOpen: boolean;
   toggleCart(): void;
   handleOverlayClick(e: React.MouseEvent<HTMLDivElement>): void;
+  toggleMobileNavigation(): void;
 };
 
 const UIContext = createContext<UI_CONTEXT_TYPE | undefined>(undefined);
@@ -24,12 +26,18 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const toggleMobileNavigation = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   return (
     <UIContext.Provider
       value={{
         handleOverlayClick,
         isCartOpen,
         toggleCart,
+        toggleMobileNavigation,
+        isMobileMenuOpen,
       }}
     >
       {children}

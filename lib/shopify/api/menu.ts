@@ -1,4 +1,4 @@
-import { cache } from "react";
+import "server-only";
 import { client } from "../client";
 import { GET_MENU_BY_HANDLE } from "@/graphql/queries";
 import { MENU_RESPONSE_SCHEMA } from "@/lib/schema/menu";

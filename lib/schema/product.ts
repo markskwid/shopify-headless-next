@@ -10,10 +10,12 @@ export const PRODUCT_SCHEMA = z.object({
   description: z.string(),
   vendor: z.string().optional().nullable(),
   totalInventory: z.number().optional().nullable(),
+  availableForSale: z.boolean().optional(),
   featuredImage: z
     .object({
       id: z.string(),
       url: z.string(),
+      altText: z.string().optional().nullable(),
     })
     .optional()
     .nullable(),
@@ -32,6 +34,15 @@ export const PRODUCT_SCHEMA = z.object({
     })
     .optional()
     .nullable(),
+});
+
+//product search schema
+export const PRODUCT_SEARCH_SCHEMA = PRODUCT_SCHEMA.pick({
+  id: true,
+  title: true,
+  handle: true,
+  featuredImage: true,
+  availableForSale: true,
 });
 
 // connection for graphql response

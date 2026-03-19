@@ -2,10 +2,12 @@ import {
   PRODUCT_DETAIL_SCHEMA,
   PRODUCT_SCHEMA,
   PRODUCT_LISTING_RESPONSE_SCHEMA,
+  PRODUCT_SEARCH_SCHEMA,
 } from "@/lib/schema/product";
 import { VARIANT_SCHEMA } from "@/lib/schema/variant";
 import { z } from "zod";
 
+export type PRODUCT_SEARCH_TYPE = z.infer<typeof PRODUCT_SEARCH_SCHEMA>;
 export type PRODUCT_LISTING_TYPE = z.infer<typeof PRODUCT_SCHEMA>;
 export type PRODUCT_DETAIL_TYPE = z.infer<typeof PRODUCT_DETAIL_SCHEMA>;
 export type PRODUCT_CONNECTION_TYPE = z.infer<

@@ -1,38 +1,28 @@
 "use client";
+import { useUI } from "@/context/UserInterface";
 import { MENU_TYPE } from "@/types/menu";
 import Link from "next/link";
 import { useState } from "react";
-import {
-  AiFillCaretDown,
-  AiOutlineArrowLeft,
-  AiOutlineClose,
-} from "react-icons/ai";
-import { AiOutlineMenu } from "react-icons/ai";
-export const MobileNavigation = ({ menu }: { menu: MENU_TYPE[] }) => {
+import { AiFillCaretDown, AiOutlineClose } from "react-icons/ai";
+
+export const MobileNavigation = ({ menu }: { menu: MENU_TYPE }) => {
   const [openNavId, setOpenNavId] = useState<string | null>();
-  const [openNavigation, setOpenNavigation] = useState(false);
+  const { isMobileMenuOpen, toggleMobileNavigation } = useUI();
 
   const toggleMenu = (id: string) => {
     setOpenNavId((prev) => (prev === id ? null : id));
   };
 
-  const toggleNavigation = () => setOpenNavigation(!openNavigation);
-
   return (
     <>
-      <button onClick={toggleNavigation} className="inline-block lg:hidden">
-        <i>
-          <AiOutlineMenu />
-        </i>
-      </button>
       <div
-        className={`lg:hidden min-h-screen z-10 w-screen fixed top-0 left-0 right-0 bg-black/20 duration-75 transition-normal ${openNavigation ? "opacity-100 pointer-events-auto delay-0" : "opacity-0 pointer-events-none delay-200"}`}
+        className={`lg:hidden min-h-screen z-10 w-screen fixed top-0 left-0 right-0 bg-black/20 duration-75 transition-normal ${isMobileMenuOpen ? "opacity-100 pointer-events-auto delay-0" : "opacity-0 pointer-events-none delay-200"}`}
       >
         <div
-          className={`bg-white absolute bottom-0 ${openNavigation ? "translate-x-0 delay-100" : "-translate-x-full delay-0"} pb-10 h-full w-75 max-w-125 px-5 transition-normal duration-200 ease-out`}
+          className={`bg-white absolute bottom-0 ${isMobileMenuOpen ? "translate-x-0 delay-100" : "-translate-x-full delay-0"} pb-10 h-full w-75 max-w-125 px-5 transition-normal duration-200 ease-out`}
         >
           <button
-            onClick={toggleNavigation}
+            onClick={toggleMobileNavigation}
             className="mt-5 text-sm uppercase text-red-400 flex justify-start items-center gap-1 border border-black bg-black"
           >
             <i>

@@ -1,3 +1,4 @@
+import "server-only";
 import {
   CART_LINES_REMOVE,
   CART_LINES_UPDATE,

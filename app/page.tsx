@@ -6,6 +6,8 @@ import { getProducts } from "@/lib/shopify/api/products";
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Sort } from "@/components/ProductList/Sort";
+import { searchResults } from "@/lib/shopify/api/search";
 
 async function ProductSection({
   sortKey,
@@ -15,7 +17,11 @@ async function ProductSection({
   reverse: boolean;
 }) {
   const products = await getProducts(sortKey, reverse);
-  return <ProductList products={products.data ?? []} />;
+  return (
+    <>
+      <ProductList products={products.data ?? []} />
+    </>
+  );
 }
 
 async function CollectionsSection() {
@@ -57,12 +63,13 @@ async function CollectionsSection() {
     </section>
   );
 }
+
 export default async function Home({
   searchParams,
 }: {
   searchParams: Promise<{ orderBy?: string; order?: string }>;
 }) {
-  const params = await searchParams; // Next 15 requires awaiting searchParams
+  const params = await searchParams;
 
   const sortKey =
     params.orderBy === "name"
@@ -75,12 +82,51 @@ export default async function Home({
   return (
     <PageWrapper>
       <>
-        <Suspense
-          key={`${sortKey}-${reverse}`}
-          fallback={<ProductListSkeleton />}
+        <section
+          aria-label="Homepage banner"
+          className="rounded-md relative mb-10 w-full h-120 overflow-hidden"
         >
-          <ProductSection sortKey={sortKey} reverse={reverse} />
-        </Suspense>
+          <div className="w-full relative overflow-hidden h-full">
+            <Image
+              quality={100}
+              loading="eager"
+              preload={true}
+              className="object-cover"
+              alt="Banner image"
+              fill
+              src={
+                "https://cdn.shopify.com/s/files/1/0805/0642/1503/files/banner-image-for-with-light-caramelize-and-wavy-background-with-shirts-and-jacket-that-will-be-featured-and-positioned-in-the-right-side.png?v=1773900624"
+              }
+            />
+          </div>
+
+          <div className="z-50 absolute max-w-100 left-10 top-1/2 -translate-y-1/2">
+            <h1 className="font-bold text-5xl mb-2 leading-12">
+              Launch your store in minutes.
+            </h1>
+            <p className="text-xl text-neutral-700!">
+              Stripe-native. Built for the agentic future.
+            </p>
+
+            <Link
+              className="mt-4 block text-center w-max rounded-full bg-black text-white! py-2 px-5"
+              href={"#"}
+            >
+              Try it today
+            </Link>
+          </div>
+        </section>
+        <>
+          <div className="w-full mb-5 flex justify-end items-center px-2">
+            <Sort />
+          </div>
+          <Suspense
+            key={`${sortKey}-${reverse}`}
+            fallback={<ProductListSkeleton />}
+          >
+            <ProductSection sortKey={sortKey} reverse={reverse} />
+          </Suspense>
+        </>
 
         <Suspense
           fallback={
