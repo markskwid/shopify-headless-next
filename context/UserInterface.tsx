@@ -5,6 +5,8 @@ import { createContext, useState, ReactNode, useContext } from "react";
 type UI_CONTEXT_TYPE = {
   isCartOpen: boolean;
   isMobileMenuOpen: boolean;
+  isSearchBarOpen: boolean;
+  toggleSearchBar(): void;
   toggleCart(): void;
   handleOverlayClick(e: React.MouseEvent<HTMLDivElement>): void;
   toggleMobileNavigation(): void;
@@ -15,10 +17,15 @@ const UIContext = createContext<UI_CONTEXT_TYPE | undefined>(undefined);
 export const UIProvider = ({ children }: { children: ReactNode }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
 
   const toggleCart = () => {
     setIsCartOpen((prev) => !prev);
   };
+
+  const toggleSearchBar = () => {
+    setIsSearchBarOpen((prev) => !prev);
+  }
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -35,6 +42,8 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
       value={{
         handleOverlayClick,
         isCartOpen,
+        isSearchBarOpen,
+        toggleSearchBar,
         toggleCart,
         toggleMobileNavigation,
         isMobileMenuOpen,

@@ -8,89 +8,29 @@ import {
 } from "react-icons/ai";
 import { useCart } from "@/context/Cart";
 import { useUI } from "@/context/UserInterface";
-import { useEffect, useState } from "react";
-import { searchResults } from "@/lib/shopify/api/search";
-import { PRODUCT_SEARCH_TYPE } from "@/types/product";
-import Link from "next/link";
-import Image from "next/image";
+import { SearchBar } from "./Search";
+import useMediaQuery from "@/lib/responsiveness/useMediaQuery";
 
 export const NavUser = () => {
   const { cart } = useCart();
-  const { toggleCart, toggleMobileNavigation } = useUI();
+  const {
+    toggleCart,
+    toggleMobileNavigation,
+    isSearchBarOpen,
+    toggleSearchBar,
+  } = useUI();
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchData, setSearchData] = useState<PRODUCT_SEARCH_TYPE[] | null>(
-    null,
-  );
-
-  useEffect(() => {
-    if (!searchQuery) {
-      setSearchData(null);
-      return;
-    }
-
-    const getSearchData = async () => {
-      const res = await searchResults(searchQuery);
-      if (!res.success && !res.data) return;
-
-      setSearchData(res.data);
-    };
-
-    const timeout = setTimeout(() => {
-      getSearchData();
-    }, 300);
-
-    return () => clearTimeout(timeout);
-  }, [searchQuery]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.currentTarget;
-    setSearchQuery(value);
-  };
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   return (
     <div className="flex justify-end items-center gap-3 [&_i]:text-2xl">
-      <div className="input-container absolute left-1/2 right-0 -translate-x-1/2 opacity-0 translate-y-full -bottom-10 w-[90%] md:relative md:translate-0 md:left-0 md:bottom-0 md:translate-y-0 md:opacity-100">
-        <form method="POST" className="">
-          <input
-            onChange={handleInputChange}
-            type="text"
-            tabIndex={1}
-            className="border bg-gray-300/50 rounded-md py-1 px-2 shadow-2xl w-full md:w-72"
-            placeholder="Search item"
-          />
-
-          <button type="submit" className="absolute right-2 top-1 align-middle">
-            <i>
-              <AiOutlineSearch />
-            </i>
-          </button>
-        </form>
-
-        {searchData && (
-          <div className="absolute bg-white w-full border border-gray-400 mt-2 rounded-md px-2 left-0 right-0">
-            {searchData.map((item: PRODUCT_SEARCH_TYPE) => (
-              <Link
-                key={item.id}
-                href={item.handle}
-                className="flex justify-start items-center my-2"
-              >
-                <div className="relative mr-2">
-                  <Image
-                    src={item.featuredImage?.url ?? ""}
-                    width="50"
-                    alt={item.title}
-                    height="50"
-                    loading={"lazy"}
-                  />
-                </div>
-                <p>{item.title}</p>
-              </Link>
-            ))}
-          </div>
-        )}
+      <div
+        className={`transition-none ${isMobile ? isSearchBarOpen ? "max-md:pointer-events-auto max-md:opacity-100 max-md:translate-y-0 max-md:duration-75 max-md:delay-0" : "max-md:opacity-0 max-md:-translate-y-full max-md:duration-100 max-md:delay-75 max-md:pointer-events-none" : ""} 
+          max-md:transition-[scale, transform] max-md:absolute max-md:-bottom-10 max-md:w-[92%] max-md:left-1/2 max-md:-translate-x-1/2`}
+      >
+        <SearchBar />
       </div>
-      <button className="md:hidden align-middle">
+      <button onClick={toggleSearchBar} className="md:hidden align-middle">
         <i>
           <AiOutlineSearch />
         </i>

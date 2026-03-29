@@ -16,10 +16,22 @@ export const MobileNavigation = ({ menu }: { menu: MENU_TYPE }) => {
   return (
     <>
       <div
-        className={`lg:hidden min-h-screen z-10 w-screen fixed top-0 left-0 right-0 bg-black/20 duration-75 transition-normal ${isMobileMenuOpen ? "opacity-100 pointer-events-auto delay-0" : "opacity-0 pointer-events-none delay-200"}`}
+        className={`lg:hidden min-h-screen z-10 w-screen fixed top-0 left-0 right-0 bg-black/20
+    max-lg:transition-opacity max-lg:duration-75
+    ${
+      isMobileMenuOpen
+        ? "opacity-100 pointer-events-auto max-lg:delay-0"
+        : "opacity-0 pointer-events-none max-lg:delay-200"
+    }`}
       >
         <div
-          className={`bg-white absolute bottom-0 ${isMobileMenuOpen ? "translate-x-0 delay-100" : "-translate-x-full delay-0"} pb-10 h-full w-75 max-w-125 px-5 transition-normal duration-200 ease-out`}
+          className={`bg-white absolute bottom-0 pb-10 h-full w-75 max-w-125 px-5
+      max-lg:transition-transform max-lg:duration-200 max-lg:ease-out
+      ${
+        isMobileMenuOpen
+          ? "translate-x-0 max-lg:delay-100"
+          : "-translate-x-full max-lg:delay-0"
+      }`}
         >
           <button
             onClick={toggleMobileNavigation}
