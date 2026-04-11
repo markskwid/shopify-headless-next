@@ -45,7 +45,7 @@ export const ImageAndSwatches = ({
 
   return (
     <>
-      <Link href={"#"}>
+      <Link href={`/product/${product.handle}`}>
         <figure className="min-h-42 h-100 p-4 bg-gray-400/20 rounded-sm relative overflow-hidden">
           <div className="absolute inset-2">
             <Image

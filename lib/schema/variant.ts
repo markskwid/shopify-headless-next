@@ -1,10 +1,6 @@
 import { z } from "zod";
 import { MONEY_SCHEMA } from "./money";
 
-/**
- * Zod reusable schema
- */
-
 export const VARIANT_SCHEMA = z.object({
   id: z.string(),
   title: z.string(),
@@ -19,7 +15,6 @@ export const VARIANT_SCHEMA = z.object({
     .nullable()
     .optional(),
   price: MONEY_SCHEMA.optional(),
-  quantityAvailable: z.number().optional(),
   selectedOptions: z
     .array(
       z.object({

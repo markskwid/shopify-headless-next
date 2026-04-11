@@ -26,17 +26,36 @@ export const FETCH_PRODUCTS = `
 
 // fetch product -- by handle (pdp)
 export const FETCH_PRODUCT_BY_HANDLE = `
-    ${FRAGMENT_PRODUCT_FIELDS}
     query FetchProductByHandle($handle: String!) {
         product(handle: $handle) {
-            ...ProductFields
-            variants(first: 10) {
+            id
+            title
+            handle
+            vendor
+            totalInventory
+            description
+            priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+            maxVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+            featuredImage{
+              id
+              url
+            }
+            variants(first: 20) {
             nodes {
                 id
                 sku
                 title
                 availableForSale
                 quantityAvailable
+                currentlyNotInStock
                 selectedOptions {
                 name
                 value

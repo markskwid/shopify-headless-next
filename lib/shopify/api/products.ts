@@ -72,52 +72,55 @@ export const getProducts = async (
 };
 
 //Get product by handle
-export const getProductByHandle = cache(
-  async (handle: string): Promise<API_RESPONSE<PRODUCT_DETAIL_TYPE>> => {
-    try {
-      const { data, errors } = await client.request(FETCH_PRODUCT_BY_HANDLE, {
-        variables: {
-          handle,
-        },
-      });
+export const getProductByHandle = async (
+  handle: string,
+): Promise<API_RESPONSE<PRODUCT_DETAIL_TYPE>> => {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag(`product-${handle}`)
+  try {
+    const { data, errors } = await client.request(FETCH_PRODUCT_BY_HANDLE, {
+      variables: {
+        handle,
+      },
+    });
 
-      if (errors) {
-        console.log("Graphql Errors", errors);
-        return {
-          success: false,
-          errors: normalizeError(errors),
-          data: null,
-        };
-      }
-
-      const parsed = PRODUCT_DETAIL_RESPONSE_SCHEMA.safeParse(data);
-
-      if (!parsed.success) {
-        console.log("Invalid value", parsed.error);
-        return {
-          success: false,
-          errors: normalizeError(parsed.error),
-          data: null,
-        };
-      }
-
-      const product = parsed.data.product;
-
-      return {
-        success: !!product,
-        data: product !== null ? product : null,
-        errors: null,
-      };
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error(error.message);
-      }
-
+    if (errors) {
+      console.log("Graphql Errors", errors);
       return {
         success: false,
+        errors: normalizeError(errors),
         data: null,
-        errors: normalizeError(error),
       };
     }
-  },
-);
+
+    const parsed = PRODUCT_DETAIL_RESPONSE_SCHEMA.safeParse(data);
+
+    if (!parsed.success) {
+      console.log("Invalid value", parsed.error);
+      return {
+        success: false,
+        errors: normalizeError(parsed.error),
+        data: null,
+      };
+    }
+
+    const product = parsed.data.product;
+
+    return {
+      success: !!product,
+      data: product !== null ? product : null,
+      errors: null,
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+
+    return {
+      success: false,
+      data: null,
+      errors: normalizeError(error),
+    };
+  }
+};
