@@ -60,6 +60,18 @@ export const PRODUCT_DETAIL_SCHEMA = PRODUCT_SCHEMA.extend({
   variants: z.object({
     nodes: z.array(VARIANT_SCHEMA),
   }),
+
+  images: z.object({
+    edges: z.array(
+      z.object({
+        node: z.object({
+          url: z.string(),
+          altText: z.string().optional().nullable(),
+          id: z.string(),
+        }),
+      }),
+    ),
+  }),
 });
 
 export const PRODUCT_DETAIL_RESPONSE_SCHEMA = z.object({

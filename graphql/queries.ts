@@ -34,6 +34,15 @@ export const FETCH_PRODUCT_BY_HANDLE = `
             vendor
             totalInventory
             description
+            images(first: 30){
+             edges{
+              node{
+                 id
+                 url
+                 altText
+               }
+             }
+            }
             priceRange {
             minVariantPrice {
               amount

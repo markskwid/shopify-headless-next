@@ -77,7 +77,7 @@ export const getProductByHandle = async (
 ): Promise<API_RESPONSE<PRODUCT_DETAIL_TYPE>> => {
   "use cache";
   cacheLife("minutes");
-  cacheTag(`product-${handle}`)
+  cacheTag(`product-${handle}`);
   try {
     const { data, errors } = await client.request(FETCH_PRODUCT_BY_HANDLE, {
       variables: {
