@@ -10,7 +10,7 @@ type CART_CONTEXT_TYPE = {
   cart: CART_TYPE | null;
   addingVariant: string | null;
   setCart: (cart: CART_TYPE) => void;
-  addItem: (id: string) => void;
+  addItem: (id: string, quantity?: number) => void;
   updateItem: (
     variantId: string,
     quantity: string,
@@ -34,12 +34,12 @@ export const CartProvider = ({
   const [addingVariant, setAddingVariant] = useState<string | null>(null);
   const { toggleCart } = useUI();
 
-  const addItem = async (id: string) => {
+  const addItem = async (id: string, quantity?: number) => {
     try {
       setAddingVariant(id);
       const formData = new FormData();
       formData.append("variantId", id);
-      formData.append("quantity", "1");
+      formData.append("quantity", quantity ? quantity.toString() : "1");
 
       const res = await addToCartAction(formData);
 
