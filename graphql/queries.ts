@@ -70,6 +70,7 @@ export const FETCH_PRODUCT_BY_HANDLE = `
                 value
                 }
                 image {
+                id
                 url
                 }
                 price {

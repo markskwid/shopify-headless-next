@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
+import { set } from "zod";
 
 type ProductImageType = {
   url: string;
@@ -11,8 +12,10 @@ type ProductImageType = {
 
 export default function ProductImages({
   images,
+  selectedImageIndex: initialSelectedImageIndex,
 }: {
   images: ProductImageType[];
+  selectedImageIndex: number | undefined;
 }) {
   const [mainImageRef, mainImageApi] = useEmblaCarousel({ loop: false });
   const [thumbRef, thumbApi] = useEmblaCarousel({
@@ -21,6 +24,7 @@ export default function ProductImages({
   });
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
+  //Sync main image to thumbnail selection and vice versa
   useEffect(() => {
     if (!mainImageApi || !thumbApi) return;
 
@@ -37,6 +41,16 @@ export default function ProductImages({
     };
   }, [mainImageApi, thumbApi]);
 
+  //Set initial selected image based on the variant selected
+  useEffect(() => {
+    if (!mainImageApi || !thumbApi || initialSelectedImageIndex === undefined)
+      return;
+
+    mainImageApi.scrollTo(initialSelectedImageIndex);
+    thumbApi.scrollTo(initialSelectedImageIndex);
+    setSelectedImageIndex(initialSelectedImageIndex);
+  }, [initialSelectedImageIndex, mainImageApi, thumbApi]);
+
   const handleThumbnailClick = (index: number) => {
     setSelectedImageIndex(index);
     mainImageApi?.scrollTo(index);
@@ -44,7 +58,7 @@ export default function ProductImages({
   };
 
   return (
-    <section className="embla w-1/2 basis-[70%]">
+    <section className="embla w-full basis-full md:basis-[50%] lg:basis-[70%]">
       {/* Main Image Slider */}
       <div
         className="w-full embla__viewport overflow-hidden"
@@ -54,7 +68,7 @@ export default function ProductImages({
           {images.length > 0 &&
             images.map((image, index) => (
               <div
-                className="embla__slide relative h-152 grow-0 shrink-0 basis-full min-w-0"
+                className="embla__slide relative h-[52vh] sm:h-[80vh] md:h-[60vh] lg:h-[90vh] grow-0 shrink-0 basis-full min-w-0"
                 key={image.id}
               >
                 <Image
@@ -81,7 +95,7 @@ export default function ProductImages({
           {images.length > 0 &&
             images.map((image, index) => (
               <div
-                className={`embla__slide relative h-full min-h-32 grow-0 shrink-0 basis-[20%] min-w-0 ${selectedImageIndex === index ? "border-4" : "border"} border-slate-400 cursor-pointer`}
+                className={`embla__slide relative h-[15dvh] sm:h-[25dvh] md:h-[17dvh] lg:h-[20dvh] grow-0 shrink-0 basis-[25%] md:basis-[33.33%] lg:basis-[20%] min-w-0 ${selectedImageIndex === index ? "border-4" : "border"} border-slate-400 cursor-pointer`}
                 key={image.id}
                 onClick={() => handleThumbnailClick(index)}
               >

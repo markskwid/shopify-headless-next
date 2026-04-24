@@ -19,19 +19,30 @@ export default function ProductInformation({
   const router = useRouter();
   const { addItem, addingVariant } = useCart();
   const [quantity, setQuantity] = useState<number>(1);
+  const [error, setError] = useState<string | null>(null);
 
   const handleVariantChange = (variantId: string) => {
     // Logic to update the selected variant based on user selection
     router.replace(`?size=${variantId}`);
   };
 
-  const handleAddToCart = (
-    variantId: string,
-    e: React.FormEvent<HTMLFormElement>,
-  ) => {
+  const handleAddToCart = async (e: React.SubmitEvent<HTMLFormElement>) => {
     // Logic to add the selected variant to the cart
     e.preventDefault();
-    addItem(variantId, quantity);
+
+    if (!selectedVariant.availableForSale) {
+      setError("This variant is currently out of stock.");
+      return;
+    }
+
+    const success = await addItem(selectedVariant.id, quantity);
+
+    if (!success) {
+      setError("Failed to add item to cart. Please try again.");
+      return;
+    }
+
+    setError(null);
   };
 
   const handleQuantityChange = (action: "inc" | "dec") => {
@@ -44,11 +55,10 @@ export default function ProductInformation({
 
   const isAddingThisVariant = addingVariant === selectedVariant.id;
 
-  console.log("Selected Variant:", selectedVariant);
   return (
-    <div>
-      <h1 className="font-bold text-6xl">{productData?.title}</h1>
-      <p className="font-bold text-4xl mt-2">
+    <div className="mt-5 basis-full md:basis-[50%] md:mt-0">
+      <h1 className="font-bold text-4xl lg:text-6xl">{productData?.title}</h1>
+      <p className="font-bold md:text-3xl lg:text-4xl mt-2">
         {formatPrice(
           selectedVariant?.price?.amount ?? "0",
           selectedVariant?.price?.currencyCode ?? "USD",
@@ -63,7 +73,9 @@ export default function ProductInformation({
 
       {productData?.variants.nodes.length && (
         <>
-          <span className="block mt-5 mb-2 font-bold">Sizes:</span>
+          <span className="block mt-5 mb-2 font-bold">
+            {productData.variants.nodes.length > 1 ? "Select Size:" : "Size:"}
+          </span>
           <div className="flex items-center gap-4 mt-4">
             {productData.variants.nodes.map((variant) => (
               <button
@@ -81,10 +93,10 @@ export default function ProductInformation({
       <div>
         <span className="block mt-5 mb-2 font-bold">Quantity:</span>
         <form
-          className="flex items-center mt-5 space-x-5"
-          onSubmit={(e) => handleAddToCart(selectedVariant.id, e)}
+          className="flex items-center flex-row md:flex-col lg:flex-row md:justify-center md:space-y-3 lg:space-y-0 mt-5 space-x-5"
+          onSubmit={handleAddToCart}
         >
-          <div className="basis-[50%] flex border border-black/20 max-w-52 justify-between items-center h-13 rounded-full overflow-hidden">
+          <div className="basis-[50%] md:basis-auto lg:basis-[50%] flex border border-black/20 w-full md:max-w-52 lg:max-w-52 md:max-h-12 lg:h-13 justify-between items-center self-start rounded-full overflow-hidden">
             <button
               type="button"
               onClick={() => handleQuantityChange("dec")}
@@ -95,9 +107,14 @@ export default function ProductInformation({
             <input
               className="text-center shrink min-w-0 h-full appearance-none! font-bold text-lg"
               type="number"
-              defaultValue={quantity}
+              value={quantity}
               min="1"
               max="10"
+              onChange={(e) =>
+                handleQuantityChange(
+                  Number(e.target.value) > quantity ? "inc" : "dec",
+                )
+              }
             />
             <button
               type="button"
@@ -109,17 +126,23 @@ export default function ProductInformation({
           </div>
           <button
             type="submit"
-            className="w-full border bg-black hover:bg-black/80 py-3 rounded-full text-white text-lg font-bold cursor-pointer"
-            disabled={isAddingThisVariant}
+            className={`w-full grow border bg-black hover:bg-black/80 py-3 rounded-full text-white text-lg font-bold  ${isAddingThisVariant || !selectedVariant.availableForSale ? "cursor-not-allowed opacity-70" : "cursor-pointer"}`}
+            disabled={isAddingThisVariant || !selectedVariant.availableForSale}
           >
             {isAddingThisVariant ? "Adding..." : "Add to Cart"}
           </button>
         </form>
       </div>
 
-      {selectedVariant.availableForSale && (
-        <span className="text-red-500 mt-4 block font-bold">
+      {!selectedVariant.availableForSale && (
+        <span className="text-red-500! mt-4 block font-bold">
           This variant is currently out of stock.
+        </span>
+      )}
+
+      {error && (
+        <span className="text-red-500! mt-4 block font-bold">
+          Failed to add item to cart. Please try again
         </span>
       )}
     </div>

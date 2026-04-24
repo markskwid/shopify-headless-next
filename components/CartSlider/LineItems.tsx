@@ -8,9 +8,12 @@ import Image from "next/image";
 export const LineItems = () => {
   const { cart, deleteItem, updateItem } = useCart();
 
+  const isCartEmpty = cart?.lines.nodes.length === 0;
+
+  console.log(isCartEmpty);
   return (
     <div className="w-full flex-1 overflow-y-auto no-scrollbar pr-1">
-      {cart?.lines.nodes ? (
+      {!isCartEmpty ? (
         <ul>
           {cart?.lines.nodes.map((item: CART_LINE_TYPE) => (
             <li key={item.id} className="w-full relative">
@@ -76,7 +79,9 @@ export const LineItems = () => {
           ))}
         </ul>
       ) : (
-        <p>Cart is empty</p>
+        <p className="p-4 font-bold h-full flex justify-center items-center text-2xl">
+          Cart is empty
+        </p>
       )}
     </div>
   );

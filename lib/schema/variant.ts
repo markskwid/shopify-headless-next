@@ -10,6 +10,7 @@ export const VARIANT_SCHEMA = z.object({
   currentlyNotInStock: z.boolean().optional().nullable(),
   image: z
     .object({
+      id: z.string(),
       url: z.string(),
     })
     .nullable()

@@ -2,7 +2,6 @@ import { PageWrapper } from "@/components/PageWrapper";
 import ProductImages from "@/components/ProductPage/ProductImages";
 import ProductInformation from "@/components/ProductPage/ProductInformation";
 import { getProductByHandle } from "@/lib/shopify/api/products";
-import { formatPrice } from "@/utils/formatPricing";
 
 interface Props {
   params: Promise<{ handle: string }>;
@@ -19,14 +18,18 @@ export default async function ProductPage({ params, searchParams }: Props) {
   }
 
   const productData = productResponse.data;
-  const selectedVariant = productData?.variants.nodes.find((v) => v.title === size) ?? productData?.variants.nodes[0];
+  const selectedVariant = productData?.variants.nodes.find((v) => v.title === size) ?? productData?.variants.nodes[0]!;
+
+  const selectedImageIndex = productData?.images.edges.findIndex(({ node }) => node.id === selectedVariant.image?.id);
+  
   return (
     <PageWrapper>
-      <section className="flex justify-start items-start space-x-12">
+      <section className="flex flex-col md:flex-row justify-start items-start space-x-12">
         {productData && (
           <>
             <ProductImages
               images={productData?.images.edges.map(({ node }) => node) ?? []}
+              selectedImageIndex={selectedImageIndex}
             />
             <ProductInformation productData={productData} selectedVariant={selectedVariant} />
           </>
