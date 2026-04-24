@@ -19,6 +19,7 @@ export const FRAGMENT_PRODUCT_FIELDS = `
           quantityAvailable
           currentlyNotInStock
           image {
+            id
             url
             altText
           }

@@ -10,7 +10,6 @@ export const LineItems = () => {
 
   const isCartEmpty = cart?.lines.nodes.length === 0;
 
-  console.log(isCartEmpty);
   return (
     <div className="w-full flex-1 overflow-y-auto no-scrollbar pr-1">
       {!isCartEmpty ? (

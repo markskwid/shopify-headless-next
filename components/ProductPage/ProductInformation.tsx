@@ -53,10 +53,12 @@ export default function ProductInformation({
     }
   };
 
+  const isOutStock = !selectedVariant.availableForSale;
   const isAddingThisVariant = addingVariant === selectedVariant.id;
+  const isDisabled = isOutStock || isAddingThisVariant;
 
   return (
-    <div className="mt-5 basis-full md:basis-[50%] md:mt-0">
+    <div className="mt-5 basis-full md:basis-[50%] md:mt-0 md:sticky md:top-20">
       <h1 className="font-bold text-4xl lg:text-6xl">{productData?.title}</h1>
       <p className="font-bold md:text-3xl lg:text-4xl mt-2">
         {formatPrice(
@@ -71,11 +73,9 @@ export default function ProductInformation({
         </div>
       )}
 
-      {productData?.variants.nodes.length && (
+      {productData?.variants.nodes.length > 1 && (
         <>
-          <span className="block mt-5 mb-2 font-bold">
-            {productData.variants.nodes.length > 1 ? "Select Size:" : "Size:"}
-          </span>
+          <span className="block mt-5 mb-2 font-bold">Select Size:</span>
           <div className="flex items-center gap-4 mt-4">
             {productData.variants.nodes.map((variant) => (
               <button
@@ -96,38 +96,37 @@ export default function ProductInformation({
           className="flex items-center flex-row md:flex-col lg:flex-row md:justify-center md:space-y-3 lg:space-y-0 mt-5 space-x-5"
           onSubmit={handleAddToCart}
         >
-          <div className="basis-[50%] md:basis-auto lg:basis-[50%] flex border border-black/20 w-full md:max-w-52 lg:max-w-52 md:max-h-12 lg:h-13 justify-between items-center self-start rounded-full overflow-hidden">
+          <div className="basis-1/2 h-13 md:basis-auto lg:basis-[50%] flex border border-black/20 w-full md:max-w-52 lg:max-w-52 md:max-h-12 lg:h-13 justify-between items-center self-start rounded-full overflow-hidden">
             <button
               type="button"
               onClick={() => handleQuantityChange("dec")}
-              className="grow basis-[25%] h-full text-center bg-black/20 cursor-pointer flex justify-center items-center"
+              className="grow basis-[35%] md:basis-[25%] h-full text-center bg-black/20 cursor-pointer flex justify-center items-center"
             >
               <AiOutlineMinus />
             </button>
             <input
-              className="text-center shrink min-w-0 h-full appearance-none! font-bold text-lg"
+              className="basis-[30%] text-center shrink min-w-0 h-full appearance-none! font-bold text-lg"
               type="number"
               value={quantity}
               min="1"
               max="10"
-              onChange={(e) =>
-                handleQuantityChange(
-                  Number(e.target.value) > quantity ? "inc" : "dec",
-                )
-              }
+              onChange={(e) => {
+                const value = Math.min(10, Math.max(1, Number(e.target.value)));
+                setQuantity(value);
+              }}
             />
             <button
               type="button"
               onClick={() => handleQuantityChange("inc")}
-              className="grow basis-[25%] h-full text-center bg-black/20 cursor-pointer flex justify-center items-center"
+              className="grow basis-[35%] md:basis-[25%] h-full text-center bg-black/20 cursor-pointer flex justify-center items-center"
             >
               <AiOutlinePlus />
             </button>
           </div>
           <button
             type="submit"
-            className={`w-full grow border bg-black hover:bg-black/80 py-3 rounded-full text-white text-lg font-bold  ${isAddingThisVariant || !selectedVariant.availableForSale ? "cursor-not-allowed opacity-70" : "cursor-pointer"}`}
-            disabled={isAddingThisVariant || !selectedVariant.availableForSale}
+            className={`w-full grow border bg-black hover:bg-black/80 py-3 rounded-full text-white text-lg font-bold  ${isDisabled ? "cursor-not-allowed opacity-70" : "cursor-pointer"}`}
+            disabled={isDisabled}
           >
             {isAddingThisVariant ? "Adding..." : "Add to Cart"}
           </button>
