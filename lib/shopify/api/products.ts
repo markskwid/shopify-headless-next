@@ -1,7 +1,11 @@
 import "server-only";
 
 import { API_RESPONSE } from "../../../types/response";
-import { FETCH_PRODUCT_BY_HANDLE, FETCH_PRODUCTS } from "@/graphql/queries";
+import {
+  FETCH_PRODUCT_BY_HANDLE,
+  FETCH_PRODUCTS,
+  GET_PRODUCT_RECOMMENDATION,
+} from "@/graphql/queries";
 import { client } from "../client";
 import { cache } from "react";
 import {
@@ -33,7 +37,7 @@ export const getProducts = async (
       console.log("Graphql Errors", errors);
       return {
         success: false,
-        data: [],
+        data: null,
         pageInfo: null,
         errors: normalizeError(errors),
       };
@@ -45,7 +49,7 @@ export const getProducts = async (
       console.error(parsed.error);
       return {
         success: false,
-        data: [],
+        data: null,
         pageInfo: null,
         errors: normalizeError(parsed.error),
       };
@@ -64,24 +68,23 @@ export const getProducts = async (
 
     return {
       success: false,
-      data: [],
+      data: null,
       pageInfo: null,
       errors: normalizeError(error),
     };
   }
 };
 
-//Get product by handle
-export const getProductByHandle = async (
-  handle: string,
-): Promise<API_RESPONSE<PRODUCT_DETAIL_TYPE>> => {
+//get product recommendation
+export const getProductRecommendation = async (productId: string) => {
   "use cache";
   cacheLife("minutes");
-  cacheTag(`product-${handle}`);
+  cacheTag(`product-recommendation-${productId}`);
+
   try {
-    const { data, errors } = await client.request(FETCH_PRODUCT_BY_HANDLE, {
+    const { data, errors } = await client.request(GET_PRODUCT_RECOMMENDATION, {
       variables: {
-        handle,
+        productId,
       },
     });
 
@@ -94,22 +97,65 @@ export const getProductByHandle = async (
       };
     }
 
+    console.log("PROD RECOMM: ", data);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+
+    return {
+      success: false,
+      data: null,
+      errors: normalizeError(error),
+    };
+  }
+};
+
+
+export const getProductByHandle = async (
+  handle: string,
+): Promise<API_RESPONSE<PRODUCT_DETAIL_TYPE>> => {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag(`product-${handle}`);
+  try {
+    const { data, errors } = await client.request(FETCH_PRODUCT_BY_HANDLE, {
+      variables: { handle },
+    });
+
+    if (errors) {
+      console.log("Graphql Errors", errors);
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(errors),
+      };
+    }
+
     const parsed = PRODUCT_DETAIL_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
       console.log("Invalid value", parsed.error);
       return {
         success: false,
-        errors: normalizeError(parsed.error),
         data: null,
+        errors: normalizeError(parsed.error),
       };
     }
 
     const product = parsed.data.product;
 
+    if (!product) {
+      return {
+        success: false,
+        data: null,
+        errors: ["Product not found"],
+      };
+    }
+
     return {
-      success: !!product,
-      data: product !== null ? product : null,
+      success: true,
+      data: product,
       errors: null,
     };
   } catch (error: unknown) {

@@ -83,6 +83,23 @@ export const FETCH_PRODUCT_BY_HANDLE = `
     }
   `;
 
+// fetch related products
+
+export const GET_PRODUCT_RECOMMENDATION = `
+  ${FRAGMENT_PRODUCT_FIELDS}
+
+  query GET_PRODUCT_RECOMMENDATION($productId: ID!){
+    productRecommendations(productId: $productId){
+      edges {
+        node {
+          ...ProductFields
+        }
+      }
+    }
+  }
+`;
+
+
 //get navigation menu by handle
 export const GET_MENU_BY_HANDLE = `
     ${FRAGMENT_MENU_ITEMS}

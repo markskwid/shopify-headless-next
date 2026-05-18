@@ -10,6 +10,7 @@ export const SearchBar = () => {
   const [searchData, setSearchData] = useState<PRODUCT_SEARCH_TYPE[] | null>(
     null,
   );
+  const [error, setError] = useState<string | null>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -20,7 +21,10 @@ export const SearchBar = () => {
 
     const getSearchData = async () => {
       const res = await searchResults(searchQuery);
-      if (!res.success && !res.data) return;
+      if (!res.success && !res.data) {
+        setError("Something went wrong. Try again!");
+        return;
+      }
 
       setSearchData(res.data);
     };
@@ -75,32 +79,40 @@ export const SearchBar = () => {
         </button>
       </form>
 
-      {searchData && (
+      {!error ? (
+        searchData && (
+          <div className="search-result absolute bg-white w-full border border-gray-400 mt-2 rounded-md px-2 left-0 right-0">
+            {searchData.length > 0 ? (
+              searchData.map((item: PRODUCT_SEARCH_TYPE) => (
+                <Link
+                  key={item.id}
+                  href={item.handle}
+                  className="flex justify-start items-center my-2 min-h-10"
+                >
+                  <div className="relative mr-2">
+                    <Image
+                      src={item.featuredImage?.url ?? ""}
+                      width="50"
+                      alt={item.title}
+                      height="50"
+                      loading={"lazy"}
+                    />
+                  </div>
+                  <p>{item.title}</p>
+                </Link>
+              ))
+            ) : (
+              <div className="flex justify-start items-center my-2 min-h-10">
+                No item found. Try other keywords
+              </div>
+            )}
+          </div>
+        )
+      ) : (
         <div className="search-result absolute bg-white w-full border border-gray-400 mt-2 rounded-md px-2 left-0 right-0">
-          {searchData.length > 0 ? (
-            searchData.map((item: PRODUCT_SEARCH_TYPE) => (
-              <Link
-                key={item.id}
-                href={item.handle}
-                className="flex justify-start items-center my-2 min-h-10"
-              >
-                <div className="relative mr-2">
-                  <Image
-                    src={item.featuredImage?.url ?? ""}
-                    width="50"
-                    alt={item.title}
-                    height="50"
-                    loading={"lazy"}
-                  />
-                </div>
-                <p>{item.title}</p>
-              </Link>
-            ))
-          ) : (
-            <div className="flex justify-start items-center my-2 min-h-10">
-              No item found. Try other keywords
-            </div>
-          )}
+          <div className="flex justify-start items-center my-2 min-h-10">
+            {error}
+          </div>
         </div>
       )}
     </div>
