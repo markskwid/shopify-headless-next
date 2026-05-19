@@ -1,5 +1,5 @@
 "use client";
-import { MENU_TYPE } from "@/types/menuTypes";
+import { MENU_TYPE } from "@/types/menu";
 import Link from "next/link";
 import { useState } from "react";
 import { AiFillCaretDown, AiOutlineArrowLeft } from "react-icons/ai";

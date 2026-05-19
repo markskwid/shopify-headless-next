@@ -120,10 +120,22 @@ export const createCart = async (): Promise<
       };
     }
 
+    const userErrors = payload.cartCreate.userErrors ?? [];
+    const cart = payload.cartCreate.cart ?? null;
+
+    if (userErrors.length > 0 || !cart) {
+      return {
+        success: false,
+        data: null,
+        errors: userErrors.map((e) => e.message),
+        warnings: payload.cartCreate.warnings ?? null,
+      };
+    }
+
     return {
-      success: !payload.cartCreate.userErrors?.length,
-      data: payload.cartCreate.cart ?? null,
-      errors: payload.cartCreate.userErrors?.map((e) => e.message) ?? null,
+      success: true,
+      data: cart,
+      errors: null,
       warnings: payload.cartCreate.warnings ?? null,
     };
   } catch (error: unknown) {
@@ -185,11 +197,21 @@ export const addToCart = async (
     const items = parsed.data.cartLinesAdd.cart;
     const userErrors =
       parsed.data.cartLinesAdd.userErrors?.map((e) => e.message) ?? [];
+
+    if (!items) {
+      return {
+        success: false,
+        data: null,
+        errors: userErrors,
+        warnings: parsed.data.cartLinesAdd.warnings,
+      };
+    }
+
     //if okay return data
     return {
-      success: !!items,
+      success: true,
       data: items,
-      errors: userErrors ? userErrors : null,
+      errors: null,
       warnings: parsed.data.cartLinesAdd.warnings,
     };
   } catch (error: unknown) {
@@ -243,11 +265,20 @@ export const removeItemInCart = async (
     const items = parsed.data.cartLinesRemove.cart;
     const userErrors =
       parsed.data.cartLinesRemove.userErrors?.map((e) => e.message) ?? [];
+
+    if (userErrors.length > 0 || !items) {
+      return {
+        success: false,
+        data: null,
+        errors: userErrors,
+        warnings: parsed.data.cartLinesRemove.warnings,
+      };
+    }
     //if okay return data
     return {
-      success: userErrors.length === 0,
+      success: true,
       data: items,
-      errors: userErrors ? userErrors : null,
+      errors: null,
       warnings: parsed.data.cartLinesRemove.warnings,
     };
   } catch (error: unknown) {
@@ -301,11 +332,19 @@ export const updateItemInCart = async (
     const items = parsed.data.cartLinesUpdate.cart;
     const userErrors =
       parsed.data.cartLinesUpdate.userErrors?.map((e) => e.message) ?? [];
+    if (userErrors.length > 0 || !items) {
+      return {
+        success: false,
+        data: null,
+        errors: userErrors,
+        warnings: parsed.data.cartLinesUpdate.warnings,
+      };
+    }
     //if okay return data
     return {
-      success: userErrors.length === 0,
+      success: true,
       data: items,
-      errors: userErrors ? userErrors : null,
+      errors: null,
       warnings: parsed.data.cartLinesUpdate.warnings,
     };
   } catch (error: unknown) {
@@ -361,11 +400,20 @@ export const updateCartNote = async (
     const items = parsed.data.cartNoteUpdate.cart;
     const userErrors =
       parsed.data.cartNoteUpdate.userErrors?.map((e) => e.message) ?? [];
+
+    if (userErrors.length > 0 || !items) {
+      return {
+        success: false,
+        data: null,
+        errors: userErrors,
+        warnings: parsed.data.cartNoteUpdate.warnings,
+      };
+    }
     //if okay return data
     return {
-      success: userErrors.length === 0,
+      success: true,
       data: items,
-      errors: userErrors ? userErrors : null,
+      errors: null,
       warnings: parsed.data.cartNoteUpdate.warnings,
     };
   } catch (error: unknown) {

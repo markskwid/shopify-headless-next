@@ -7,7 +7,6 @@ import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Sort } from "@/components/ProductList/Sort";
-import { searchResults } from "@/lib/shopify/api/search";
 
 async function ProductSection({
   sortKey,
@@ -19,7 +18,7 @@ async function ProductSection({
   const products = await getProducts(sortKey, reverse);
   return (
     <>
-      <ProductList products={products.data ?? []} />
+      <ProductList products={products.data ?? []} isSlider={false} />
     </>
   );
 }

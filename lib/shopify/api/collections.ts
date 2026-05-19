@@ -27,7 +27,7 @@ export const getCollections = async (): Promise<
       console.log("Graphql Errors", errors);
       return {
         success: false,
-        data: [],
+        data: null,
         pageInfo: null,
         errors: normalizeError(errors),
       };
@@ -41,7 +41,7 @@ export const getCollections = async (): Promise<
       console.log("Invalid data: ", parsed.error);
       return {
         success: false,
-        data: [],
+        data: null,
         pageInfo: null,
         errors: normalizeError(parsed.error),
       };
@@ -64,7 +64,7 @@ export const getCollections = async (): Promise<
 
     return {
       success: false,
-      data: [],
+      data: null,
       pageInfo: null,
       errors: normalizeError(error),
     };
@@ -105,8 +105,16 @@ export const getCollectionByHandle = async (
 
     const collection = parsed.data.collection;
 
+    if (!collection) {
+      return {
+        success: false,
+        data: null,
+        errors: ["Collection is empty"],
+      };
+    }
+
     return {
-      success: !!collection,
+      success: true,
       data: collection,
       errors: null,
     };
@@ -137,7 +145,7 @@ export const getFeaturedCollections = async (): Promise<
       console.log("Graphql Errors", errors);
       return {
         success: false,
-        data: [],
+        data: null,
         pageInfo: null,
         errors: normalizeError(errors),
       };
@@ -171,7 +179,7 @@ export const getFeaturedCollections = async (): Promise<
 
     return {
       success: false,
-      data: [],
+      data: null,
       pageInfo: null,
       errors: normalizeError(error),
     };

@@ -77,3 +77,7 @@ export const PRODUCT_DETAIL_SCHEMA = PRODUCT_SCHEMA.extend({
 export const PRODUCT_DETAIL_RESPONSE_SCHEMA = z.object({
   product: PRODUCT_DETAIL_SCHEMA,
 });
+
+export const PRODUCT_RECOMMENDATION_RESPONSE_SCHEMA = z.object({
+  productRecommendations: z.array(PRODUCT_SCHEMA),
+});

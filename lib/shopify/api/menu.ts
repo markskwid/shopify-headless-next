@@ -22,7 +22,7 @@ export const getMenuByHandle = async (
       console.log("Graphql error", errors.message);
       return {
         success: false,
-        data: [],
+        data: null,
         errors: normalizeError(errors),
       };
     }
@@ -33,17 +33,25 @@ export const getMenuByHandle = async (
       console.log("Invalid data", parsed.error);
       return {
         success: false,
-        data: [],
+        data: null,
         errors: normalizeError(parsed.error),
       };
     }
 
     const menuItems = parsed.data.menu?.items;
 
+    if (!menuItems) {
+      return {
+        success: false,
+        data: null,
+        errors: ["Empty menu items"],
+      };
+    }
+
     return {
-      success: !!menuItems,
-      data: menuItems ? menuItems : [],
-      errors: menuItems ? null : ["Unknown Error"],
+      success: true,
+      data: menuItems,
+      errors: null,
     };
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -52,7 +60,7 @@ export const getMenuByHandle = async (
 
     return {
       success: false,
-      data: [],
+      data: null,
       errors: normalizeError(error),
     };
   }

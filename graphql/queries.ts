@@ -90,11 +90,7 @@ export const GET_PRODUCT_RECOMMENDATION = `
 
   query GET_PRODUCT_RECOMMENDATION($productId: ID!){
     productRecommendations(productId: $productId){
-      edges {
-        node {
-          ...ProductFields
-        }
-      }
+      ...ProductFields
     }
   }
 `;

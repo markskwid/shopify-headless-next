@@ -11,6 +11,7 @@ import { cache } from "react";
 import {
   PRODUCT_DETAIL_RESPONSE_SCHEMA,
   PRODUCT_LISTING_RESPONSE_SCHEMA,
+  PRODUCT_RECOMMENDATION_RESPONSE_SCHEMA,
 } from "../../schema/product";
 import { normalizeError } from "@/utils/normalizeErrors";
 import { PRODUCT_DETAIL_TYPE, PRODUCT_LISTING_TYPE } from "@/types/product";
@@ -76,7 +77,9 @@ export const getProducts = async (
 };
 
 //get product recommendation
-export const getProductRecommendation = async (productId: string) => {
+export const getProductRecommendation = async (
+  productId: string,
+): Promise<API_RESPONSE<PRODUCT_LISTING_TYPE[]>> => {
   "use cache";
   cacheLife("minutes");
   cacheTag(`product-recommendation-${productId}`);
@@ -97,7 +100,23 @@ export const getProductRecommendation = async (productId: string) => {
       };
     }
 
-    console.log("PROD RECOMM: ", data);
+     const parsed = PRODUCT_RECOMMENDATION_RESPONSE_SCHEMA.safeParse(data);
+
+    if (!parsed.success) {
+      console.error(parsed.error);
+      return {
+        success: false,
+        data: null,
+        pageInfo: null,
+        errors: normalizeError(parsed.error),
+      };
+    }
+
+    return {
+      success: true,
+      data: parsed.data.productRecommendations,
+      errors: null,
+    };
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error(error.message);
@@ -110,7 +129,6 @@ export const getProductRecommendation = async (productId: string) => {
     };
   }
 };
-
 
 export const getProductByHandle = async (
   handle: string,

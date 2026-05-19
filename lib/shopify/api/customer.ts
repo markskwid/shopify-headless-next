@@ -56,14 +56,22 @@ export const createCustomer = async (input: {
     }
 
     const customer = parsed.data.customerCreate?.customer ?? null;
-    const userErrors = parsed.data.customerCreate?.customerUserErrors?.map(
-      (e) => e.message,
-    );
+    const userErrors =
+      parsed.data.customerCreate?.customerUserErrors?.map((e) => e.message) ??
+      [];
+
+    if (userErrors?.length > 0 || !customer) {
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(userErrors),
+      };
+    }
 
     return {
-      success: customer ? true : false,
-      data: customer ? customer : null,
-      errors: userErrors ? userErrors : null,
+      success: true,
+      data: customer,
+      errors: null,
     };
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -115,10 +123,18 @@ export const loginCustomer = async (input: {
       .map((e) => e?.message)
       .filter((msg): msg is string => !!msg);
 
+    if (userErrors.length > 0 || !customerToken) {
+      return {
+        success: false,
+        data: null,
+        errors: userErrors,
+      };
+    }
+
     return {
-      success: !!customerToken,
-      data: customerToken ? customerToken : null,
-      errors: userErrors.length > 0 ? userErrors : null,
+      success: true,
+      data: customerToken,
+      errors: null,
     };
   } catch (error: unknown) {
     if (error instanceof Error) {
