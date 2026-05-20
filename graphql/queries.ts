@@ -262,7 +262,7 @@ ${FRAGMENT_CART_ITEM}
 
 //predictive search result
 export const PREDICTIVE_SEARCH = `
-query PredictiveProductSearch($query: String!, $limit: Int = 10) {
+query PredictiveProductSearch($query: String!, $limit: Int = 5) {
   predictiveSearch(
     query: $query
     limit: $limit
@@ -279,6 +279,27 @@ query PredictiveProductSearch($query: String!, $limit: Int = 10) {
       }
 
       availableForSale
+    }
+  }
+}`;
+
+//for search page
+export const SEARCH_PRODUCTS = `
+${FRAGMENT_PRODUCT_FIELDS}
+
+query SEARCH_PRODUCTS($query: String!, $first: Int = 10) {
+  search(
+    query: $query,
+    first: $first,
+    types: [PRODUCT]
+  ) {
+    totalCount
+    edges{
+     node{
+      ...on Product{
+         ...ProductFields
+       }
+     }
     }
   }
 }`;

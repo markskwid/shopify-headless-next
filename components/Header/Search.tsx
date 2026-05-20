@@ -2,10 +2,13 @@ import { searchResults } from "@/lib/shopify/api/search";
 import { PRODUCT_SEARCH_TYPE } from "@/types/product";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineArrowRight, AiOutlineSearch } from "react-icons/ai";
 import Image from "next/image";
+import { useRouter, usePathname } from "next/navigation";
 
 export const SearchBar = () => {
+  const router = useRouter();
+  const pathName = usePathname();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchData, setSearchData] = useState<PRODUCT_SEARCH_TYPE[] | null>(
     null,
@@ -25,7 +28,7 @@ export const SearchBar = () => {
         setError("Something went wrong. Try again!");
         return;
       }
-
+      console.log(res.data);
       setSearchData(res.data);
     };
 
@@ -57,16 +60,30 @@ export const SearchBar = () => {
     };
   }, [searchData]);
 
+  //useEffect to clear state query value when changing pages
+  useEffect(() => {
+    setSearchQuery("");
+    setSearchData(null);
+    setError(null);
+  }, [pathName]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.currentTarget;
     setSearchQuery(value);
   };
+
+  //form submit then redirect to search page
+  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    router.push(`/search?q=${searchQuery}`);
+  };
   return (
     <div className="relative" ref={searchContainerRef}>
-      <form method="POST" className="">
+      <form id="search-form" method="POST" className="" onSubmit={handleSubmit}>
         <input
           onChange={handleInputChange}
           type="text"
+          value={searchQuery}
           tabIndex={1}
           className="border bg-gray-300/50 rounded-md py-1 px-2 shadow-2xl w-full md:w-72"
           placeholder="Search item"
@@ -83,24 +100,36 @@ export const SearchBar = () => {
         searchData && (
           <div className="search-result absolute bg-white w-full border border-gray-400 mt-2 rounded-md px-2 left-0 right-0">
             {searchData.length > 0 ? (
-              searchData.map((item: PRODUCT_SEARCH_TYPE) => (
-                <Link
-                  key={item.id}
-                  href={item.handle}
-                  className="flex justify-start items-center my-2 min-h-10"
-                >
-                  <div className="relative mr-2">
-                    <Image
-                      src={item.featuredImage?.url ?? ""}
-                      width="50"
-                      alt={item.title}
-                      height="50"
-                      loading={"lazy"}
-                    />
-                  </div>
-                  <p>{item.title}</p>
-                </Link>
-              ))
+              <>
+                {searchData.map((item: PRODUCT_SEARCH_TYPE) => (
+                  <Link
+                    key={item.id}
+                    href={item.handle}
+                    className="flex justify-start items-center my-2 min-h-10"
+                  >
+                    <div className="relative mr-2">
+                      <Image
+                        src={item.featuredImage?.url ?? ""}
+                        width="50"
+                        alt={item.title}
+                        height="50"
+                        loading={"lazy"}
+                      />
+                    </div>
+                    <p>{item.title}</p>
+                  </Link>
+                ))}
+
+                <div className="border-t border-gray-200 mt-2">
+                  <button
+                    type="submit"
+                    form="search-form"
+                    className="flex justify-center items-center text-center w-full gap-2 p-2 cursor-pointer hover:bg-gray-50"
+                  >
+                    See All Results <AiOutlineArrowRight size={15} />
+                  </button>
+                </div>
+              </>
             ) : (
               <div className="flex justify-start items-center my-2 min-h-10">
                 No item found. Try other keywords

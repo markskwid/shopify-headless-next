@@ -25,8 +25,6 @@ export const CartSlider = () => {
 
   const isCartEmpty = cart?.lines.nodes.length === 0;
 
-  console.log(cart);
-
   return (
     <div
       onClick={handleOverlayClick}
