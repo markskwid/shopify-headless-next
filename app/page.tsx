@@ -25,7 +25,7 @@ async function ProductSection({
 
 async function CollectionsSection() {
   const collections = await getFeaturedCollections();
-
+  
   return (
     <section className="mt-20" aria-label="Featured Categories">
       <div className="flex-start items-start flex flex-col space-y-10 lg:flex-row lg:space-x-5">
@@ -33,7 +33,7 @@ async function CollectionsSection() {
           collections.data.map((collection) => (
             <Link
               key={collection.title}
-              href="#"
+              href={`/collection/${collection.handle}`}
               className="group category w-full lg:w-1/2"
             >
               <article>

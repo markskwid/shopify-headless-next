@@ -291,9 +291,10 @@ query SEARCH_PRODUCTS($query: String!, $first: Int = 10) {
   search(
     query: $query,
     first: $first,
-    types: [PRODUCT]
+    types: [PRODUCT],
   ) {
     totalCount
+   
     edges{
      node{
       ...on Product{
@@ -301,5 +302,29 @@ query SEARCH_PRODUCTS($query: String!, $first: Int = 10) {
        }
      }
     }
+    pageInfo{
+     hasNextPage
+     endCursor
+    }
   }
 }`;
+
+
+//get collection filters
+export const GET_COLLECTION_FILTER = `
+  query{
+     collection(handle: "all"){
+      products(first: 1){
+        filters{
+          id
+          label
+          values{
+            id
+            label
+            input
+          }
+        }
+      } 
+    }  
+  }
+`;

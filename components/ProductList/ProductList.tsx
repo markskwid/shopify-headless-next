@@ -17,7 +17,7 @@ export const ProductList = ({
 
   return (
     <section aria-label="Product Listing" className="min-h-screen">
-      <div className="flex flex-wrap justify-start items-start space-x-2 space-y-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

@@ -75,6 +75,9 @@ export const getCollections = async (): Promise<
 export const getCollectionByHandle = async (
   handle: string,
 ): Promise<API_RESPONSE<COLLECTION_DETAIL_TYPE>> => {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag(`collection-${handle}`);
   try {
     const { data, errors } = await client.request(FETCH_COLLECTION_BY_HANDLE, {
       variables: {
@@ -91,7 +94,6 @@ export const getCollectionByHandle = async (
       };
     }
 
-    console.log(data);
     const parsed = COLLECTION_DETAIL_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
@@ -104,7 +106,7 @@ export const getCollectionByHandle = async (
     }
 
     const collection = parsed.data.collection;
-
+    
     if (!collection) {
       return {
         success: false,

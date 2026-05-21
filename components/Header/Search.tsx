@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineArrowRight, AiOutlineSearch } from "react-icons/ai";
 import Image from "next/image";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 export const SearchBar = () => {
   const router = useRouter();
   const pathName = usePathname();
+  const searchParams = useSearchParams();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [searchData, setSearchData] = useState<PRODUCT_SEARCH_TYPE[] | null>(
     null,
@@ -65,7 +67,7 @@ export const SearchBar = () => {
     setSearchQuery("");
     setSearchData(null);
     setError(null);
-  }, [pathName]);
+  }, [pathName, searchParams]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.currentTarget;

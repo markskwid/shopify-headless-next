@@ -22,6 +22,12 @@ const SEARCH_RESULT_PAGE_SCHEMA = z.object({
         node: PRODUCT_SCHEMA,
       }),
     ),
+    pageInfo: z
+      .object({
+        hasNextPage: z.boolean(),
+        endCursor: z.string().nullable(),
+      })
+      .optional(),
   }),
 });
 
@@ -34,8 +40,6 @@ export const searchResults = async (
         query,
       },
     });
-
-    console.log(data);
 
     if (errors) {
       console.log("Graphql Error", errors.message);
@@ -81,7 +85,18 @@ export const searchResults = async (
   }
 };
 
-export const searchResultsPage = async (query: string) : Promise<API_RESPONSE<PRODUCT_LISTING_TYPE[]>> => {
+type SEARCH_RESULT_PAGE_TYPE = {
+  totalCount: number;
+  products: PRODUCT_LISTING_TYPE[];
+  pageInfo?: {
+    hasNextPage: boolean;
+    endCursor: string | null;
+  };
+};
+
+export const searchResultsPage = async (
+  query: string,
+): Promise<API_RESPONSE<SEARCH_RESULT_PAGE_TYPE>> => {
   "use cache";
   cacheLife("minutes");
   cacheTag(`search-${query}`);
@@ -91,6 +106,8 @@ export const searchResultsPage = async (query: string) : Promise<API_RESPONSE<PR
         query,
       },
     });
+
+    console.log("SEARCH RESULT DATA", data);
 
     if (errors) {
       console.log("Graphql Error", errors.message);
@@ -113,9 +130,16 @@ export const searchResultsPage = async (query: string) : Promise<API_RESPONSE<PR
       };
     }
 
+    //transform data
+    const newData: SEARCH_RESULT_PAGE_TYPE = {
+      totalCount: parsed.data.search.totalCount,
+      products: parsed.data.search.edges.map((edge) => edge.node),
+      pageInfo: parsed.data.search.pageInfo,
+    };
+
     return {
       success: true,
-      data: parsed.data.search.edges.map((edge) => edge.node),
+      data: newData,
       errors: null,
     };
   } catch (error: unknown) {

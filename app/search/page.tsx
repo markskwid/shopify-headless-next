@@ -15,13 +15,18 @@ export default async function Search({ searchParams }: Props) {
   }
 
   const searchResult = await searchResultsPage(q);
-  const products = searchResult.data;
 
   return (
     <PageWrapper>
       <>
-        <h1 className="text-4xl font-bold mb-10">Search Result For: {q}</h1>
-        <ProductList products={products ?? []} isSlider={false} />
+        <h1 className="text-4xl font-bold mb-2">Search Result For: {q}</h1>
+        <span className="mb-10">
+          Result count: {searchResult.data?.totalCount} products
+        </span>
+        <ProductList
+          products={searchResult.data?.products ?? []}
+          isSlider={false}
+        />
       </>
     </PageWrapper>
   );
