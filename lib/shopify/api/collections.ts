@@ -5,6 +5,7 @@ import {
   FETCH_COLLECTION_BY_HANDLE,
   FETCH_COLLECTIONS,
   FETCH_FEATURED_COLLECTIONS,
+  GET_COLLECTION_FILTER,
 } from "@/graphql/queries";
 import {
   COLLECTION_DETAIL_RESPONSE_SCHEMA,
@@ -14,7 +15,9 @@ import {
 import { API_RESPONSE } from "@/types/response";
 import { COLLECTION_DETAIL_TYPE, COLLECTION_TYPE } from "@/types/collection";
 import { normalizeError } from "@/utils/normalizeErrors";
-import { cacheLife, cacheTag, unstable_cache } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
+import { FILTER_RESPONSE_SCHEMA } from "@/lib/schema/filters";
+import { FILTER_TYPE } from "@/types/filters";
 
 //Get all collections
 export const getCollections = async (): Promise<
@@ -74,14 +77,20 @@ export const getCollections = async (): Promise<
 //Get all collections
 export const getCollectionByHandle = async (
   handle: string,
+  filters?: object[],
+  sortKey?: string,
+  reverse?: boolean,
 ): Promise<API_RESPONSE<COLLECTION_DETAIL_TYPE>> => {
   "use cache";
   cacheLife("minutes");
-  cacheTag(`collection-${handle}`);
+  cacheTag(`collection-${handle}-${JSON.stringify(filters ?? [])}-${sortKey ?? "CREATED"}-${reverse ?? false}`);
   try {
     const { data, errors } = await client.request(FETCH_COLLECTION_BY_HANDLE, {
       variables: {
         handle,
+        filters: filters ?? [],
+        sortKey: sortKey ?? "CREATED",
+        reverse: reverse ?? false
       },
     });
 
@@ -106,7 +115,7 @@ export const getCollectionByHandle = async (
     }
 
     const collection = parsed.data.collection;
-    
+
     if (!collection) {
       return {
         success: false,
@@ -138,7 +147,7 @@ export const getFeaturedCollections = async (): Promise<
   API_RESPONSE<COLLECTION_TYPE[]>
 > => {
   "use cache";
-  cacheLife("weeks");
+  cacheLife("hours");
   cacheTag("featured-collections");
   try {
     const { data, errors } = await client.request(FETCH_FEATURED_COLLECTIONS);
@@ -173,6 +182,58 @@ export const getFeaturedCollections = async (): Promise<
       data: featuredCollections ?? null,
       errors: null,
       warnings: null,
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+
+    return {
+      success: false,
+      data: null,
+      pageInfo: null,
+      errors: normalizeError(error),
+    };
+  }
+};
+
+//get collections filters
+export const getFilters = async (
+  handle: string,
+): Promise<API_RESPONSE<FILTER_TYPE[]>> => {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(`${handle}-filters`);
+  try {
+    const { data, errors } = await client.request(GET_COLLECTION_FILTER, {
+      variables: {
+        handle,
+      },
+    });
+
+    if (errors) {
+      console.log(errors);
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(errors),
+      };
+    }
+
+    const parsed = FILTER_RESPONSE_SCHEMA.safeParse(data);
+
+    if (!parsed.success) {
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(parsed.error),
+      };
+    }
+
+    return {
+      success: true,
+      data: parsed.data.collection.products.filters,
+      errors: null,
     };
   } catch (error: unknown) {
     if (error instanceof Error) {

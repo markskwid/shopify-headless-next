@@ -95,7 +95,6 @@ export const GET_PRODUCT_RECOMMENDATION = `
   }
 `;
 
-
 //get navigation menu by handle
 export const GET_MENU_BY_HANDLE = `
     ${FRAGMENT_MENU_ITEMS}
@@ -215,26 +214,23 @@ query FeaturedCollections {
 
 //get collection by handle
 export const FETCH_COLLECTION_BY_HANDLE = `
-    ${FRAGMENT_PRODUCT_FIELDS}
-
-    query GET_COLLECTION_BY_HANDLE($handle: String!) {
+${FRAGMENT_PRODUCT_FIELDS}
+query GET_COLLECTION_BY_HANDLE($handle: String!, $filters: [ProductFilter!], $sortKey: ProductCollectionSortKeys, $reverse: Boolean) {
     collection(handle: $handle) {
         title
         description
         handle
         image {
-        altText
-        url
+            altText
+            url
         }
-        products(first: 15) {
-        nodes {
-            ...ProductFields
-        }
+        products(first: 15, filters: $filters, sortKey: $sortKey, reverse: $reverse) {
+            nodes {
+                ...ProductFields
+            }
         }
     }
-    }
-
-`;
+}`;
 
 //get customer
 export const GET_CUSTOMER_INFO = `
@@ -309,19 +305,20 @@ query SEARCH_PRODUCTS($query: String!, $first: Int = 10) {
   }
 }`;
 
-
 //get collection filters
 export const GET_COLLECTION_FILTER = `
-  query{
-     collection(handle: "all"){
+  query GET_COLLECTION_FILTER($handle: String!){
+     collection(handle: $handle){
       products(first: 1){
         filters{
           id
           label
+          type
           values{
             id
             label
             input
+            count
           }
         }
       } 

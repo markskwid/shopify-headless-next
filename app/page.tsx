@@ -18,7 +18,7 @@ async function ProductSection({
   const products = await getProducts(sortKey, reverse);
   return (
     <>
-      <ProductList products={products.data ?? []} isSlider={false} />
+      <ProductList products={products.data ?? []} isSlider={false} isCollection={false}/>
     </>
   );
 }
