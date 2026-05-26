@@ -2,10 +2,11 @@
 import { loginAction } from "@/app/(auth)/login/actions";
 import { formatLoginError } from "@/utils/formatLoginError";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiErrorCircle } from "react-icons/bi";
 
 export default function LoginForm() {
+  //states
   const [email, setEmail] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -80,10 +81,7 @@ export default function LoginForm() {
         {loading ? "Logging in..." : "Submit"}
       </button>
 
-      <Link
-        href={"/sign-up"}
-        className="block mt-5 text-center underline"
-      >
+      <Link href={"/register"} className="block mt-5 text-center underline">
         Create an account
       </Link>
     </form>

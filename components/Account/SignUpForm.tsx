@@ -2,7 +2,7 @@
 import { registerThenLoginAction } from "@/app/(auth)/register/action";
 import { formatLoginError } from "@/utils/formatLoginError";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiErrorCircle } from "react-icons/bi";
 
 interface SIGN_UP_FORM {
@@ -13,6 +13,21 @@ interface SIGN_UP_FORM {
 }
 
 export default function SignUpForm() {
+  //useEffect to reset form once unmounted
+  useEffect(() => {
+    return () => {
+      setError(null);
+      setLoading(false);
+      setForm({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+      });
+    };
+  }, []);
+
+  //states
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [form, setForm] = useState<SIGN_UP_FORM>({
@@ -34,7 +49,6 @@ export default function SignUpForm() {
     formData.append("password", form.password);
     formData.append("firstName", form.firstName);
     formData.append("lastName", form.lastName);
-
 
     //send response to action
     const response = await registerThenLoginAction(formData);
@@ -138,7 +152,7 @@ export default function SignUpForm() {
       </button>
 
       <Link href={"/login"} className="block mt-5 text-center underline">
-        Sign in now
+        Sign in
       </Link>
     </form>
   );
