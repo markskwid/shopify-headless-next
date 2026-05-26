@@ -56,7 +56,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
         <>
           <h2 className="text-4xl font-bold mb-10 mt-20">Related Products</h2>
           <Suspense fallback={<ProductListSkeleton />}>
-            <ProductList products={productRecommendation?.data ?? []} isSlider={true}/>
+            <ProductList products={productRecommendation?.data ?? []} isSlider={true} isCollection={false}/>
           </Suspense>
         </>
       </>

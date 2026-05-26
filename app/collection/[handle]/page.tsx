@@ -78,16 +78,11 @@ export default async function Collection({ params, searchParams }: Props) {
                 <Sort />
               </div>
 
-              <Suspense
-                key={`${sortKey}-${reverse}`}
-                fallback={<ProductListSkeleton />}
-              >
-                <ProductList
-                  products={collection.data?.products.nodes ?? []}
-                  isSlider={false}
-                  isCollection={true}
-                />
-              </Suspense>
+              <ProductList
+                products={collection.data?.products.nodes ?? []}
+                isSlider={false}
+                isCollection={true}
+              />
             </>
           ) : (
             <h2 className="font-bold text-xl">

@@ -121,7 +121,7 @@ export default async function Home({
           </div>
           <Suspense
             key={`${sortKey}-${reverse}`}
-            fallback={<ProductListSkeleton />}
+            fallback={<ProductListSkeleton isCollection={false} />}
           >
             <ProductSection sortKey={sortKey} reverse={reverse} />
           </Suspense>

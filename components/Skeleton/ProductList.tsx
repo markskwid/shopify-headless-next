@@ -1,13 +1,20 @@
-const PAGE_SIZE = 12;
+interface Props {
+  productSize?: number;
+  isCollection?: boolean;
+}
+export const ProductListSkeleton = ({ productSize, isCollection }: Props) => {
+  const PAGE_SIZE = productSize ?? 12;
 
-export const ProductListSkeleton = () => {
   return (
-    <div className="flex flex-wrap justify-start items-start space-x-2 space-y-5 min-h-screen">
+    <div
+      className={
+        isCollection
+          ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-4"
+          : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4"
+      }
+    >
       {Array.from({ length: PAGE_SIZE }).map((_, index) => (
-        <div
-          key={index}
-          className="group md:flex-[48%] lg:flex-[24%] z-10 animate-pulse min-h-62"
-        >
+        <div key={index} className="group animate-pulse min-h-62">
           <div className="w-full min-h-98 bg-gray-300 rounded-md"></div>
           <div className="text-center font-semibold mt-2 text-xl h-8 bg-gray-300"></div>
 

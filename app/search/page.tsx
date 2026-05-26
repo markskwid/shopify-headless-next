@@ -1,7 +1,9 @@
 import { PageWrapper } from "@/components/PageWrapper";
 import { ProductList } from "@/components/ProductList/ProductList";
+import { ProductListSkeleton } from "@/components/Skeleton/ProductList";
 import { searchResultsPage } from "@/lib/shopify/api/search";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 interface Props {
   searchParams: Promise<{ q?: string }>;
@@ -26,6 +28,7 @@ export default async function Search({ searchParams }: Props) {
         <ProductList
           products={searchResult.data?.products ?? []}
           isSlider={false}
+          isCollection={false}
         />
       </>
     </PageWrapper>
