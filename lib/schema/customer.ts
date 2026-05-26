@@ -44,6 +44,7 @@ export const CUSTOMER_LOGIN_RESPONSE_SCHEMA = z.object({
     customerUserErrors: z.array(
       z
         .object({
+          code: z.string(),
           field: z.array(z.string()).nullable().optional(),
           message: z.string().nullable().optional(),
         })

@@ -35,6 +35,7 @@ mutation CUSTOMER_LOGIN($input: CustomerAccessTokenCreateInput!) {
       expiresAt
     }
     customerUserErrors {
+      code
       field
       message
     }

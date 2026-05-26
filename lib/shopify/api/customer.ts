@@ -122,12 +122,16 @@ export const loginCustomer = async (input: {
     const userErrors = parsed.data.customerAccessTokenCreate.customerUserErrors
       .map((e) => e?.message)
       .filter((msg): msg is string => !!msg);
+    const userErrorCodes =
+      parsed.data.customerAccessTokenCreate.customerUserErrors
+        .map((e) => e?.code)
+        .filter((code): code is string => Boolean(code));
 
     if (userErrors.length > 0 || !customerToken) {
       return {
         success: false,
         data: null,
-        errors: userErrors,
+        errors: userErrorCodes,
       };
     }
 

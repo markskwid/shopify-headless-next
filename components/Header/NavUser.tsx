@@ -10,6 +10,7 @@ import { useCart } from "@/context/Cart";
 import { useUI } from "@/context/UserInterface";
 import { SearchBar } from "./Search";
 import useMediaQuery from "@/lib/responsiveness/useMediaQuery";
+import Link from "next/link";
 
 export const NavUser = () => {
   const { cart } = useCart();
@@ -35,11 +36,11 @@ export const NavUser = () => {
           <AiOutlineSearch />
         </i>
       </button>
-      <button>
+      <Link href={"/login"}>
         <i>
           <AiOutlineUser />
         </i>
-      </button>
+      </Link>
       <button className="relative cursor-pointer" onClick={toggleCart}>
         <i>
           <AiOutlineShoppingCart />
@@ -54,7 +55,7 @@ export const NavUser = () => {
 
       <button
         onClick={() => toggleMobileNavigation()}
-        className="inline-block lg:hidden test"
+        className="inline-block lg:hidden"
       >
         <i>
           <AiOutlineMenu />

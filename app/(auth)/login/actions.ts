@@ -25,6 +25,13 @@ export const loginAction = async (formData: FormData) => {
         expiresAt: result.data?.expiresAt,
         errors: null,
       };
+    } else {
+      return {
+        success: false,
+        customerToken: null,
+        expiresAt: null,
+        errors: result.errors,
+      };
     }
   } catch (err: unknown) {
     console.error("Server action error:", err);
