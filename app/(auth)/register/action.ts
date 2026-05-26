@@ -5,7 +5,6 @@ import {
   createCustomer,
   loginCustomer,
 } from "./../../../lib/shopify/api/customer";
-("use server");
 
 export const registerThenLoginAction = async (formData: FormData) => {
   try {
@@ -37,7 +36,6 @@ export const registerThenLoginAction = async (formData: FormData) => {
           expiresAt: loginResult.data?.expiresAt,
           errors: null,
         };
-        
       } else {
         console.log("Error logging in customer");
         return {
@@ -50,6 +48,7 @@ export const registerThenLoginAction = async (formData: FormData) => {
 
     //if customer fail on register
     console.log("Error registering customer");
+
     return {
       success: false,
       customer: null,

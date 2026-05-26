@@ -4,7 +4,7 @@ export const CUSTOMER_INPUT_SCHEMA = z.object({
   firstName: z.string(),
   lastName: z.string(),
   email: z.email(),
-  password: z.string().min(8),
+  password: z.string(),
 });
 
 export const CUSTOMER_SCHEMA = z.object({
@@ -28,6 +28,7 @@ export const CUSTOMER_CREATE_RESPONSE_SCHEMA = z.object({
       customerUserErrors: z
         .array(
           z.object({
+            code: z.string(),
             field: z.array(z.string()).nullable().optional(),
             message: z.string(),
           }),

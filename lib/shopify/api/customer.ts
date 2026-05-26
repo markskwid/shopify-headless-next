@@ -59,12 +59,15 @@ export const createCustomer = async (input: {
     const userErrors =
       parsed.data.customerCreate?.customerUserErrors?.map((e) => e.message) ??
       [];
+    const userErrorCodes = parsed.data.customerCreate?.customerUserErrors
+      ?.map((e) => e?.code)
+      .filter((code): code is string => Boolean(code));
 
     if (userErrors?.length > 0 || !customer) {
       return {
         success: false,
         data: null,
-        errors: normalizeError(userErrors),
+        errors: userErrorCodes ?? ["Unknown Error"],
       };
     }
 

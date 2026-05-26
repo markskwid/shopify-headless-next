@@ -19,6 +19,7 @@ mutation CUSTOMER_CREATE($input: CustomerCreateInput!) {
       email
     }
     customerUserErrors {
+      code
       field
       message
     }
