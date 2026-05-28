@@ -1,54 +1,20 @@
 "use client";
 import { registerThenLoginAction } from "@/app/(auth)/register/action";
 import { formatLoginError } from "@/utils/formatLoginError";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { BiErrorCircle } from "react-icons/bi";
+import Link from "next/link";
 
-interface SIGN_UP_FORM {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
-
-export default function SignUpForm() {
-  //useEffect to reset form once unmounted
-  useEffect(() => {
-    return () => {
-      setError(null);
-      setLoading(false);
-      setForm({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-      });
-    };
-  }, []);
-
+function SignUpFormContent() {
   //states
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [form, setForm] = useState<SIGN_UP_FORM>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    const formData = new FormData();
-    formData.append("email", form.email);
-    formData.append("password", form.password);
-    formData.append("firstName", form.firstName);
-    formData.append("lastName", form.lastName);
+    const formData = new FormData(e.currentTarget);
 
     //send response to action
     const response = await registerThenLoginAction(formData);
@@ -84,8 +50,6 @@ export default function SignUpForm() {
             type="text"
             id="firstname"
             name="firstName"
-            value={form.firstName ?? ""}
-            onChange={handleChange}
             className="border border-gray-600 mt-2 w-full p-2 rounded-md"
             required
           />
@@ -102,8 +66,6 @@ export default function SignUpForm() {
             type="text"
             id="lastname"
             name="lastName"
-            value={form.lastName ?? ""}
-            onChange={handleChange}
             className="border border-gray-600 mt-2 w-full p-2 rounded-md"
             required
           />
@@ -118,8 +80,6 @@ export default function SignUpForm() {
           type="text"
           id="email"
           name="email"
-          value={form.email ?? ""}
-          onChange={handleChange}
           className="border border-gray-600 mt-2 w-full p-2 rounded-md"
           required
         />
@@ -135,8 +95,6 @@ export default function SignUpForm() {
         <input
           type="password"
           id="password"
-          value={form.password ?? ""}
-          onChange={handleChange}
           name="password"
           className="border border-gray-600 mt-2 w-full p-2 rounded-md"
           required
@@ -156,4 +114,10 @@ export default function SignUpForm() {
       </Link>
     </form>
   );
+}
+
+export default function SignUpForm() {
+  const pathName = usePathname();
+
+  return <SignUpFormContent key={pathName} />;
 }

@@ -1,23 +1,20 @@
 "use client";
 import { loginAction } from "@/app/(auth)/login/actions";
 import { formatLoginError } from "@/utils/formatLoginError";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BiErrorCircle } from "react-icons/bi";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
-export default function LoginForm() {
+function LoginFormContent() {
   //states
-  const [email, setEmail] = useState<string | null>(null);
-  const [password, setPassword] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    const formData = new FormData();
-    formData.append("email", email as string);
-    formData.append("password", password as string);
+    const formData = new FormData(e.currentTarget);
 
     //send response to action
     const response = await loginAction(formData);
@@ -34,6 +31,7 @@ export default function LoginForm() {
     <form
       className="border border-gray-400 py-5 px-5 my-5 rounded-lg w-sm md:w-md"
       onSubmit={handleSubmit}
+      autoComplete="off"
     >
       <div className="flex flex-col justify-start items-start mb-5">
         {error && (
@@ -48,8 +46,6 @@ export default function LoginForm() {
           type="text"
           id="email"
           name="email"
-          value={email ?? ""}
-          onChange={(e) => setEmail(e.target.value)}
           className="border border-gray-600 mt-2 w-full p-2 rounded-md"
           required
         />
@@ -65,8 +61,6 @@ export default function LoginForm() {
         <input
           type="password"
           id="password"
-          value={password ?? ""}
-          onChange={(e) => setPassword(e.target.value)}
           name="password"
           className="border border-gray-600 mt-2 w-full p-2 rounded-md"
           required
@@ -81,9 +75,19 @@ export default function LoginForm() {
         {loading ? "Logging in..." : "Submit"}
       </button>
 
-      <Link href={"/register"} className="block mt-5 text-center underline">
+      <Link
+        href={"/register"}
+        className="block mt-5 text-center underline"
+        replace
+      >
         Create an account
       </Link>
     </form>
   );
+}
+
+export default function LoginForm() {
+  const pathName = usePathname();
+
+  return <LoginFormContent key={pathName} />;
 }
