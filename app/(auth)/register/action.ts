@@ -1,58 +1,64 @@
 "use server";
 
 import { cookies } from "next/headers";
-import {
-  createCustomer,
-  loginCustomer,
-} from "./../../../lib/shopify/api/customer";
+import { createCustomer, loginCustomer } from "@/lib/shopify/api/customer";
+import { API_RESPONSE } from "@/types/response";
+import { CUSTOMER_ACCESS_TOKEN_TYPE } from "@/types/customer";
+import { normalizeError } from "@/utils/normalizeErrors";
+import { createCart, updateCartBuyerIdentity } from "@/lib/shopify/api/cart";
 
-export const registerThenLoginAction = async (formData: FormData) => {
+export const registerThenLoginAction = async (
+  formData: FormData,
+): Promise<API_RESPONSE<CUSTOMER_ACCESS_TOKEN_TYPE>> => {
+  const firstName = formData.get("firstName") as string;
+  const lastName = formData.get("lastName") as string;
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
   try {
     const registerResult = await createCustomer({
-      firstName: formData.get("firstName") as string,
-      lastName: formData.get("lastName") as string,
-      email: formData.get("email") as string,
-      password: formData.get("password") as string,
+      firstName,
+      lastName,
+      email,
+      password,
     });
 
-    if (registerResult.success) {
-      const loginResult = await loginCustomer({
-        email: formData.get("email") as string,
-        password: formData.get("password") as string,
-      });
-
-      if (loginResult.success) {
-        const cookieStore = await cookies();
-        cookieStore.set("customerAccessToken", loginResult.data?.accessToken!, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "lax",
-          expires: new Date(loginResult.data?.expiresAt!),
-        });
-
-        return {
-          success: true,
-          customerToken: loginResult.data?.accessToken,
-          expiresAt: loginResult.data?.expiresAt,
-          errors: null,
-        };
-      } else {
-        console.log("Error logging in customer");
-        return {
-          success: false,
-          customer: null,
-          errors: registerResult.errors,
-        };
-      }
+    if (!registerResult.success) {
+      return {
+        success: false,
+        data: null,
+        errors: registerResult.errors,
+      };
     }
 
-    //if customer fail on register
-    console.log("Error registering customer");
+    const loginResult = await loginCustomer({
+      email,
+      password,
+    });
+
+    if (!loginResult.success) {
+      return {
+        success: false,
+        data: null,
+        errors: loginResult.errors,
+      };
+    }
+
+    const { accessToken, expiresAt } = loginResult.data!;
+
+    //save token on cookies
+    const cookieStore = await cookies();
+    cookieStore.set("customerAccessToken", accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      expires: new Date(expiresAt),
+    });
 
     return {
-      success: false,
-      customer: null,
-      errors: registerResult.errors,
+      success: true,
+      data: loginResult.data,
+      errors: null,
     };
   } catch (err: unknown) {
     if (err instanceof Error) {
@@ -61,8 +67,8 @@ export const registerThenLoginAction = async (formData: FormData) => {
 
     return {
       success: false,
-      customer: null,
-      errors: err instanceof Error ? err.message : "Unknown error",
+      data: null,
+      errors: normalizeError(err),
     };
   }
 };

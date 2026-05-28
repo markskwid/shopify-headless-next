@@ -3,7 +3,7 @@ import { loginAction } from "@/app/(auth)/login/actions";
 import { formatLoginError } from "@/utils/formatLoginError";
 import { useState } from "react";
 import { BiErrorCircle } from "react-icons/bi";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import Link from "next/link";
 
 function LoginFormContent() {
@@ -22,6 +22,7 @@ function LoginFormContent() {
     if (!response?.success) {
       setError(formatLoginError(response?.errors));
     } else {
+      redirect("/account");
       setError(null);
     }
 

@@ -7,12 +7,15 @@ export const addToCartAction = async (formData: FormData) => {
   try {
     const variantId = formData.get("variantId") as string;
     const quantity = Number(formData.get("quantity") ?? 1);
-    let cookieStore = await cookies();
+    const cookieStore = await cookies();
 
     let cartId = cookieStore.get("cartId")?.value;
 
     if (!cartId) {
-      const newCart = await createCart();
+      const customerAccessToken = cookieStore.get("customerAccessToken")?.value;
+
+      //create cart + attached
+      const newCart = await createCart(customerAccessToken);
 
       if (!newCart.success || !newCart.data) {
         console.log("Error creating a new cart");

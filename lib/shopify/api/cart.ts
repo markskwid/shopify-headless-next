@@ -1,5 +1,6 @@
 import "server-only";
 import {
+  CART_ATTACH_BUYER_IDENTITY,
   CART_LINES_REMOVE,
   CART_LINES_UPDATE,
   CART_UPDATE_NOTE,
@@ -77,13 +78,19 @@ export const getCart = async (
   }
 };
 
-export const createCart = async (): Promise<
+export const createCart = async (customerToken?: string): Promise<
   API_RESPONSE<CREATED_CART_TYPE>
 > => {
   try {
     const { data, errors } = await client.request(CREATE_CART, {
       variables: {
-        input: {},
+        input: {
+          ...(customerToken && {
+            buyerIdentity: {
+              customerAccessToken: customerToken
+            }
+          })
+        },
       },
     });
 
@@ -415,6 +422,50 @@ export const updateCartNote = async (
       data: items,
       errors: null,
       warnings: parsed.data.cartNoteUpdate.warnings,
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+
+    return {
+      success: false,
+      data: null,
+      errors: normalizeError(error),
+      warnings: null,
+    };
+  }
+};
+
+export const updateCartBuyerIdentity = async (
+  customerToken: string,
+  cartId: string,
+) => {
+  console.log(customerToken, cartId);
+  try {
+    const { data, errors } = await client.request(CART_ATTACH_BUYER_IDENTITY, {
+      variables: {
+        cartId: cartId,
+        buyerIdentity: {
+          customerAccessToken: customerToken,
+        },
+      },
+    });
+
+    if (errors) {
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(errors),
+      };
+    }
+
+    console.log("ATTACHED DATA: ", data);
+
+    return {
+      success: true,
+      data: data,
+      errors: null,
     };
   } catch (error: unknown) {
     if (error instanceof Error) {

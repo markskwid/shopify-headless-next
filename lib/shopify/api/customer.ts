@@ -9,6 +9,7 @@ import {
 import { CUSTOMER_TYPE, CUSTOMER_ACCESS_TOKEN_TYPE } from "@/types/customer";
 import { API_RESPONSE } from "@/types/response";
 import { normalizeError } from "@/utils/normalizeErrors";
+import { GET_CUSTOMER_INFO } from "@/graphql/queries";
 
 export const createCustomer = async (input: {
   firstName: string;
@@ -141,6 +142,40 @@ export const loginCustomer = async (input: {
     return {
       success: true,
       data: customerToken,
+      errors: null,
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+
+    return {
+      success: false,
+      data: null,
+      errors: normalizeError(error),
+    };
+  }
+};
+
+export const getCustomer = async (token: string) => {
+  try {
+    const { data, errors } = await client.request(GET_CUSTOMER_INFO, {
+      variables: {
+        token,
+      },
+    });
+
+    if (errors) {
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(errors),
+      };
+    }
+
+    return {
+      success: true,
+      data: data,
       errors: null,
     };
   } catch (error: unknown) {

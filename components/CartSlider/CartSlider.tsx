@@ -23,7 +23,7 @@ export const CartSlider = () => {
     };
   }, [isCartOpen]);
 
-  const isCartEmpty = cart?.lines.nodes.length === 0;
+  const isCartEmpty = !cart?.lines.nodes.length;
 
   return (
     <div

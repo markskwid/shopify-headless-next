@@ -1,7 +1,7 @@
 "use client";
 import { registerThenLoginAction } from "@/app/(auth)/register/action";
 import { formatLoginError } from "@/utils/formatLoginError";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import { useState } from "react";
 import { BiErrorCircle } from "react-icons/bi";
 import Link from "next/link";
@@ -20,10 +20,10 @@ function SignUpFormContent() {
     const response = await registerThenLoginAction(formData);
 
     if (!response?.success) {
-      console.log(response.errors);
       setError(formatLoginError(response?.errors));
     } else {
       setError(null);
+      redirect("/");
     }
 
     setLoading(false);

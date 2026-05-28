@@ -59,6 +59,14 @@ mutation CREATE_CART($input: CartInput){
       id
       totalQuantity
       checkoutUrl
+
+      buyerIdentity {
+          email
+          customer {
+            firstName
+            lastName
+          }
+       }
     }
     
     userErrors{
@@ -110,7 +118,6 @@ mutation REMOVE_ITEM($cartId: ID!, $lineIds: [ID!]!) {
 }
 `;
 
-
 export const CART_LINES_UPDATE = `
 ${FRAGMENT_CART_ITEM}
 mutation UPDATE_ITEM($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
@@ -146,3 +153,24 @@ mutation UPDATE_CART_NOTE($cartId: ID!, $note: String!) {
     }
   }
 }`;
+
+//----- Attach customer info on the current cart
+export const CART_ATTACH_BUYER_IDENTITY = `
+  mutation cartBuyerIdentityUpdate(
+    $cartId: ID!
+    $buyerIdentity: CartBuyerIdentityInput!
+  ) {
+    cartBuyerIdentityUpdate(cartId: $cartId, buyerIdentity: $buyerIdentity) {
+      cart {
+        id
+        buyerIdentity {
+          email
+          customer {
+            firstName
+            lastName
+          }
+        }
+      }
+    }
+  }
+`;

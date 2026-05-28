@@ -8,7 +8,7 @@ import Image from "next/image";
 export const LineItems = () => {
   const { cart, deleteItem, updateItem } = useCart();
 
-  const isCartEmpty = cart?.lines.nodes.length === 0;
+  const isCartEmpty = !cart?.lines.nodes.length;
 
   return (
     <div className="w-full flex-1 overflow-y-auto no-scrollbar pr-1">
