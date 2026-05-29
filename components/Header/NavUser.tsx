@@ -46,7 +46,7 @@ export const NavUser = () => {
       <button
         className="relative cursor-pointer"
         onClick={() => {
-          pathName === "/cart" ? null : toggleCart;
+          if (pathName !== "/cart") toggleCart();
         }}
       >
         <i>

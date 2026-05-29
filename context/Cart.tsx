@@ -9,6 +9,7 @@ import { useUI } from "./UserInterface";
 type CART_CONTEXT_TYPE = {
   cart: CART_TYPE | null;
   addingVariant: string | null;
+  updatingVariant: string | null;
   setCart: (cart: CART_TYPE) => void;
   addItem: (id: string, quantity?: number) => Promise<boolean>;
   updateItem: (
@@ -32,7 +33,8 @@ export const CartProvider = ({
 }: CART_PROVIDER_PROPS) => {
   const [cart, setCartState] = useState<CART_TYPE | null>(initialCart);
   const [addingVariant, setAddingVariant] = useState<string | null>(null);
-  
+  const [updatingVariant, setUpdatingVariant] = useState<string | null>(null);
+
   const { toggleCart } = useUI();
 
   const addItem = async (id: string, quantity?: number) => {
@@ -83,6 +85,7 @@ export const CartProvider = ({
     action: "inc" | "dec",
   ) => {
     try {
+      setUpdatingVariant(id);
       const formData = new FormData();
       formData.append("line-id", id);
       let newQuantity = Number(quantity);
@@ -98,7 +101,7 @@ export const CartProvider = ({
       if (!res.success || !res.data) {
         return;
       }
-
+      setUpdatingVariant(null);
       setCart(res.data);
     } catch (error) {
       console.log(error);
@@ -118,6 +121,7 @@ export const CartProvider = ({
         deleteItem,
         addItem,
         updateItem,
+        updatingVariant,
       }}
     >
       {children}

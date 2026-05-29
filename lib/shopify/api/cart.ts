@@ -1,5 +1,6 @@
 import "server-only";
 import {
+  CART_APPLY_DISCOUNT_CODE,
   CART_ATTACH_BUYER_IDENTITY,
   CART_LINES_REMOVE,
   CART_LINES_UPDATE,
@@ -9,6 +10,7 @@ import { CART_LINES_ADD, CREATE_CART } from "@/graphql/mutations";
 import { client } from "../client";
 import {
   ADD_TO_CART_RESPONSE_SCHEMA,
+  CART_DISCOUNT_APPLIED_RETURN_SCHEMA,
   CREATE_CART_RESPONSE_SCHEMA,
   GET_CART_RESPONSE_SCHEMA,
   REMOVE_ITEM_CART_RESPONSE_SCHEMA,
@@ -78,18 +80,18 @@ export const getCart = async (
   }
 };
 
-export const createCart = async (customerToken?: string): Promise<
-  API_RESPONSE<CREATED_CART_TYPE>
-> => {
+export const createCart = async (
+  customerToken?: string,
+): Promise<API_RESPONSE<CREATED_CART_TYPE>> => {
   try {
     const { data, errors } = await client.request(CREATE_CART, {
       variables: {
         input: {
           ...(customerToken && {
             buyerIdentity: {
-              customerAccessToken: customerToken
-            }
-          })
+              customerAccessToken: customerToken,
+            },
+          }),
         },
       },
     });
@@ -465,6 +467,62 @@ export const updateCartBuyerIdentity = async (
     return {
       success: true,
       data: data,
+      errors: null,
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+
+    return {
+      success: false,
+      data: null,
+      errors: normalizeError(error),
+      warnings: null,
+    };
+  }
+};
+
+export const applyDiscountCode = async (cartId: string, couponCode: string) => {
+  try {
+    const { data, errors } = await client.request(CART_APPLY_DISCOUNT_CODE, {
+      variables: {
+        cartId,
+        discountCodes: [couponCode],
+      },
+    });
+
+    if (errors) {
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(errors),
+      };
+    }
+
+    const parsed = CART_DISCOUNT_APPLIED_RETURN_SCHEMA.safeParse(data);
+
+    if (!parsed.success) {
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(parsed.error),
+      };
+    }
+
+    if (!parsed.data?.cartDiscountCodesUpdate?.cart) {
+      return {
+        success: false,
+        data: null,
+        errors: ["Invalid response from Shopify"],
+      };
+    }
+
+    const cart = parsed.data.cartDiscountCodesUpdate.cart;
+
+    return {
+      success: true,
+      data: cart,
       errors: null,
     };
   } catch (error: unknown) {

@@ -1,6 +1,7 @@
 "use server";
 import { removeItemInCart } from "@/lib/shopify/api/cart";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 export const removeItemAction = async (formData: FormData) => {
   try {
@@ -38,6 +39,7 @@ export const removeItemAction = async (formData: FormData) => {
       };
     }
 
+    revalidatePath("/cart");
     return {
       data: result.data,
       success: true,

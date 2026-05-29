@@ -70,6 +70,11 @@ fragment CART_FIELD on Cart {
   note
   totalQuantity
   checkoutUrl
+
+  discountCodes{
+    code
+    applicable
+  }
   cost {
     subtotalAmount {
       amount
@@ -95,6 +100,7 @@ fragment CART_FIELD on Cart {
           title
           product{
             title
+            handle
           }
           image{
            url

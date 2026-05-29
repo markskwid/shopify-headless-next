@@ -1,6 +1,7 @@
 "use server";
 import { updateItemInCart } from "@/lib/shopify/api/cart";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 export const updateItemAction = async (formData: FormData) => {
   try {
@@ -34,10 +35,11 @@ export const updateItemAction = async (formData: FormData) => {
       };
     }
 
+    revalidatePath("/cart");
     return {
       data: result.data,
       success: true,
-      errors: result.errors,
+      errors: null,
     };
   } catch (err: unknown) {
     if (err instanceof Error) {

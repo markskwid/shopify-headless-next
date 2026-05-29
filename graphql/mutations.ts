@@ -174,3 +174,31 @@ export const CART_ATTACH_BUYER_IDENTITY = `
     }
   }
 `;
+
+//----- Apply discount code
+export const CART_APPLY_DISCOUNT_CODE = `
+mutation cartDiscountCodesUpdate($cartId: ID!, $discountCodes: [String!]!) {
+  cartDiscountCodesUpdate(cartId: $cartId, discountCodes: $discountCodes) {
+    cart {
+      discountCodes {
+        code
+        applicable
+      }
+      cost {
+        subtotalAmount {
+          amount
+          currencyCode
+        }
+        totalAmount {
+          amount
+          currencyCode
+        }
+      }
+    }
+    userErrors {
+      field
+      message
+    }
+  }
+}
+`;

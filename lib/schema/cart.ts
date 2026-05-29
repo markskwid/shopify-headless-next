@@ -14,6 +14,7 @@ export const CART_LINE_SCHEMA = z.object({
     }),
     product: z.object({
       title: z.string(),
+      handle: z.string(),
     }),
     price: MONEY_SCHEMA,
     sku: z.string().nullable(),
@@ -31,6 +32,12 @@ export const CART_SCHEMA = z.object({
   id: z.string(),
   checkoutUrl: z.string(),
   totalQuantity: z.number(),
+  discountCodes: z.array(
+    z.object({
+      code: z.string(),
+      applicable: z.boolean(),
+    }),
+  ),
   cost: z.object({
     subtotalAmount: MONEY_SCHEMA.nullable(),
     totalTaxAmount: MONEY_SCHEMA.nullable(),
@@ -161,5 +168,25 @@ export const UPDATE_CART_NOTE_RESPONSE_SCHEMA = z.object({
         }),
       )
       .nullable(),
+  }),
+});
+
+//discount code cart
+export const CART_DISCOUNT_APPLIED_RETURN_SCHEMA = z.object({
+  cartDiscountCodesUpdate: z.object({
+    cart: z.object({
+      discountCodes: z.array(
+        z.object({
+          code: z.string(),
+          applicable: z.boolean(),
+        }),
+      ),
+      cost: z.object({
+        subtotalAmount: MONEY_SCHEMA,
+        totalAmount: MONEY_SCHEMA,
+      }),
+
+      userErrors: z.array(z.object()).nullable().optional(),
+    }),
   }),
 });
