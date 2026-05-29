@@ -9,10 +9,12 @@ import {
 import { useCart } from "@/context/Cart";
 import { useUI } from "@/context/UserInterface";
 import { SearchBar } from "./Search";
+import { usePathname } from "next/navigation";
 import useMediaQuery from "@/lib/responsiveness/useMediaQuery";
 import Link from "next/link";
 
 export const NavUser = () => {
+  const pathName = usePathname();
   const { cart } = useCart();
   const {
     toggleCart,
@@ -26,7 +28,7 @@ export const NavUser = () => {
   return (
     <div className="flex justify-end items-center gap-3 [&_i]:text-2xl">
       <div
-        className={`transition-none ${isMobile ? isSearchBarOpen ? "max-md:pointer-events-auto max-md:opacity-100 max-md:translate-y-0 max-md:duration-75 max-md:delay-0" : "max-md:opacity-0 max-md:-translate-y-full max-md:duration-100 max-md:delay-75 max-md:pointer-events-none" : ""} 
+        className={`transition-none ${isMobile ? (isSearchBarOpen ? "max-md:pointer-events-auto max-md:opacity-100 max-md:translate-y-0 max-md:duration-75 max-md:delay-0" : "max-md:opacity-0 max-md:-translate-y-full max-md:duration-100 max-md:delay-75 max-md:pointer-events-none") : ""} 
           max-md:transition-[scale, transform] max-md:absolute max-md:-bottom-10 max-md:w-[92%] max-md:left-1/2 max-md:-translate-x-1/2`}
       >
         <SearchBar />
@@ -41,7 +43,12 @@ export const NavUser = () => {
           <AiOutlineUser />
         </i>
       </Link>
-      <button className="relative cursor-pointer" onClick={toggleCart}>
+      <button
+        className="relative cursor-pointer"
+        onClick={() => {
+          pathName === "/cart" ? null : toggleCart;
+        }}
+      >
         <i>
           <AiOutlineShoppingCart />
         </i>

@@ -6,8 +6,11 @@ import { AiOutlineArrowLeft } from "react-icons/ai";
 import { LineItems } from "./LineItems";
 import { useEffect } from "react";
 import { useUI } from "@/context/UserInterface";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 export const CartSlider = () => {
+  const pathName = usePathname();
   const { cart } = useCart();
   const { toggleCart, isCartOpen, handleOverlayClick } = useUI();
 
@@ -22,6 +25,13 @@ export const CartSlider = () => {
       document.body.style.overflow = "";
     };
   }, [isCartOpen]);
+
+  //useEffect for closing slider when navigating pages
+  useEffect(() => {
+    if (isCartOpen) {
+      toggleCart();
+    }
+  }, [pathName]);
 
   const isCartEmpty = !cart?.lines.nodes.length;
 
@@ -59,7 +69,9 @@ export const CartSlider = () => {
                 Shipping & Taxes are added to checkout
               </span>
             </div>
-            <button className="button">Go to Cart</button>
+            <Link href="/cart" className="button">
+              Go to Cart
+            </Link>
             {cart?.checkoutUrl && (
               <a className="button" href={cart.checkoutUrl}>
                 Checkout Now
