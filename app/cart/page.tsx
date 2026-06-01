@@ -1,3 +1,4 @@
+import DiscountCode from "@/components/Cart/DiscountCode";
 import Item from "@/components/Cart/Item";
 import ToggleDiscount from "@/components/Cart/ToggleDiscount";
 import { PageWrapper } from "@/components/PageWrapper";
@@ -15,8 +16,8 @@ export default async function Cart() {
   }
 
   const isCartEmpty = !cart.data?.lines.nodes.length;
+  const appliedDiscount = cart.data?.discountCodes.find((i) => i.applicable);
 
-  console.log(cart);
   return (
     <PageWrapper>
       <>
@@ -62,13 +63,13 @@ export default async function Cart() {
 
                 <ToggleDiscount />
 
-                {cart.data?.discountCodes.length && (
+                {appliedDiscount && (
                   <>
                     <div className="grid grid-cols-2 py-3 border-b border-neutral-300">
                       <strong className="text-lg">Applied Codes: </strong>
-                      <span className="text-end italic">
-                        {cart.data.discountCodes[0].code}
-                      </span>
+                      <div className="text-end italic">
+                        <DiscountCode code={appliedDiscount.code} />
+                      </div>
                     </div>
                     <div className="grid grid-cols-2 py-3 border-b border-neutral-300">
                       <strong className="text-lg">Grand Total: </strong>
