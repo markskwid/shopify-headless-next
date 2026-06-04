@@ -234,8 +234,8 @@ query GET_COLLECTION_BY_HANDLE($handle: String!, $filters: [ProductFilter!], $so
 
 //get customer
 export const GET_CUSTOMER_INFO = `
-query GET_CUSTOMER($token: String!){
-  customer(customerAccessToken: $token){
+query GET_CUSTOMER($token: String!) {
+  customer(customerAccessToken: $token) {
     id
     firstName
     lastName
@@ -243,6 +243,67 @@ query GET_CUSTOMER($token: String!){
     acceptsMarketing
     phone
     createdAt
+
+    # default shipping address
+    defaultAddress {
+      id
+      firstName
+      lastName
+      address1
+      address2
+      city
+      province
+      country
+      zip
+      phone
+    }
+
+    # all saved addresses
+    addresses(first: 10) {
+      nodes {
+        id
+        firstName
+        lastName
+        address1
+        address2
+        city
+        province
+        country
+        zip
+        phone
+      }
+    }
+
+    # order history
+    orders(first: 10, sortKey: PROCESSED_AT, reverse: true) {
+      nodes {
+        id
+        orderNumber
+        processedAt
+        financialStatus
+        fulfillmentStatus
+        currentTotalPrice {
+          amount
+          currencyCode
+        }
+        lineItems(first: 10) {
+          nodes {
+            title
+            quantity
+            variant {
+              image {
+                url
+                altText
+              }
+              price {
+                amount
+                currencyCode
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 `;

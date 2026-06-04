@@ -11,6 +11,7 @@ import { Suspense } from "react";
 import { cookies } from "next/headers";
 import { AuthProvider } from "@/context/Auth";
 import { getCustomer } from "@/lib/shopify/api/customer";
+import { CUSTOMER_TYPE } from "@/types/customer";
 
 const interFont = Inter({
   variable: "--font-google",
@@ -47,8 +48,8 @@ async function AuthInitializer({ children }: { children: React.ReactNode }) {
     <AuthProvider
       initialState={{
         isLoggedIn: !!customer,
-        firstName: customer?.data.firstName || null,
-        lastName: customer?.data.lastName || null,
+        firstName: customer?.data?.firstName || null,
+        lastName: customer?.data?.lastName || null,
       }}
     >
       {children}

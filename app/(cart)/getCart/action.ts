@@ -6,7 +6,17 @@ import { cookies } from "next/headers";
 export const getCartAction = async () => {
   try {
     let cookieStore = await cookies();
-    let cartId = cookieStore.get("cartId")?.value as string;
+    let cartId = cookieStore.get("cartId")?.value;
+
+    //delete cart cookies if this is null indicating the user have checkout
+    if (cartId) {
+      const existingCart = await getCart(cartId);
+
+      if (!existingCart.success || !existingCart.data) {
+        cookieStore.delete("cartId");
+        cartId = undefined;
+      }
+    }
 
     if (!cartId) {
       return {

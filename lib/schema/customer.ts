@@ -8,12 +8,12 @@ export const CUSTOMER_INPUT_SCHEMA = z.object({
 });
 
 export const CUSTOMER_SCHEMA = z.object({
-  id: z.string().optional(),
-  firstName: z.string(),
-  lastName: z.string(),
+  id: z.string(),
+  firstName: z.string().nullable(),
+  lastName: z.string().nullable(),
   email: z.string(),
   acceptsMarketing: z.boolean().optional(),
-  phone: z.string().optional(),
+  phone: z.string().nullable(),
 });
 
 export const CUSTOMER_ACCESS_TOKEN_SCHEMA = z.object({
@@ -52,4 +52,8 @@ export const CUSTOMER_LOGIN_RESPONSE_SCHEMA = z.object({
         .optional(),
     ),
   }),
+});
+
+export const GET_CUSTOMER_RESPONSE_SCHEMA = z.object({
+  customer: CUSTOMER_SCHEMA,
 });

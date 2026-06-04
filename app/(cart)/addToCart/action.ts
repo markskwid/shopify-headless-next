@@ -1,6 +1,6 @@
 "use server";
 
-import { addToCart, createCart } from "@/lib/shopify/api/cart";
+import { addToCart, createCart, getCart } from "@/lib/shopify/api/cart";
 import { cookies } from "next/headers";
 
 export const addToCartAction = async (formData: FormData) => {
