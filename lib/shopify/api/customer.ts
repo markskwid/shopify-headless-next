@@ -179,6 +179,8 @@ export const getCustomer = async (
 
     const parsed = GET_CUSTOMER_RESPONSE_SCHEMA.safeParse(data);
 
+    console.log(parsed.data);
+
     if (!parsed.success) {
       return {
         success: false,

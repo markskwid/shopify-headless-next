@@ -1,10 +1,24 @@
 import { z } from "zod";
+import { MONEY_SCHEMA } from "./money";
 
 export const CUSTOMER_INPUT_SCHEMA = z.object({
   firstName: z.string(),
   lastName: z.string(),
   email: z.email(),
   password: z.string(),
+});
+
+export const ADDRESS_SCHEMA = z.object({
+  id: z.string(),
+  firstName: z.string().nullable(),
+  lastName: z.string().nullable(),
+  address1: z.string().nullable(),
+  address2: z.string().nullable(),
+  city: z.string().nullable(),
+  province: z.string().nullable(),
+  country: z.string().nullable(),
+  zip: z.string().nullable(),
+  phone: z.string().nullable(),
 });
 
 export const CUSTOMER_SCHEMA = z.object({
@@ -14,6 +28,45 @@ export const CUSTOMER_SCHEMA = z.object({
   email: z.string(),
   acceptsMarketing: z.boolean().optional(),
   phone: z.string().nullable(),
+  addresses: z
+    .object({
+      nodes: z.array(ADDRESS_SCHEMA),
+    })
+    .nullable()
+    .optional(),
+  defaultAddress: ADDRESS_SCHEMA.nullable().optional(),
+  orders: z
+    .object({
+      nodes: z.array(
+        z.object({
+          currentTotalPrice: MONEY_SCHEMA,
+          financialStatus: z.string(),
+          fulfillmentStatus: z.string(),
+          id: z.string(),
+          orderNumber: z.number(),
+          processedAt: z.string(),
+          lineItems: z.object({
+            nodes: z.array(
+              z.object({
+                title: z.string(),
+                quantity: z.number(),
+                variant: z
+                  .object({
+                    image: z.object({
+                      url: z.string(),
+                      altText: z.string().nullable(),
+                    }),
+                    price: MONEY_SCHEMA,
+                  })
+                  .nullable(),
+              }),
+            ),
+          }),
+        }),
+      ),
+    })
+    .nullable()
+    .optional(),
 });
 
 export const CUSTOMER_ACCESS_TOKEN_SCHEMA = z.object({

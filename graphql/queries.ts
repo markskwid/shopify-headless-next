@@ -242,9 +242,7 @@ query GET_CUSTOMER($token: String!) {
     email
     acceptsMarketing
     phone
-    createdAt
 
-    # default shipping address
     defaultAddress {
       id
       firstName
@@ -258,7 +256,6 @@ query GET_CUSTOMER($token: String!) {
       phone
     }
 
-    # all saved addresses
     addresses(first: 10) {
       nodes {
         id
@@ -274,7 +271,6 @@ query GET_CUSTOMER($token: String!) {
       }
     }
 
-    # order history
     orders(first: 10, sortKey: PROCESSED_AT, reverse: true) {
       nodes {
         id
