@@ -278,10 +278,49 @@ query GET_CUSTOMER($token: String!) {
         processedAt
         financialStatus
         fulfillmentStatus
+        subtotalPrice {
+          amount
+          currencyCode
+        }
+        totalShippingPrice {
+          amount
+          currencyCode
+        }
+        totalTax {
+          amount
+          currencyCode
+        }
+        totalPrice {
+          amount
+          currencyCode
+        }
         currentTotalPrice {
           amount
           currencyCode
         }
+        totalRefunded {
+          amount
+          currencyCode
+        }
+
+        discountApplications(first: 5) {
+          nodes {
+            ... on DiscountCodeApplication {
+              code
+              applicable
+              value {
+                ... on PricingPercentageValue {
+                  percentage
+                }
+                ... on MoneyV2 {
+                  amount
+                  currencyCode
+                }
+              }
+            }
+          }
+        }
+          
         lineItems(first: 10) {
           nodes {
             title

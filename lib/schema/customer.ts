@@ -40,6 +40,24 @@ export const CUSTOMER_SCHEMA = z.object({
       nodes: z.array(
         z.object({
           currentTotalPrice: MONEY_SCHEMA,
+          subtotalPrice: MONEY_SCHEMA,
+          totalShippingPrice: MONEY_SCHEMA,
+          totalTax: MONEY_SCHEMA,
+          totalPrice: MONEY_SCHEMA,
+          discountApplications: z
+            .object({
+              nodes: z.array(
+                z.object({
+                  applicable: z.boolean(),
+                  code: z.string(),
+                  value: z.object({
+                    percentage: z.number(),
+                  }),
+                }),
+              ),
+            })
+            .optional()
+            .nullable(),
           financialStatus: z.string(),
           fulfillmentStatus: z.string(),
           id: z.string(),
