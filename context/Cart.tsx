@@ -17,7 +17,7 @@ type CART_CONTEXT_TYPE = {
     quantity: string,
     action: "inc" | "dec",
   ) => void;
-  deleteItem: (id: string) => void;
+  deleteItem: (id: string) => void;                                                                                                    
 };
 
 const CartContext = createContext<CART_CONTEXT_TYPE | undefined>(undefined);

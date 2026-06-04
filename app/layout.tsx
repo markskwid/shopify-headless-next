@@ -8,6 +8,9 @@ import { CartSlider } from "@/components/CartSlider/CartSlider";
 import { UIProvider } from "@/context/UserInterface";
 import { Footer } from "@/components/Footer/Footer";
 import { Suspense } from "react";
+import { cookies } from "next/headers";
+import { AuthProvider } from "@/context/Auth";
+import { getCustomer } from "@/lib/shopify/api/customer";
 
 const interFont = Inter({
   variable: "--font-google",
@@ -17,7 +20,8 @@ const interFont = Inter({
 
 export const metadata: Metadata = {
   title: "MarkHeadless Project",
-  description: "MarkHeadless Project created using Next.js, Shopify, and Tailwind",
+  description:
+    "MarkHeadless Project created using Next.js, Shopify, and Tailwind",
 };
 
 async function CartInitializer({ children }: { children: React.ReactNode }) {
@@ -35,6 +39,23 @@ async function CartInitializer({ children }: { children: React.ReactNode }) {
   );
 }
 
+async function AuthInitializer({ children }: { children: React.ReactNode }) {
+  const token = (await cookies()).get("customerAccessToken")?.value;
+  const customer = token ? await getCustomer(token) : null;
+
+  return (
+    <AuthProvider
+      initialState={{
+        isLoggedIn: !!customer,
+        firstName: customer?.data.firstName || null,
+        lastName: customer?.data.lastName || null,
+      }}
+    >
+      {children}
+    </AuthProvider>
+  );
+}
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -43,11 +64,15 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${interFont.variable} font-sans antialiased`}>
-        <UIProvider>
-          <Suspense fallback={<div className="min-h-screen"></div>}>
-            <CartInitializer>{children}</CartInitializer>
-          </Suspense>
-        </UIProvider>
+        <Suspense fallback={null}>
+          <AuthInitializer>
+            <UIProvider>
+              <Suspense fallback={<div className="min-h-screen"></div>}>
+                <CartInitializer>{children}</CartInitializer>
+              </Suspense>
+            </UIProvider>
+          </AuthInitializer>
+        </Suspense>
         <Footer />
       </body>
     </html>

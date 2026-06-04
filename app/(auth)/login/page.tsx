@@ -1,7 +1,12 @@
 import LoginForm from "@/components/Account/LoginForm";
 import { PageWrapper } from "@/components/PageWrapper";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+export default async function Login() {
+  const token = (await cookies()).get("customerAccessToken")?.value;
 
-export default function Login() {
+  if (token) redirect("/account");
+
   return (
     <PageWrapper>
       <div className="flex justify-center items-center">
