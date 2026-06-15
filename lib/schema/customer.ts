@@ -21,6 +21,50 @@ export const ADDRESS_SCHEMA = z.object({
   phone: z.string().nullable(),
 });
 
+export const ORDER_SCHEMA = z.object({
+  currentTotalPrice: MONEY_SCHEMA,
+  subtotalPrice: MONEY_SCHEMA,
+  totalShippingPrice: MONEY_SCHEMA,
+  totalTax: MONEY_SCHEMA,
+  totalPrice: MONEY_SCHEMA,
+  discountApplications: z
+    .object({
+      nodes: z.array(
+        z.object({
+          applicable: z.boolean(),
+          code: z.string(),
+          value: z.object({
+            percentage: z.number(),
+          }),
+        }),
+      ),
+    })
+    .optional()
+    .nullable(),
+  financialStatus: z.string(),
+  fulfillmentStatus: z.string(),
+  id: z.string(),
+  orderNumber: z.number(),
+  processedAt: z.string(),
+  lineItems: z.object({
+    nodes: z.array(
+      z.object({
+        title: z.string(),
+        quantity: z.number(),
+        variant: z
+          .object({
+            image: z.object({
+              url: z.string(),
+              altText: z.string().nullable(),
+            }),
+            price: MONEY_SCHEMA,
+          })
+          .nullable(),
+      }),
+    ),
+  }),
+});
+
 export const CUSTOMER_SCHEMA = z.object({
   id: z.string(),
   firstName: z.string().nullable(),
@@ -37,54 +81,10 @@ export const CUSTOMER_SCHEMA = z.object({
   defaultAddress: ADDRESS_SCHEMA.nullable().optional(),
   orders: z
     .object({
-      nodes: z.array(
-        z.object({
-          currentTotalPrice: MONEY_SCHEMA,
-          subtotalPrice: MONEY_SCHEMA,
-          totalShippingPrice: MONEY_SCHEMA,
-          totalTax: MONEY_SCHEMA,
-          totalPrice: MONEY_SCHEMA,
-          discountApplications: z
-            .object({
-              nodes: z.array(
-                z.object({
-                  applicable: z.boolean(),
-                  code: z.string(),
-                  value: z.object({
-                    percentage: z.number(),
-                  }),
-                }),
-              ),
-            })
-            .optional()
-            .nullable(),
-          financialStatus: z.string(),
-          fulfillmentStatus: z.string(),
-          id: z.string(),
-          orderNumber: z.number(),
-          processedAt: z.string(),
-          lineItems: z.object({
-            nodes: z.array(
-              z.object({
-                title: z.string(),
-                quantity: z.number(),
-                variant: z
-                  .object({
-                    image: z.object({
-                      url: z.string(),
-                      altText: z.string().nullable(),
-                    }),
-                    price: MONEY_SCHEMA,
-                  })
-                  .nullable(),
-              }),
-            ),
-          }),
-        }),
-      ),
+      nodes: z.array(ORDER_SCHEMA),
     })
-    .nullable()
-    .optional(),
+    .optional()
+    .nullable(),
 });
 
 export const CUSTOMER_ACCESS_TOKEN_SCHEMA = z.object({

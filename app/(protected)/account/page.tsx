@@ -1,4 +1,4 @@
-import Dashboard from "@/components/Account/Dashboard";
+import Dashboard from "@/components/Account/Dashboard/Dashboard";
 import { getCustomer } from "@/lib/shopify/api/customer";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
