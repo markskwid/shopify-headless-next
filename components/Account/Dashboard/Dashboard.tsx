@@ -10,6 +10,12 @@ import Modal from "@/components/Modal";
 import { useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 
+type MODAL_STATE = {
+  isOpen: boolean;
+  mode: "add" | "edit";
+  address: ADDRESS_TYPE | null;
+};
+
 export default function Dashboard({
   customer,
 }: {
@@ -73,7 +79,7 @@ export default function Dashboard({
         )
       }
 
-      {isOpen && <Modal isAdding={isAdding} isOpen={true} />}
+      {/* {isOpen && <Modal isAdding={isAdding} isOpen={true} />} */}
     </div>
   );
 }

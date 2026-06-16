@@ -2,12 +2,15 @@
 import { useState } from "react";
 import { BiErrorCircle } from "react-icons/bi";
 import { City, Country, State } from "country-state-city";
+import { ADDRESS_TYPE } from "@/types/address";
 export default function Modal({
-  isAdding,
+  mode,
   isOpen,
+  address,
 }: {
-  isAdding: boolean;
+  mode: "add" | "edit";
   isOpen: boolean;
+  address: ADDRESS_TYPE | null;
 }) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -24,7 +27,7 @@ export default function Modal({
       {/* form */}
       <form className="bg-white border border-gray-400 py-5 px-5 my-5 rounded-lg w-sm md:w-md">
         <h3 className="text-2xl font-bold mb-5">
-          {isAdding ? "Add New Address" : "Edit Address"}
+          {mode === "add" ? "Add New Address" : "Edit Address"}
         </h3>
         {error && (
           <div className="w-full p-2 bg-red-500/50 mb-4 rounded-md flex justify-start items-center font-bold">
