@@ -7,7 +7,7 @@ import {
   GET_PRODUCT_RECOMMENDATION,
 } from "@/graphql/queries";
 import { client } from "../client";
-import { cache } from "react";
+
 import {
   PRODUCT_DETAIL_RESPONSE_SCHEMA,
   PRODUCT_LISTING_RESPONSE_SCHEMA,

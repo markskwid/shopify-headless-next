@@ -8,13 +8,15 @@ export default function Address({
   address,
   defaultAddressId,
   index,
+  clickToEdit,
 }: {
   address: ADDRESS_TYPE;
   defaultAddressId?: string;
   index: number;
+  clickToEdit(): void;
 }) {
   return (
-    <form
+    <div
       className="border p-4 rounded-md mt-4"
       id={address.id}
       key={address.id}
@@ -24,7 +26,7 @@ export default function Address({
           ? "Default Address"
           : `Address ${index + 1}`}
 
-        <button className="cursor-pointer">
+        <button className="cursor-pointer" onClick={clickToEdit}>
           <AiOutlineEdit />
         </button>
       </h3>
@@ -39,6 +41,6 @@ export default function Address({
         {address.city}, {address.province}, {address.country} {address.zip}
       </p>
       <p>{address.phone}</p>
-    </form>
+    </div>
   );
 }
