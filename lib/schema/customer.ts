@@ -14,6 +14,7 @@ export const ADDRESS_SCHEMA = z.object({
   lastName: z.string().nullable(),
   address1: z.string().nullable(),
   address2: z.string().nullable(),
+  company: z.string().nullable(),
   city: z.string().nullable(),
   province: z.string().nullable(),
   country: z.string().nullable(),

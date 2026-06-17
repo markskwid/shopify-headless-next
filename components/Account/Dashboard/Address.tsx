@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 
 import { ADDRESS_TYPE } from "@/types/address";
@@ -8,10 +9,12 @@ export default function Address({
   address,
   defaultAddressId,
   index,
+  onEdit,
 }: {
   address: ADDRESS_TYPE;
   defaultAddressId?: string;
   index: number;
+  onEdit(address: ADDRESS_TYPE): void;
 }) {
   return (
     <div
@@ -24,7 +27,7 @@ export default function Address({
           ? "Default Address"
           : `Address ${index + 1}`}
 
-        <button className="cursor-pointer">
+        <button className="cursor-pointer" onClick={() => onEdit(address)}>
           <AiOutlineEdit />
         </button>
       </h3>

@@ -46,6 +46,13 @@ export default function Dashboard({
                   address={address}
                   index={index}
                   defaultAddressId={customer.defaultAddress?.id}
+                  onEdit={() =>
+                    setModalState({
+                      isOpen: true,
+                      mode: "edit",
+                      address: address,
+                    })
+                  }
                 />
               ),
             )}
@@ -78,7 +85,6 @@ export default function Dashboard({
         <Modal
           key={modalState.address?.id ?? "new"}
           mode={modalState.mode}
-          isOpen={modalState.isOpen}
           address={modalState.address}
           onClose={() => setModalState((prev) => ({ ...prev, isOpen: false }))}
         />

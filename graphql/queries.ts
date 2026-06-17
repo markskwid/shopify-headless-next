@@ -249,6 +249,7 @@ query GET_CUSTOMER($token: String!) {
       lastName
       address1
       address2
+      company
       city
       province
       country
@@ -266,6 +267,7 @@ query GET_CUSTOMER($token: String!) {
         city
         province
         country
+        company
         zip
         phone
       }

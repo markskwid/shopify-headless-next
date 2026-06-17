@@ -11,7 +11,6 @@ import { CUSTOMER_TYPE, CUSTOMER_ACCESS_TOKEN_TYPE } from "@/types/customer";
 import { API_RESPONSE } from "@/types/response";
 import { normalizeError } from "@/utils/normalizeErrors";
 import { GET_CUSTOMER_INFO } from "@/graphql/queries";
-import { no } from "zod/locales";
 
 export const createCustomer = async (input: {
   firstName: string;
@@ -176,7 +175,7 @@ export const getCustomer = async (
         errors: normalizeError(errors),
       };
     }
-    
+
     const parsed = GET_CUSTOMER_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
