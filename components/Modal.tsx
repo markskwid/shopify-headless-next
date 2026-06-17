@@ -6,11 +6,13 @@ import { ADDRESS_TYPE } from "@/types/address";
 export default function Modal({
   mode,
   isOpen,
+  onClose,
   address,
 }: {
   mode: "add" | "edit";
   isOpen: boolean;
   address: ADDRESS_TYPE | null;
+  onClose(): void;
 }) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -172,6 +174,8 @@ export default function Modal({
           </button>
 
           <button
+            onClick={onClose}
+            type="button"
             className="text-black rounded-full border ml-2 py-3 px-6 font-semibold text-center w-auto mt-5 cursor-pointer"
             disabled={loading}
           >

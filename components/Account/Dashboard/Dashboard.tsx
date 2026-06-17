@@ -22,18 +22,12 @@ export default function Dashboard({
   customer: CUSTOMER_TYPE | null;
 }) {
   const { firstName, lastName } = useAuth();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isAdding, setIsAdding] = useState<boolean>(false);
+  const [modalState, setModalState] = useState<MODAL_STATE>({
+    isOpen: false,
+    mode: "add",
+    address: null,
+  });
 
-  const handleAddNewAddress = () => {
-    setIsAdding(true);
-    setIsOpen(true);
-  };
-
-  const handleEditAddress = () => {
-    setIsAdding(false);
-    setIsOpen(true);
-  };
   return (
     <div>
       <h1 className="text-3xl font-bold">My Account</h1>
@@ -52,12 +46,13 @@ export default function Dashboard({
                   address={address}
                   index={index}
                   defaultAddressId={customer.defaultAddress?.id}
-                  clickToEdit={handleEditAddress}
                 />
               ),
             )}
           <button
-            onClick={handleAddNewAddress}
+            onClick={() =>
+              setModalState({ isOpen: true, mode: "add", address: null })
+            }
             className="border p-4 rounded-md mt-4 w-68 flex flex-col justify-center items-center cursor-pointer"
           >
             <AiOutlinePlus size={30} />
@@ -79,7 +74,15 @@ export default function Dashboard({
         )
       }
 
-      {/* {isOpen && <Modal isAdding={isAdding} isOpen={true} />} */}
+      {modalState.isOpen && (
+        <Modal
+          key={modalState.address?.id ?? "new"}
+          mode={modalState.mode}
+          isOpen={modalState.isOpen}
+          address={modalState.address}
+          onClose={() => setModalState((prev) => ({ ...prev, isOpen: false }))}
+        />
+      )}
     </div>
   );
 }

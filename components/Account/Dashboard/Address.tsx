@@ -8,12 +8,10 @@ export default function Address({
   address,
   defaultAddressId,
   index,
-  clickToEdit,
 }: {
   address: ADDRESS_TYPE;
   defaultAddressId?: string;
   index: number;
-  clickToEdit(): void;
 }) {
   return (
     <div
@@ -26,7 +24,7 @@ export default function Address({
           ? "Default Address"
           : `Address ${index + 1}`}
 
-        <button className="cursor-pointer" onClick={clickToEdit}>
+        <button className="cursor-pointer">
           <AiOutlineEdit />
         </button>
       </h3>
