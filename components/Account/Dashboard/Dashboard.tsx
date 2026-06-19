@@ -14,6 +14,7 @@ type MODAL_STATE = {
   isOpen: boolean;
   mode: "add" | "edit";
   address: ADDRESS_TYPE | null;
+  defaultAddressId: string | null;
 };
 
 export default function Dashboard({
@@ -26,6 +27,7 @@ export default function Dashboard({
     isOpen: false,
     mode: "add",
     address: null,
+    defaultAddressId: null,
   });
 
   return (
@@ -51,6 +53,7 @@ export default function Dashboard({
                       isOpen: true,
                       mode: "edit",
                       address: address,
+                      defaultAddressId: customer.defaultAddress?.id as string,
                     })
                   }
                 />
@@ -58,7 +61,12 @@ export default function Dashboard({
             )}
           <button
             onClick={() =>
-              setModalState({ isOpen: true, mode: "add", address: null })
+              setModalState({
+                isOpen: true,
+                mode: "add",
+                address: null,
+                defaultAddressId: null,
+              })
             }
             className="border p-4 rounded-md mt-4 w-68 flex flex-col justify-center items-center cursor-pointer"
           >
@@ -84,6 +92,7 @@ export default function Dashboard({
       {modalState.isOpen && (
         <Modal
           key={modalState.address?.id ?? "new"}
+          defaultAddressId={modalState.defaultAddressId}
           mode={modalState.mode}
           address={modalState.address}
           onClose={() => setModalState((prev) => ({ ...prev, isOpen: false }))}

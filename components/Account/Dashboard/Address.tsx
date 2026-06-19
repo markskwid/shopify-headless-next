@@ -35,8 +35,9 @@ export default function Address({
       <p>
         {address.firstName} {address.lastName}
       </p>
+      {address.company && <p>{address.company}</p>}
       <p>
-        {address.address1} {address.address2}
+        {address.address1}, {address.address2}
       </p>
       <p>
         {address.city}, {address.province}, {address.country} {address.zip}

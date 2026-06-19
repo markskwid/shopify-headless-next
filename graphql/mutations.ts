@@ -202,3 +202,91 @@ mutation cartDiscountCodesUpdate($cartId: ID!, $discountCodes: [String!]!) {
   }
 }
 `;
+
+//----- Edit customer address
+export const CUSTOMER_EDIT_ADDRESS = `
+ mutation customerAddressUpdate(
+  $customerAccessToken: String!
+  $id: ID!
+  $address: MailingAddressInput!
+) {
+  customerAddressUpdate(
+    customerAccessToken: $customerAccessToken
+    id: $id
+    address: $address
+  ) {
+    customerAddress {
+      id
+      firstName
+      lastName
+      company
+      address1
+      address2
+      city
+      province
+      country
+      zip
+      phone
+    }
+    customerUserErrors {
+      field
+      message
+      code
+    }
+  }
+}`;
+
+//----- Add customer address
+export const CUSTOMER_CREATE_ADDRESS = `
+ mutation customerAddressCreate(
+  $customerAccessToken: String!
+  $address: MailingAddressInput!
+) {
+  customerAddressCreate(
+    customerAccessToken: $customerAccessToken
+    address: $address
+  ) {
+    customerAddress {
+      id
+      firstName
+      lastName
+      company
+      address1
+      address2
+      city
+      province
+      country
+      zip
+      phone
+    }
+    customerUserErrors {
+      field
+      message
+      code
+    }
+  }
+}`;
+
+//----- Set Default customer address
+export const CUSTOMER_SET_DEFAULT_ADDRESS = `
+mutation customerDefaultAddressUpdate(
+  $customerAccessToken: String!
+  $addressId: ID!
+) {
+  customerDefaultAddressUpdate(
+    customerAccessToken: $customerAccessToken
+    addressId: $addressId
+  ) {
+    customer {
+      id
+      defaultAddress {
+        id
+      }
+    }
+    customerUserErrors {
+      field
+      message
+      code
+    }
+  }
+}`;
