@@ -22,8 +22,8 @@ function LoginFormContent() {
     if (!response?.success) {
       setError(formatLoginError(response?.errors));
     } else {
-      redirect("/account");
       setError(null);
+      redirect("/account");
     }
 
     setLoading(false);
