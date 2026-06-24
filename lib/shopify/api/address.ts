@@ -4,6 +4,7 @@ import { normalizeError } from "@/utils/normalizeErrors";
 import { client } from "../client";
 import {
   CUSTOMER_CREATE_ADDRESS,
+  CUSTOMER_DELETE_ADDRESS,
   CUSTOMER_EDIT_ADDRESS,
   CUSTOMER_SET_DEFAULT_ADDRESS,
 } from "@/graphql/mutations";
@@ -125,6 +126,52 @@ export const setDefaultCustomerAddress = async (
         addressId,
       },
     });
+
+    if (errors) {
+      console.log("Graphql Errors", errors);
+      return {
+        success: false,
+        data: null,
+        pageInfo: null,
+        errors: normalizeError(errors),
+      };
+    }
+
+    return {
+      success: true,
+      data: data,
+      errors: null,
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+
+    return {
+      success: false,
+      data: null,
+      pageInfo: null,
+      errors: normalizeError(error),
+    };
+  }
+};
+
+
+
+export const removeCustomerAddress = async (
+  token: string,
+  addressId: string,
+) => {
+  try {
+    const { data, errors } = await client.request(
+      CUSTOMER_DELETE_ADDRESS,
+      {
+        variables: {
+          customerAccessToken: token,
+          id: addressId,
+        },
+      },
+    );
 
     if (errors) {
       console.log("Graphql Errors", errors);

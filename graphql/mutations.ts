@@ -290,3 +290,22 @@ mutation customerDefaultAddressUpdate(
     }
   }
 }`;
+
+//----- Remove customer address
+export const CUSTOMER_DELETE_ADDRESS = `
+mutation customerAddressDelete(
+  $customerAccessToken: String!
+  $id: ID!
+) {
+  customerAddressDelete(
+    customerAccessToken: $customerAccessToken
+    id: $id
+  ) {
+    deletedCustomerAddressId
+    customerUserErrors {
+      field
+      message
+      code
+    }
+  }
+}`;
