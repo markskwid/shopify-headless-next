@@ -38,11 +38,16 @@ export default function Dashboard({
       </p>
       <div className="mt-10">
         <h2 className="font-bold text-3xl">Addresses</h2>
-        <div className="flex space-x-3">
+        <div className="flex space-x-3 flex-wrap">
           {customer?.addresses?.nodes &&
             customer.defaultAddress &&
-            customer?.addresses?.nodes.map(
-              (address: ADDRESS_TYPE, index: number) => (
+            customer?.addresses?.nodes
+              .sort((a, b) => {
+                if (a.id === customer.defaultAddress?.id) return -1;
+                if (b.id === customer.defaultAddress?.id) return 1;
+                return 0;
+              })
+              .map((address: ADDRESS_TYPE, index: number) => (
                 <Address
                   key={address.id}
                   address={address}
@@ -57,22 +62,23 @@ export default function Dashboard({
                     })
                   }
                 />
-              ),
-            )}
-          <button
-            onClick={() =>
-              setModalState({
-                isOpen: true,
-                mode: "add",
-                address: null,
-                defaultAddressId: null,
-              })
-            }
-            className="border p-4 rounded-md mt-4 w-68 flex flex-col justify-center items-center cursor-pointer"
-          >
-            <AiOutlinePlus size={30} />
-            <span className="text-xl font-semibold uppercase">Add New</span>
-          </button>
+              ))}
+          {customer?.addresses?.nodes.length != 5 && (
+            <button
+              onClick={() =>
+                setModalState({
+                  isOpen: true,
+                  mode: "add",
+                  address: null,
+                  defaultAddressId: null,
+                })
+              }
+              className="border p-4 rounded-md mt-4 w-68 flex flex-col justify-center items-center cursor-pointer"
+            >
+              <AiOutlinePlus size={30} />
+              <span className="text-xl font-semibold uppercase">Add New</span>
+            </button>
+          )}
         </div>
       </div>
       {
