@@ -1,25 +1,13 @@
 import { z } from "zod";
 import { MONEY_SCHEMA } from "./money";
+import { ADDRESS_SCHEMA } from "./address";
+import { USER_ERROR_SCHEMA } from "./userErrors";
 
 export const CUSTOMER_INPUT_SCHEMA = z.object({
   firstName: z.string(),
   lastName: z.string(),
   email: z.email(),
   password: z.string(),
-});
-
-export const ADDRESS_SCHEMA = z.object({
-  id: z.string(),
-  firstName: z.string().nullable(),
-  lastName: z.string().nullable(),
-  address1: z.string().nullable(),
-  address2: z.string().nullable(),
-  company: z.string().nullable(),
-  city: z.string().nullable(),
-  province: z.string().nullable(),
-  country: z.string().nullable(),
-  zip: z.string().nullable(),
-  phone: z.string().nullable(),
 });
 
 export const ORDER_SCHEMA = z.object({
@@ -128,4 +116,37 @@ export const CUSTOMER_LOGIN_RESPONSE_SCHEMA = z.object({
 
 export const GET_CUSTOMER_RESPONSE_SCHEMA = z.object({
   customer: CUSTOMER_SCHEMA,
+});
+
+export const CUSTOMER_ADD_ADDRESS_RESPONSE_SCHEMA = z.object({
+  customerAddressCreate: z.object({
+    customerAddress: ADDRESS_SCHEMA,
+    customerUserErrors: USER_ERROR_SCHEMA,
+  }),
+});
+
+export const CUSTOMER_REMOVE_ADDRESS_RESPONSE_SCHEMA = z.object({
+  customerAddressDelete: z.object({
+    deletedCustomerAddressId: z.string(),
+  }),
+  customerUserErrors: USER_ERROR_SCHEMA,
+});
+
+export const CUSTOMER_UPDATE_ADDRESS_RESPONSE_SCHEMA = z.object({
+  customerAddressUpdate: z.object({
+    customerAddress: ADDRESS_SCHEMA,
+  }),
+  customerUserErrors: USER_ERROR_SCHEMA,
+});
+
+export const CUSTOMER_SET_DEFAULT_ADDRESS_RESPONSE_SCHEMA = z.object({
+  customerDefaultAddressUpdate: z.object({
+    customer: z.object({
+      id: z.string(),
+      defaultAddress: z.object({
+        id: z.string(),
+      }),
+    }),
+  }),
+  customerUserErrors: USER_ERROR_SCHEMA,
 });

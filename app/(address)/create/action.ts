@@ -46,8 +46,7 @@ export const createAddressAction = async (formData: FormData) => {
 
     //set to default when checkbox is checked
     if (isDefault) {
-      console.log(res.data);
-      const addressId = res.data.customerAddressCreate.customerAddress.id as string;
+      const addressId = res.data?.id as string;
       const setDefaultRes = await setDefaultAddressAction(addressId);
 
       if (!setDefaultRes.success) {

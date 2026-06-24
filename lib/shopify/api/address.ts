@@ -1,3 +1,4 @@
+import { CUSTOMER_SET_DEFAULT_ADDRESS_RESPONSE_SCHEMA } from "./../../schema/customer";
 import "server-only";
 
 import { normalizeError } from "@/utils/normalizeErrors";
@@ -8,6 +9,12 @@ import {
   CUSTOMER_EDIT_ADDRESS,
   CUSTOMER_SET_DEFAULT_ADDRESS,
 } from "@/graphql/mutations";
+import {
+  CUSTOMER_ADD_ADDRESS_RESPONSE_SCHEMA,
+  CUSTOMER_REMOVE_ADDRESS_RESPONSE_SCHEMA,
+  CUSTOMER_UPDATE_ADDRESS_RESPONSE_SCHEMA,
+} from "@/lib/schema/customer";
+import { success } from "zod";
 
 export const updateCustomerAddress = async (
   token: string,
@@ -44,9 +51,31 @@ export const updateCustomerAddress = async (
       };
     }
 
+    const parsed = CUSTOMER_UPDATE_ADDRESS_RESPONSE_SCHEMA.safeParse(data);
+
+    if (!parsed.success) {
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(parsed.error),
+      };
+    }
+
+    const userErrors = parsed.data.customerUserErrors ?? [];
+
+    if (userErrors.length > 0) {
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(userErrors),
+      };
+    }
+
+    const addressData = parsed.data.customerAddressUpdate.customerAddress;
+
     return {
       success: true,
-      data: data,
+      data: addressData,
       errors: null,
     };
   } catch (error: unknown) {
@@ -96,9 +125,32 @@ export const createCustomerAddress = async (
       };
     }
 
+    const parsed = CUSTOMER_ADD_ADDRESS_RESPONSE_SCHEMA.safeParse(data);
+
+    if (!parsed.success) {
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(parsed.error),
+      };
+    }
+
+    const userErrors =
+      parsed.data.customerAddressCreate.customerUserErrors ?? [];
+
+    if (userErrors.length > 0) {
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(userErrors),
+      };
+    }
+
+    const addressData = parsed.data.customerAddressCreate.customerAddress;
+
     return {
       success: true,
-      data: data,
+      data: addressData,
       errors: null,
     };
   } catch (error: unknown) {
@@ -120,12 +172,15 @@ export const setDefaultCustomerAddress = async (
   addressId: string,
 ) => {
   try {
-    const { data, errors } = await client.request(CUSTOMER_SET_DEFAULT_ADDRESS, {
-      variables: {
-        customerAccessToken: token,
-        addressId,
+    const { data, errors } = await client.request(
+      CUSTOMER_SET_DEFAULT_ADDRESS,
+      {
+        variables: {
+          customerAccessToken: token,
+          addressId,
+        },
       },
-    });
+    );
 
     if (errors) {
       console.log("Graphql Errors", errors);
@@ -134,6 +189,26 @@ export const setDefaultCustomerAddress = async (
         data: null,
         pageInfo: null,
         errors: normalizeError(errors),
+      };
+    }
+
+    const parsed = CUSTOMER_SET_DEFAULT_ADDRESS_RESPONSE_SCHEMA.safeParse(data);
+
+    if (!parsed.success) {
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(parsed.error),
+      };
+    }
+
+    const userErrors = parsed.data.customerUserErrors ?? [];
+
+    if (userErrors.length > 0) {
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(userErrors),
       };
     }
 
@@ -156,22 +231,17 @@ export const setDefaultCustomerAddress = async (
   }
 };
 
-
-
 export const removeCustomerAddress = async (
   token: string,
   addressId: string,
 ) => {
   try {
-    const { data, errors } = await client.request(
-      CUSTOMER_DELETE_ADDRESS,
-      {
-        variables: {
-          customerAccessToken: token,
-          id: addressId,
-        },
+    const { data, errors } = await client.request(CUSTOMER_DELETE_ADDRESS, {
+      variables: {
+        customerAccessToken: token,
+        id: addressId,
       },
-    );
+    });
 
     if (errors) {
       console.log("Graphql Errors", errors);
@@ -183,9 +253,32 @@ export const removeCustomerAddress = async (
       };
     }
 
+    const parsed = CUSTOMER_REMOVE_ADDRESS_RESPONSE_SCHEMA.safeParse(data);
+
+    if (!parsed.success) {
+      return {
+        success: false,
+        errors: normalizeError(parsed.error),
+        data: null,
+      };
+    }
+
+    const userErrors = parsed.data.customerUserErrors ?? [];
+
+    if (userErrors.length > 0) {
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(userErrors),
+      };
+    }
+
+    const addressData =
+      parsed.data.customerAddressDelete.deletedCustomerAddressId;
+
     return {
       success: true,
-      data: data,
+      data: addressData,
       errors: null,
     };
   } catch (error: unknown) {

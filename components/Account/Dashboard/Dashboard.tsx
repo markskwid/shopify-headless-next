@@ -73,7 +73,7 @@ export default function Dashboard({
                   defaultAddressId: null,
                 })
               }
-              className="border p-4 rounded-md mt-4 w-68 flex flex-col justify-center items-center cursor-pointer"
+              className="border p-4 rounded-md mt-4 flex-[20%] grow-0 min-h-52 flex flex-col justify-center items-center cursor-pointer"
             >
               <AiOutlinePlus size={30} />
               <span className="text-xl font-semibold uppercase">Add New</span>
