@@ -1,5 +1,8 @@
 import { CUSTOMER_ORDER_TYPE } from "@/types/order";
 import { formatPrice } from "@/utils/formatPricing";
+import { formatFulfillmentStatus } from "@/utils/orderStatus";
+import { AiFillCheckCircle, AiOutlineCheck } from "react-icons/ai";
+import { GoChecklist } from "react-icons/go";
 
 export default function Order({ order }: { order: CUSTOMER_ORDER_TYPE }) {
   return (
@@ -7,18 +10,26 @@ export default function Order({ order }: { order: CUSTOMER_ORDER_TYPE }) {
       className="border p-4 rounded-md mt-4 w-full md:w-[50%] lg:w-[30%]"
       key={order.id}
     >
-      <span
-        className={`rounded-full px-3 py-1 bg-neutral-500 mt-5 text-white! text-xs font-semibold`}
-      >
-        {order.fulfillmentStatus}
-      </span>
+      <div className="mb-2 pb-2 border-b border-neutral-400 flex justify-between items-center">
+        <h3 className="font-semibold text-2xl">Order #{order.orderNumber}</h3>
+        <div>
+          <span
+            className={`rounded-full px-3 mr-2 py-1 ${formatFulfillmentStatus(order.fulfillmentStatus).color} text-white! uppercase text-xs font-semibold`}
+          >
+            {formatFulfillmentStatus(order.fulfillmentStatus).label}
+          </span>
 
-      <h3 className="font-semibold text-2xl my-2 pb-2 border-b border-neutral-400">
-        Order #{order.orderNumber}
-        <span className="text-sm mt-2 font-normal block">
-          This order is {order.financialStatus}
-        </span>
-      </h3>
+          <span
+            className={`rounded-full px-3 py-1 ${
+              order.financialStatus === "PAID"
+                ? "bg-green-600"
+                : "bg-neutral-500"
+            } text-white! text-xs font-semibold`}
+          >
+            {order.financialStatus}
+          </span>
+        </div>
+      </div>
 
       {order.lineItems.nodes.map((item, index) => (
         <div className="flex mb-4" key={item.title}>
