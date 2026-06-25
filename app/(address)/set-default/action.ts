@@ -2,8 +2,9 @@
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { setDefaultCustomerAddress } from "@/lib/shopify/api/address";
+import { API_RESPONSE } from "@/types/response";
 
-export const setDefaultAddressAction = async (addressId: string) => {
+export const setDefaultAddressAction = async (addressId: string) : Promise<API_RESPONSE<string>> => {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("customerAccessToken")?.value;

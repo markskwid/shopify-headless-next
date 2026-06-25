@@ -4,7 +4,7 @@ type PageInfo = {
   endCursor?: string | null;
 };
 
-type Warning = { message: string; code: string };
+type Warning = { message: string; code: string | null };
 
 type SuccessResponse<T> = {
   success: true;

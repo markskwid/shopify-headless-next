@@ -3,8 +3,12 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { createCustomerAddress } from "@/lib/shopify/api/address";
 import { setDefaultAddressAction } from "../set-default/action";
+import { API_RESPONSE } from "@/types/response";
+import { ADDRESS_TYPE } from "@/types/address";
 
-export const createAddressAction = async (formData: FormData) => {
+export const createAddressAction = async (
+  formData: FormData,
+): Promise<API_RESPONSE<ADDRESS_TYPE>> => {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("customerAccessToken")?.value;
@@ -52,17 +56,17 @@ export const createAddressAction = async (formData: FormData) => {
       if (!setDefaultRes.success) {
         console.log("Failed to make the address as default");
         return {
-          success: false,
-          data: null,
-          errors: setDefaultRes.errors,
+          success: true,
+          data: res.data,
+          errors: null,
+          warnings: [
+            {
+              message: "Failed to set as default address",
+              code: null,
+            },
+          ],
         };
       }
-
-      return {
-        success: true,
-        data: setDefaultRes.data,
-        errors: null,
-      };
     }
 
     //return data even checkbox is not checked

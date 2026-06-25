@@ -15,6 +15,8 @@ import {
   CUSTOMER_UPDATE_ADDRESS_RESPONSE_SCHEMA,
 } from "@/lib/schema/customer";
 import { success } from "zod";
+import { API_RESPONSE } from "@/types/response";
+import { ADDRESS_TYPE } from "@/types/address";
 
 export const updateCustomerAddress = async (
   token: string,
@@ -31,7 +33,7 @@ export const updateCustomerAddress = async (
     zip: string;
     phone?: string;
   },
-) => {
+): Promise<API_RESPONSE<ADDRESS_TYPE>> => {
   try {
     const { data, errors } = await client.request(CUSTOMER_EDIT_ADDRESS, {
       variables: {
@@ -106,7 +108,7 @@ export const createCustomerAddress = async (
     zip: string;
     phone?: string;
   },
-) => {
+): Promise<API_RESPONSE<ADDRESS_TYPE>> => {
   try {
     const { data, errors } = await client.request(CUSTOMER_CREATE_ADDRESS, {
       variables: {
@@ -170,7 +172,7 @@ export const createCustomerAddress = async (
 export const setDefaultCustomerAddress = async (
   token: string,
   addressId: string,
-) => {
+): Promise<API_RESPONSE<string>> => {
   try {
     const { data, errors } = await client.request(
       CUSTOMER_SET_DEFAULT_ADDRESS,
@@ -214,7 +216,7 @@ export const setDefaultCustomerAddress = async (
 
     return {
       success: true,
-      data: data,
+      data: parsed.data.customerDefaultAddressUpdate.customer.defaultAddress.id,
       errors: null,
     };
   } catch (error: unknown) {
@@ -234,7 +236,7 @@ export const setDefaultCustomerAddress = async (
 export const removeCustomerAddress = async (
   token: string,
   addressId: string,
-) => {
+): Promise<API_RESPONSE<string>> => {
   try {
     const { data, errors } = await client.request(CUSTOMER_DELETE_ADDRESS, {
       variables: {
