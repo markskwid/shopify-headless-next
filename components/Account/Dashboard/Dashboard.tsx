@@ -10,6 +10,7 @@ import Modal from "@/components/Modal";
 import { useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { logoutAction } from "@/app/(auth)/logout/actions";
+import Toast from "@/components/Toast";
 
 type MODAL_STATE = {
   isOpen: boolean;
@@ -35,7 +36,10 @@ export default function Dashboard({
     <div>
       <div className="flex justify-between items-center mb-2">
         <h1 className="text-3xl font-bold mb-5">My Account</h1>
-        <button onClick={logoutAction} className="p-2 min-w-22 bg-neutral-600 rounded-full font-bold text-white! cursor-pointer">
+        <button
+          onClick={logoutAction}
+          className="p-2 min-w-22 bg-neutral-600 rounded-full font-bold text-white! cursor-pointer"
+        >
           Logout
         </button>
       </div>
