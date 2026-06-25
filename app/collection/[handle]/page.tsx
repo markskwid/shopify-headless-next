@@ -2,13 +2,11 @@ import Filters from "@/components/Filters";
 import { PageWrapper } from "@/components/PageWrapper";
 import { ProductList } from "@/components/ProductList/ProductList";
 import { Sort } from "@/components/ProductList/Sort";
-import { ProductListSkeleton } from "@/components/Skeleton/ProductList";
 import {
   getCollectionByHandle,
   getFilters,
 } from "@/lib/shopify/api/collections";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
 interface Props {
   params: Promise<{ handle: string }>;

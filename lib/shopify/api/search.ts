@@ -96,18 +96,20 @@ type SEARCH_RESULT_PAGE_TYPE = {
 
 export const searchResultsPage = async (
   query: string,
+  sortKey?: string,
+  reverse?: boolean,
 ): Promise<API_RESPONSE<SEARCH_RESULT_PAGE_TYPE>> => {
   "use cache";
   cacheLife("minutes");
-  cacheTag(`search-${query}`);
+  cacheTag(`search-${query}-${sortKey ?? "RELEVANCE"}-${reverse ?? false}`);
   try {
     const { data, errors } = await client.request(SEARCH_PRODUCTS, {
       variables: {
         query,
+        sortKey,
+        reverse,
       },
     });
-
-    console.log("SEARCH RESULT DATA", data);
 
     if (errors) {
       console.log("Graphql Error", errors.message);

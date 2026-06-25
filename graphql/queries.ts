@@ -381,11 +381,13 @@ query PredictiveProductSearch($query: String!, $limit: Int = 5) {
 export const SEARCH_PRODUCTS = `
 ${FRAGMENT_PRODUCT_FIELDS}
 
-query SEARCH_PRODUCTS($query: String!, $first: Int = 10) {
+query SEARCH_PRODUCTS($query: String!, $first: Int = 10, $sortKey: SearchSortKeys, $reverse: Boolean) {
   search(
     query: $query,
     first: $first,
     types: [PRODUCT],
+    sortKey: $sortKey,
+    reverse: $reverse
   ) {
     totalCount
    

@@ -1,22 +1,24 @@
 import { PageWrapper } from "@/components/PageWrapper";
 import { ProductList } from "@/components/ProductList/ProductList";
-import { ProductListSkeleton } from "@/components/Skeleton/ProductList";
+import { Sort } from "@/components/ProductList/Sort";
 import { searchResultsPage } from "@/lib/shopify/api/search";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
 interface Props {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; orderBy: string; order: string }>;
 }
 export default async function Search({ searchParams }: Props) {
-  const { q } = await searchParams;
+  const { q, order, orderBy } = await searchParams;
 
   if (!q) {
     console.log("No query input");
     return notFound();
   }
 
-  const searchResult = await searchResultsPage(q);
+  const sortKey = orderBy === "price" ? "PRICE" : orderBy === "createdAt" ? "CREATED_AT" : "RELEVANCE";
+  const reverse = order === "desc";
+
+  const searchResult = await searchResultsPage(q, sortKey, reverse);
 
   return (
     <PageWrapper>
@@ -25,6 +27,10 @@ export default async function Search({ searchParams }: Props) {
         <span className="mb-10">
           Result count: {searchResult.data?.totalCount} products
         </span>
+        <div className="mb-5 flex lg:justify-end">
+          <Sort />
+        </div>
+
         <ProductList
           products={searchResult.data?.products ?? []}
           isSlider={false}
