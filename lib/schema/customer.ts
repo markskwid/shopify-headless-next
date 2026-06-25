@@ -150,3 +150,11 @@ export const CUSTOMER_SET_DEFAULT_ADDRESS_RESPONSE_SCHEMA = z.object({
   }),
   customerUserErrors: USER_ERROR_SCHEMA,
 });
+
+export const CUSTOMER_LOGOUT_RESPONSE_SCHEMA = z.object({
+  customerAccessTokenDelete: z.object({
+    deletedAccessToken: z.string(),
+    deletedCustomerAccessTokenId: z.string(),
+    userErrors: USER_ERROR_SCHEMA,
+  }),
+});

@@ -9,6 +9,7 @@ import {
   CUSTOMER_CREATE_RESPONSE_SCHEMA,
   CUSTOMER_INPUT_SCHEMA,
   CUSTOMER_LOGIN_RESPONSE_SCHEMA,
+  CUSTOMER_LOGOUT_RESPONSE_SCHEMA,
   GET_CUSTOMER_RESPONSE_SCHEMA,
 } from "@/lib/schema/customer";
 import { CUSTOMER_TYPE, CUSTOMER_ACCESS_TOKEN_TYPE } from "@/types/customer";
@@ -162,7 +163,9 @@ export const loginCustomer = async (input: {
   }
 };
 
-export const logoutCustomer = async (token: string) => {
+export const logoutCustomer = async (
+  token: string,
+): Promise<API_RESPONSE<string>> => {
   try {
     const { data, errors } = await client.request(CUSTOMER_LOGOUT, {
       variables: {
@@ -179,9 +182,34 @@ export const logoutCustomer = async (token: string) => {
       };
     }
 
+    const parsed = CUSTOMER_LOGOUT_RESPONSE_SCHEMA.safeParse(data);
+
+    if (!parsed.success) {
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(parsed.error),
+      };
+    }
+
+    const userErrors = parsed.data.customerAccessTokenDelete.userErrors
+      ?.map((e) => e?.message)
+      .filter((msg): msg is string => !!msg);
+    const userErrorCodes = parsed.data.customerAccessTokenDelete.userErrors
+      ?.map((e) => e?.code)
+      .filter((code): code is string => Boolean(code));
+
+    if (userErrors && userErrors.length > 0) {
+      return {
+        success: false,
+        data: null,
+        errors: userErrorCodes ?? ["User errors on logout"],
+      };
+    }
+
     return {
       success: true,
-      data: data,
+      data: parsed.data.customerAccessTokenDelete.deletedAccessToken,
       errors: null,
     };
   } catch (error: unknown) {

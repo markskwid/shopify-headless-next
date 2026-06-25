@@ -461,8 +461,6 @@ export const updateCartBuyerIdentity = async (
       };
     }
 
-    console.log("ATTACHED DATA: ", data);
-
     return {
       success: true,
       data: data,
