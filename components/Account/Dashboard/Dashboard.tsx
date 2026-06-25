@@ -9,6 +9,7 @@ import { CUSTOMER_ORDER_TYPE } from "@/types/order";
 import Modal from "@/components/Modal";
 import { useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
+import { logoutAction } from "@/app/(auth)/logout/actions";
 
 type MODAL_STATE = {
   isOpen: boolean;
@@ -32,10 +33,36 @@ export default function Dashboard({
 
   return (
     <div>
-      <h1 className="text-3xl font-bold">My Account</h1>
-      <p className="mt-4 font-semibold text-lg">
-        Welcome back, {firstName} {lastName}!
-      </p>
+      <div className="flex justify-between items-center mb-2">
+        <h1 className="text-3xl font-bold mb-5">My Account</h1>
+        <button onClick={logoutAction} className="p-2 min-w-22 bg-neutral-600 rounded-full font-bold text-white! cursor-pointer">
+          Logout
+        </button>
+      </div>
+      <div className="p-5 rounded-md bg-neutral-500 min-h-22 flex flex-col md:flex-row md:justify-start md:items-center">
+        <p className="font-semibold text-lg text-white!">
+          Welcome back,{" "}
+          <span className="block text-3xl text-white!">
+            {firstName} {lastName}!
+          </span>
+        </p>
+
+        <div className="mt-5 md:mt-0 md:ml-auto flex space-x-3">
+          <div className="rounded-md bg-neutral-300 p-5 min-w-32">
+            <p className="font-bold text-center text-2xl">
+              {customer?.addresses?.nodes.length}
+              <span className="block text-sm font-normal">Addresses</span>
+            </p>
+          </div>
+
+          <div className="rounded-md bg-neutral-300 p-5 min-w-32">
+            <p className="font-bold text-center text-2xl">
+              {customer?.orders?.nodes.length}
+              <span className="block text-sm font-normal">Orders</span>
+            </p>
+          </div>
+        </div>
+      </div>
       <div className="mt-10">
         <h2 className="font-bold text-3xl">Addresses</h2>
         <div className="flex space-x-3 flex-wrap">
@@ -73,7 +100,7 @@ export default function Dashboard({
                   defaultAddressId: null,
                 })
               }
-              className="border p-4 rounded-md mt-4 flex-[20%] grow-0 min-h-52 flex flex-col justify-center items-center cursor-pointer"
+              className="border p-4 rounded-md mt-4 flex-[46%] lg:flex-[20%] grow-0 min-h-52 flex flex-col justify-center items-center cursor-pointer"
             >
               <AiOutlinePlus size={30} />
               <span className="text-xl font-semibold uppercase">Add New</span>

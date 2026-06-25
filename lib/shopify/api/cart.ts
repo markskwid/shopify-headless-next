@@ -440,10 +440,9 @@ export const updateCartNote = async (
 };
 
 export const updateCartBuyerIdentity = async (
-  customerToken: string,
+  customerToken: string | null,
   cartId: string,
 ) => {
-  console.log(customerToken, cartId);
   try {
     const { data, errors } = await client.request(CART_ATTACH_BUYER_IDENTITY, {
       variables: {

@@ -1,6 +1,10 @@
 import "server-only";
 import { client } from "../client";
-import { CREATE_CUSTOMER, CUSTOMER_LOGIN } from "@/graphql/mutations";
+import {
+  CREATE_CUSTOMER,
+  CUSTOMER_LOGIN,
+  CUSTOMER_LOGOUT,
+} from "@/graphql/mutations";
 import {
   CUSTOMER_CREATE_RESPONSE_SCHEMA,
   CUSTOMER_INPUT_SCHEMA,
@@ -143,6 +147,41 @@ export const loginCustomer = async (input: {
     return {
       success: true,
       data: customerToken,
+      errors: null,
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+
+    return {
+      success: false,
+      data: null,
+      errors: normalizeError(error),
+    };
+  }
+};
+
+export const logoutCustomer = async (token: string) => {
+  try {
+    const { data, errors } = await client.request(CUSTOMER_LOGOUT, {
+      variables: {
+        customerAccessToken: token,
+      },
+    });
+
+    if (errors) {
+      console.log("Graphql Errors", errors.graphQLErrors);
+      return {
+        success: false,
+        data: null,
+        errors: normalizeError(errors),
+      };
+    }
+
+    return {
+      success: true,
+      data: data,
       errors: null,
     };
   } catch (error: unknown) {

@@ -44,6 +44,18 @@ mutation CUSTOMER_LOGIN($input: CustomerAccessTokenCreateInput!) {
 }
 `;
 
+export const CUSTOMER_LOGOUT = `
+mutation customerAccessTokenDelete($customerAccessToken: String!) {
+  customerAccessTokenDelete(customerAccessToken: $customerAccessToken) {
+    deletedAccessToken
+    deletedCustomerAccessTokenId
+    userErrors {
+      field
+      message
+    }
+  }
+}`;
+
 //**
 // =================================
 /**

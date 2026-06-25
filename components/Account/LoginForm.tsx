@@ -1,5 +1,5 @@
 "use client";
-import { loginAction } from "@/app/(auth)/login/actions";
+import { loginAction } from "@/app/(auth)/login/action";
 import { formatLoginError } from "@/utils/formatLoginError";
 import { useState } from "react";
 import { BiErrorCircle } from "react-icons/bi";
