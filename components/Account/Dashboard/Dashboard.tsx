@@ -1,6 +1,5 @@
 "use client";
 
-import { useAuth } from "@/context/Auth";
 import { ADDRESS_TYPE } from "@/types/address";
 import { CUSTOMER_TYPE } from "@/types/customer";
 import Address from "./Address";
@@ -10,7 +9,7 @@ import Modal from "@/components/Modal";
 import { useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { logoutAction } from "@/app/(auth)/logout/actions";
-import Toast from "@/components/Toast";
+import { useRouter } from "next/navigation";
 
 type MODAL_STATE = {
   isOpen: boolean;
@@ -24,7 +23,7 @@ export default function Dashboard({
 }: {
   customer: CUSTOMER_TYPE | null;
 }) {
-  const { firstName, lastName } = useAuth();
+  const router = useRouter();
   const [modalState, setModalState] = useState<MODAL_STATE>({
     isOpen: false,
     mode: "add",
@@ -32,12 +31,24 @@ export default function Dashboard({
     defaultAddressId: null,
   });
 
+  const firstName = customer?.firstName;
+  const lastName = customer?.lastName;
+
+  const handleLogout = async () => {
+    const res = await logoutAction();
+
+    if (res.success) {
+      router.push("/login");
+      router.refresh();
+    }
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
         <h1 className="text-3xl font-bold mb-5">My Account</h1>
         <button
-          onClick={logoutAction}
+          onClick={() => handleLogout()}
           className="p-2 min-w-22 bg-neutral-600 rounded-full font-bold text-white! cursor-pointer"
         >
           Logout

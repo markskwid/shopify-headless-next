@@ -5,6 +5,7 @@ import { normalizeError } from "@/utils/normalizeErrors";
 import { revalidatePath } from "next/cache";
 import { logoutCustomer } from "@/lib/shopify/api/customer";
 import { updateCartBuyerIdentity } from "@/lib/shopify/api/cart";
+import { redirect } from "next/navigation";
 
 export const logoutAction = async () => {
   try {

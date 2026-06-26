@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { loginCustomer } from "@/lib/shopify/api/customer";
+import { getCustomer, loginCustomer } from "@/lib/shopify/api/customer";
 import { API_RESPONSE } from "@/types/response";
 import { CUSTOMER_ACCESS_TOKEN_TYPE } from "@/types/customer";
 import { normalizeError } from "@/utils/normalizeErrors";

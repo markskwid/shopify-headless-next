@@ -79,6 +79,9 @@ export const CUSTOMER_SCHEMA = z.object({
 export const CUSTOMER_ACCESS_TOKEN_SCHEMA = z.object({
   accessToken: z.string(),
   expiresAt: z.string(),
+  firstName: z.string().optional().nullable(),
+  lastName: z.string().optional().nullable(),
+  email: z.string().optional().nullable(),
 });
 
 export const CUSTOMER_CREATE_RESPONSE_SCHEMA = z.object({

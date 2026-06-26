@@ -40,23 +40,6 @@ async function CartInitializer({ children }: { children: React.ReactNode }) {
   );
 }
 
-async function AuthInitializer({ children }: { children: React.ReactNode }) {
-  const token = (await cookies()).get("customerAccessToken")?.value;
-  const customer = token ? await getCustomer(token) : null;
-
-  return (
-    <AuthProvider
-      initialState={{
-        isLoggedIn: !!customer,
-        firstName: customer?.data?.firstName || null,
-        lastName: customer?.data?.lastName || null,
-      }}
-    >
-      {children}
-    </AuthProvider>
-  );
-}
-
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -66,13 +49,11 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${interFont.variable} font-sans antialiased`}>
         <Suspense fallback={null}>
-          <AuthInitializer>
-            <UIProvider>
-              <Suspense fallback={<div className="min-h-screen"></div>}>
-                <CartInitializer>{children}</CartInitializer>
-              </Suspense>
-            </UIProvider>
-          </AuthInitializer>
+          <UIProvider>
+            <Suspense fallback={<div className="min-h-screen"></div>}>
+              <CartInitializer>{children}</CartInitializer>
+            </Suspense>
+          </UIProvider>
         </Suspense>
         <Footer />
       </body>
