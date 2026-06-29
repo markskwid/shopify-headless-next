@@ -40,7 +40,7 @@ export const FETCH_PRODUCT_BY_HANDLE = `
               description
             }
 
-            images(first: 30) {
+            images(first: 10) {
               edges {
                 node {
                   id

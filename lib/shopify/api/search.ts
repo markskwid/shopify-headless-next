@@ -2,34 +2,12 @@
 import { normalizeError } from "@/utils/normalizeErrors";
 import { client } from "../client";
 import { PREDICTIVE_SEARCH, SEARCH_PRODUCTS } from "@/graphql/queries";
-import { z } from "zod";
 import { API_RESPONSE } from "@/types/response";
-import { PRODUCT_LISTING_TYPE, PRODUCT_SEARCH_TYPE } from "@/types/product";
-import { PRODUCT_SCHEMA, PRODUCT_SEARCH_SCHEMA } from "@/lib/schema/product";
+import { PRODUCT_SEARCH_TYPE } from "@/types/product";
 import { cacheLife, cacheTag } from "next/cache";
+import { PREDICTIVE_SEARCH_RESULT_SCHEMA, SEARCH_RESULT_PAGE_SCHEMA } from "@/lib/schema/search";
+import { SEARCH_RESULT_PAGE_TYPE } from "@/types/search";
 
-const PREDICTIVE_SEARCH_RESULT_SCHEMA = z.object({
-  predictiveSearch: z.object({
-    products: z.array(PRODUCT_SEARCH_SCHEMA),
-  }),
-});
-
-const SEARCH_RESULT_PAGE_SCHEMA = z.object({
-  search: z.object({
-    totalCount: z.number(),
-    edges: z.array(
-      z.object({
-        node: PRODUCT_SCHEMA,
-      }),
-    ),
-    pageInfo: z
-      .object({
-        hasNextPage: z.boolean(),
-        endCursor: z.string().nullable(),
-      })
-      .optional(),
-  }),
-});
 
 export const searchResults = async (
   query: string,
@@ -85,14 +63,6 @@ export const searchResults = async (
   }
 };
 
-type SEARCH_RESULT_PAGE_TYPE = {
-  totalCount: number;
-  products: PRODUCT_LISTING_TYPE[];
-  pageInfo?: {
-    hasNextPage: boolean;
-    endCursor: string | null;
-  };
-};
 
 export const searchResultsPage = async (
   query: string,
