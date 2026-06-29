@@ -10,7 +10,7 @@ import { useCart } from "@/context/Cart";
 import { useUI } from "@/context/UserInterface";
 import { SearchBar } from "./Search";
 import { usePathname } from "next/navigation";
-import useMediaQuery from "@/lib/responsiveness/useMediaQuery";
+import useMediaQuery from "@/hooks/useMediaQuery";
 import Link from "next/link";
 
 export const NavUser = () => {
