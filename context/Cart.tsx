@@ -40,11 +40,7 @@ export const CartProvider = ({
   const addItem = async (id: string, quantity?: number) => {
     try {
       setAddingVariant(id);
-      const formData = new FormData();
-      formData.append("variantId", id);
-      formData.append("quantity", quantity ? quantity.toString() : "1");
-
-      const res = await addToCartAction(formData);
+      const res = await addToCartAction(id, quantity);
 
       if (!res.success || !res.data) {
         console.error(res.errors);

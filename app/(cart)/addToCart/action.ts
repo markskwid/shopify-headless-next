@@ -3,10 +3,8 @@
 import { addToCart, createCart } from "@/lib/shopify/api/cart";
 import { cookies } from "next/headers";
 
-export const addToCartAction = async (formData: FormData) => {
+export const addToCartAction = async (variantId: string, quantity = 1) => {
   try {
-    const variantId = formData.get("variantId") as string;
-    const quantity = Number(formData.get("quantity") ?? 1);
     const cookieStore = await cookies();
 
     let cartId = cookieStore.get("cartId")?.value;
