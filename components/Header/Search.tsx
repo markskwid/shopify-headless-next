@@ -30,7 +30,6 @@ export const SearchBar = () => {
         setError("Something went wrong. Try again!");
         return;
       }
-      console.log(res.data);
       setSearchData(res.data);
     };
 

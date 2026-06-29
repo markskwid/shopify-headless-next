@@ -7,7 +7,7 @@ export default function DiscountCode({ code }: { code: string }) {
     const result = await removeDiscountCodeAction();
 
     if (!result.success) {
-      console.log("Failed to remove discount code");
+      console.error("Failed to remove discount code");
     }
   };
   return (

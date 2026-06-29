@@ -17,7 +17,7 @@ type CART_CONTEXT_TYPE = {
     quantity: string,
     action: "inc" | "dec",
   ) => void;
-  deleteItem: (id: string) => void;                                                                                                    
+  deleteItem: (id: string) => void;
 };
 
 const CartContext = createContext<CART_CONTEXT_TYPE | undefined>(undefined);
@@ -54,7 +54,7 @@ export const CartProvider = ({
       toggleCart();
       return true;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return false;
     } finally {
       setAddingVariant(null);
@@ -75,7 +75,7 @@ export const CartProvider = ({
 
       setCart(res.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -98,13 +98,11 @@ export const CartProvider = ({
 
       const res = await updateItemAction(formData);
 
-      if (!res.success || !res.data) {
-        return;
-      }
-      setUpdatingVariant(null);
-      setCart(res.data);
+      if (res.success && res.data) setCart(res.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+    } finally {
+      setUpdatingVariant(null);
     }
   };
 

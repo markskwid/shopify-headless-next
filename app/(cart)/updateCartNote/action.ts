@@ -8,7 +8,7 @@ export const updateCartNoteAction = async (formData: FormData) => {
     const cartId = cookieStore.get("cartId")?.value;
 
     if (!cartId) {
-      console.log("Cart not exists");
+      console.error("Cart not exists");
       return {
         success: false,
         errors: ["Cart ID not found"],
@@ -21,7 +21,7 @@ export const updateCartNoteAction = async (formData: FormData) => {
     const result = await updateCartNote(cartId, note);
 
     if (!result.success) {
-      console.log("Error updating cart note", result.errors);
+      console.error("Error updating cart note", result.errors);
 
       return {
         success: false,
@@ -37,7 +37,7 @@ export const updateCartNoteAction = async (formData: FormData) => {
     };
   } catch (err: unknown) {
     if (err instanceof Error) {
-      console.log(err.message);
+      console.error(err.message);
     }
 
     return {

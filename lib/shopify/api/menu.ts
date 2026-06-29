@@ -19,7 +19,7 @@ export const getMenuByHandle = async (
     });
 
     if (errors) {
-      console.log("Graphql error", errors.message);
+      console.error("Graphql error", errors.message);
       return {
         success: false,
         data: null,
@@ -30,7 +30,7 @@ export const getMenuByHandle = async (
     const parsed = MENU_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
-      console.log("Invalid data", parsed.error);
+      console.error("Invalid data", parsed.error);
       return {
         success: false,
         data: null,

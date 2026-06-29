@@ -34,31 +34,40 @@ export const FETCH_PRODUCT_BY_HANDLE = `
             vendor
             totalInventory
             description
-            images(first: 30){
-             edges{
-              node{
-                 id
-                 url
-                 altText
-               }
-             }
+
+            seo {
+              title
+              description
             }
+
+            images(first: 30) {
+              edges {
+                node {
+                  id
+                  url
+                  altText
+                }
+              }
+            }
+
             priceRange {
-            minVariantPrice {
-              amount
-              currencyCode
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+              maxVariantPrice {
+                amount
+                currencyCode
+              }
             }
-            maxVariantPrice {
-              amount
-              currencyCode
-            }
-          }
-            featuredImage{
+
+            featuredImage {
               id
               url
             }
+
             variants(first: 20) {
-            nodes {
+              nodes {
                 id
                 sku
                 title
@@ -66,30 +75,29 @@ export const FETCH_PRODUCT_BY_HANDLE = `
                 quantityAvailable
                 currentlyNotInStock
                 selectedOptions {
-                name
-                value
+                  name
+                  value
                 }
                 image {
-                id
-                url
+                  id
+                  url
                 }
                 price {
-                currencyCode
-                amount
+                  currencyCode
+                  amount
                 }
-            }
+              }
             }
         }
     }
-  `;
-
+`;
 // fetch related products
 
 export const GET_PRODUCT_RECOMMENDATION = `
   ${FRAGMENT_PRODUCT_FIELDS}
 
-  query GET_PRODUCT_RECOMMENDATION($productId: ID!){
-    productRecommendations(productId: $productId){
+  query GET_PRODUCT_RECOMMENDATION($productHandle: String!){
+    productRecommendations(productHandle: $productHandle){
       ...ProductFields
     }
   }

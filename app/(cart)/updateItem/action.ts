@@ -9,7 +9,7 @@ export const updateItemAction = async (formData: FormData) => {
     const cartId = cookieStore.get("cartId")?.value;
 
     if (!cartId) {
-      console.log("Cart not exists");
+      console.error("Cart not exists");
       return {
         success: false,
         errors: ["Cart ID not found"],
@@ -26,7 +26,7 @@ export const updateItemAction = async (formData: FormData) => {
     });
 
     if (!result.success) {
-      console.log("Error removing item", result.errors);
+      console.error("Error removing item", result.errors);
 
       return {
         success: false,
@@ -43,7 +43,7 @@ export const updateItemAction = async (formData: FormData) => {
     };
   } catch (err: unknown) {
     if (err instanceof Error) {
-      console.log(err.message);
+      console.error(err.message);
     }
 
     return {

@@ -14,11 +14,10 @@ export default function ToggleDiscount() {
     const result = await applyDiscountAction(formData);
 
     if (!result.success) {
-      console.log(result.errors);
+      console.error(result.errors);
       setError("Failed to apply coupon. Try again");
     }
 
-    console.log(result.data);
   };
   return (
     <div className="grid grid-cols-2 py-3 border-b border-neutral-300">

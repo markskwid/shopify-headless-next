@@ -22,7 +22,7 @@ export default function Address({
     const res = await removeAddressAction(id);
 
     if (!res.success) {
-      console.log("Something's wrong removing the address");
+      console.error("Something's wrong removing the address");
       return;
     }
 

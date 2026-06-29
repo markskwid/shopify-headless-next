@@ -23,11 +23,14 @@ import { FILTER_TYPE } from "@/types/filters";
 export const getCollections = async (): Promise<
   API_RESPONSE<COLLECTION_TYPE[]>
 > => {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("collections");
   try {
     const { data, errors } = await client.request(FETCH_COLLECTIONS);
 
     if (errors) {
-      console.log("Graphql Errors", errors);
+      console.error("Graphql Errors", errors);
       return {
         success: false,
         data: null,
@@ -36,12 +39,10 @@ export const getCollections = async (): Promise<
       };
     }
 
-    console.log(data);
-
     const parsed = COLLECTION_LISTING_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
-      console.log("Invalid data: ", parsed.error);
+      console.error("Invalid data: ", parsed.error);
       return {
         success: false,
         data: null,
@@ -74,7 +75,7 @@ export const getCollections = async (): Promise<
   }
 };
 
-//Get all collections
+//Get collection by handle
 export const getCollectionByHandle = async (
   handle: string,
   filters?: object[],
@@ -83,7 +84,7 @@ export const getCollectionByHandle = async (
 ): Promise<API_RESPONSE<COLLECTION_DETAIL_TYPE>> => {
   "use cache";
   cacheLife("minutes");
-  cacheTag(`collection-${handle}-${JSON.stringify(filters ?? [])}-${sortKey ?? "CREATED"}-${reverse ?? false}`);
+  cacheTag(`collection-${handle}`);
   try {
     const { data, errors } = await client.request(FETCH_COLLECTION_BY_HANDLE, {
       variables: {
@@ -95,7 +96,7 @@ export const getCollectionByHandle = async (
     });
 
     if (errors) {
-      console.log("Graphql Errors", errors);
+      console.error("Graphql Errors", errors);
       return {
         success: false,
         data: null,
@@ -106,7 +107,7 @@ export const getCollectionByHandle = async (
     const parsed = COLLECTION_DETAIL_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
-      console.log("Invalid Data: ", parsed.error);
+      console.error("Invalid Data: ", parsed.error);
       return {
         success: false,
         data: null,
@@ -153,7 +154,7 @@ export const getFeaturedCollections = async (): Promise<
     const { data, errors } = await client.request(FETCH_FEATURED_COLLECTIONS);
 
     if (errors) {
-      console.log("Graphql Errors", errors);
+      console.error("Graphql Errors", errors);
       return {
         success: false,
         data: null,
@@ -212,7 +213,7 @@ export const getFilters = async (
     });
 
     if (errors) {
-      console.log(errors);
+      console.error(errors);
       return {
         success: false,
         data: null,

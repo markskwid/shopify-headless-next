@@ -62,7 +62,7 @@ export const registerThenLoginAction = async (
     };
   } catch (err: unknown) {
     if (err instanceof Error) {
-      console.log(err.message);
+      console.error(err.message);
     }
 
     return {

@@ -11,6 +11,13 @@ export const PRODUCT_SCHEMA = z.object({
   vendor: z.string().optional().nullable(),
   totalInventory: z.number().optional().nullable(),
   availableForSale: z.boolean().optional(),
+  seo: z
+    .object({
+      title: z.string().nullable().optional(),
+      description: z.string().nullable().optional(),
+    })
+    .optional()
+    .nullable(),
   featuredImage: z
     .object({
       id: z.string(),

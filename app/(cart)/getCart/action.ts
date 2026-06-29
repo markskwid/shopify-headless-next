@@ -8,16 +8,6 @@ export const getCartAction = async () => {
     let cookieStore = await cookies();
     let cartId = cookieStore.get("cartId")?.value;
 
-    //delete cart cookies if this is null indicating the user have checkout
-    if (cartId) {
-      const existingCart = await getCart(cartId);
-
-      if (!existingCart.success || !existingCart.data) {
-        cookieStore.delete("cartId");
-        cartId = undefined;
-      }
-    }
-
     if (!cartId) {
       return {
         success: false,
@@ -29,7 +19,9 @@ export const getCartAction = async () => {
 
     let cart = await getCart(cartId);
 
-    if (!cart.success) {
+    if (!cart.success || !cart.data) {
+      cookieStore.delete("cartId");
+
       return {
         success: false,
         data: null,

@@ -11,7 +11,7 @@ export default async function Search({ searchParams }: Props) {
   const { q, order, orderBy } = await searchParams;
 
   if (!q) {
-    console.log("No query input");
+    console.error("No query input");
     return notFound();
   }
 

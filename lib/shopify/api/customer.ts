@@ -28,7 +28,7 @@ export const createCustomer = async (input: {
     const parsedInput = CUSTOMER_INPUT_SCHEMA.safeParse(input);
 
     if (!parsedInput.success) {
-      console.log("Invalid customer input", parsedInput.error);
+      console.error("Invalid customer input", parsedInput.error);
       return {
         success: false,
         data: null,
@@ -43,7 +43,7 @@ export const createCustomer = async (input: {
     });
 
     if (errors) {
-      console.log("Graphql Errors", errors.graphQLErrors);
+      console.error("Graphql Errors", errors.graphQLErrors);
       return {
         success: false,
         data: null,
@@ -54,7 +54,7 @@ export const createCustomer = async (input: {
     const parsed = CUSTOMER_CREATE_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
-      console.log("Invalid data", parsed.error);
+      console.error("Invalid data", parsed.error);
       return {
         success: false,
         data: null,
@@ -108,7 +108,7 @@ export const loginCustomer = async (input: {
     });
 
     if (errors) {
-      console.log("Graphql Errors", errors);
+      console.error("Graphql Errors", errors);
       return {
         success: false,
         data: null,
@@ -119,7 +119,7 @@ export const loginCustomer = async (input: {
     const parsed = CUSTOMER_LOGIN_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
-      console.log("Invalid data", parsed.error);
+      console.error("Invalid data", parsed.error);
       return {
         success: false,
         data: null,
@@ -174,7 +174,7 @@ export const logoutCustomer = async (
     });
 
     if (errors) {
-      console.log("Graphql Errors", errors.graphQLErrors);
+      console.error("Graphql Errors", errors.graphQLErrors);
       return {
         success: false,
         data: null,

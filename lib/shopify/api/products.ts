@@ -24,8 +24,7 @@ export const getProducts = async (
 ): Promise<API_RESPONSE<PRODUCT_LISTING_TYPE[]>> => {
   "use cache";
   cacheLife("minutes");
-  const key = `products-${sortKey ?? "CREATED_AT"}-${reverse ?? false}`;
-  cacheTag(key);
+  cacheTag(`homepage-products`);
   try {
     const { data, errors } = await client.request(FETCH_PRODUCTS, {
       variables: {
@@ -35,7 +34,7 @@ export const getProducts = async (
     });
 
     if (errors) {
-      console.log("Graphql Errors", errors);
+      console.error("Graphql Errors", errors);
       return {
         success: false,
         data: null,
@@ -78,21 +77,20 @@ export const getProducts = async (
 
 //get product recommendation
 export const getProductRecommendation = async (
-  productId: string,
+  productHandle: string,
 ): Promise<API_RESPONSE<PRODUCT_LISTING_TYPE[]>> => {
   "use cache";
   cacheLife("minutes");
-  cacheTag(`product-recommendation-${productId}`);
-
+  cacheTag(`product-recommendation-${productHandle}`);
   try {
     const { data, errors } = await client.request(GET_PRODUCT_RECOMMENDATION, {
       variables: {
-        productId,
+        productHandle,
       },
     });
 
     if (errors) {
-      console.log("Graphql Errors", errors);
+      console.error("Graphql Errors", errors);
       return {
         success: false,
         errors: normalizeError(errors),
@@ -100,7 +98,7 @@ export const getProductRecommendation = async (
       };
     }
 
-     const parsed = PRODUCT_RECOMMENDATION_RESPONSE_SCHEMA.safeParse(data);
+    const parsed = PRODUCT_RECOMMENDATION_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
       console.error(parsed.error);
@@ -142,7 +140,7 @@ export const getProductByHandle = async (
     });
 
     if (errors) {
-      console.log("Graphql Errors", errors);
+      console.error("Graphql Errors", errors);
       return {
         success: false,
         data: null,
@@ -153,7 +151,7 @@ export const getProductByHandle = async (
     const parsed = PRODUCT_DETAIL_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
-      console.log("Invalid value", parsed.error);
+      console.error("Invalid value", parsed.error);
       return {
         success: false,
         data: null,

@@ -43,7 +43,7 @@ export const getCart = async (
     const parsed = GET_CART_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
-      console.log("Invalid Data", parsed.error);
+      console.error("Invalid Data", parsed.error);
       return {
         success: false,
         data: null,
@@ -54,7 +54,6 @@ export const getCart = async (
     const cart = parsed.data.cart;
 
     if (!cart) {
-      console.log("ERRRRORRR");
       return {
         success: false,
         data: null,
@@ -108,7 +107,7 @@ export const createCart = async (
     const parsed = CREATE_CART_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
-      console.log("Invalid Data: ", parsed.error);
+      console.error("Invalid Data: ", parsed.error);
       return {
         success: false,
         data: null,
@@ -120,7 +119,7 @@ export const createCart = async (
     const payload = parsed.data;
 
     if (!payload) {
-      console.log("Error creating cart");
+      console.error("Error creating cart");
       return {
         success: false,
         data: null,
@@ -182,7 +181,7 @@ export const addToCart = async (
     });
 
     if (errors) {
-      console.log("Graphql error", errors);
+      console.error("Graphql error", errors);
       return {
         success: false,
         data: null,
@@ -194,7 +193,7 @@ export const addToCart = async (
     const parsed = ADD_TO_CART_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
-      console.log("Invalid data", parsed.error);
+      console.error("Invalid data", parsed.error);
       return {
         success: false,
         data: null,
@@ -250,7 +249,7 @@ export const removeItemInCart = async (
     });
 
     if (errors) {
-      console.log("Graphql error", errors);
+      console.error("Graphql error", errors);
       return {
         success: false,
         data: null,
@@ -262,7 +261,7 @@ export const removeItemInCart = async (
     const parsed = REMOVE_ITEM_CART_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
-      console.log("Invalid data", parsed.error);
+      console.error("Invalid data", parsed.error);
       return {
         success: false,
         data: null,
@@ -317,7 +316,7 @@ export const updateItemInCart = async (
     });
 
     if (errors) {
-      console.log("Graphql error", errors);
+      console.error("Graphql error", errors);
       return {
         success: false,
         data: null,
@@ -329,7 +328,7 @@ export const updateItemInCart = async (
     const parsed = UPDATE_ITEM_CART_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
-      console.log("Invalid data", parsed.error);
+      console.error("Invalid data", parsed.error);
       return {
         success: false,
         data: null,
@@ -383,7 +382,7 @@ export const updateCartNote = async (
     });
 
     if (errors) {
-      console.log("Graphql error", errors);
+      console.error("Graphql error", errors);
       return {
         success: false,
         data: null,
@@ -392,12 +391,10 @@ export const updateCartNote = async (
       };
     }
 
-    console.log(data);
-
     const parsed = UPDATE_CART_NOTE_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
-      console.log("Invalid data", parsed.error);
+      console.error("Invalid data", parsed.error);
       return {
         success: false,
         data: null,

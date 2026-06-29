@@ -36,7 +36,7 @@ export const loginAction = async (
         );
 
         if (!attachedBuyerToCart.success) {
-          console.log(
+          console.error(
             "Error attaching buyer to the cart",
             attachedBuyerToCart.errors,
           );

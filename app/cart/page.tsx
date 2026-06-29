@@ -12,7 +12,7 @@ export default async function Cart() {
   const cart = await getCart(cartId);
 
   if (!cart.success) {
-    console.log("Error getting cart");
+    console.error("Error getting cart");
   }
 
   const isCartEmpty = !cart.data?.lines.nodes.length;

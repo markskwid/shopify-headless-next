@@ -2,7 +2,7 @@
 import { normalizeError } from "@/utils/normalizeErrors";
 import { client } from "../client";
 import { PREDICTIVE_SEARCH, SEARCH_PRODUCTS } from "@/graphql/queries";
-import { success, z } from "zod";
+import { z } from "zod";
 import { API_RESPONSE } from "@/types/response";
 import { PRODUCT_LISTING_TYPE, PRODUCT_SEARCH_TYPE } from "@/types/product";
 import { PRODUCT_SCHEMA, PRODUCT_SEARCH_SCHEMA } from "@/lib/schema/product";
@@ -42,7 +42,7 @@ export const searchResults = async (
     });
 
     if (errors) {
-      console.log("Graphql Error", errors.message);
+      console.error("Graphql Error", errors.message);
       return {
         success: false,
         data: null,
@@ -54,7 +54,7 @@ export const searchResults = async (
     const parsed = PREDICTIVE_SEARCH_RESULT_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
-      console.log("Zod Error", parsed.error);
+      console.error("Zod Error", parsed.error);
       return {
         success: false,
         data: null,
@@ -101,7 +101,7 @@ export const searchResultsPage = async (
 ): Promise<API_RESPONSE<SEARCH_RESULT_PAGE_TYPE>> => {
   "use cache";
   cacheLife("minutes");
-  cacheTag(`search-${query}-${sortKey ?? "RELEVANCE"}-${reverse ?? false}`);
+  cacheTag(`search`);
   try {
     const { data, errors } = await client.request(SEARCH_PRODUCTS, {
       variables: {
@@ -112,7 +112,7 @@ export const searchResultsPage = async (
     });
 
     if (errors) {
-      console.log("Graphql Error", errors.message);
+      console.error("Graphql Error", errors.message);
       return {
         success: false,
         data: null,

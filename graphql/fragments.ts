@@ -89,7 +89,7 @@ fragment CART_FIELD on Cart {
       currencyCode
     }
   }
-  lines(first: 10) {
+  lines(first: 50) {
     nodes {
       id
       quantity

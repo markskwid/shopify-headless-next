@@ -14,7 +14,7 @@ export const getSocialMedias = async () => {
     const { data, errors } = await client.request(FETCH_SOCIAL_MEDIA);
 
     if (errors && errors.graphQLErrors) {
-      console.log("GraphQL error", errors.message);
+      console.error("GraphQL error", errors.message);
       return {
         success: false,
         data: null,
@@ -26,7 +26,7 @@ export const getSocialMedias = async () => {
     const parsed = SOCIAL_MEDIA_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
-      console.log("Zod Error", parsed.error);
+      console.error("Zod Error", parsed.error);
       return {
         success: false,
         data: null,

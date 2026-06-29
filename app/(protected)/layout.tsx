@@ -2,28 +2,31 @@ import { PageWrapper } from "@/components/PageWrapper";
 import { AuthProvider } from "@/context/Auth";
 import { getCustomer } from "@/lib/shopify/api/customer";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const token = (await cookies()).get("customerAccessToken")?.value;
+  const token = (await cookies()).get("customerAccessToken")?.value || "";
 
-  if (!token) redirect("/login");
+  let customerData = null;
 
-  const customer = await getCustomer(token);
+  if (token) {
+    const customer = await getCustomer(token);
 
-  if (!customer.data) redirect("/login");
+    if (customer.success && customer.data) {
+      customerData = customer.data;
+    }
+  }
 
   return (
     <AuthProvider
       initialState={{
-        isLoggedIn: true,
-        firstName: customer.data.firstName ?? null,
-        lastName: customer.data.lastName ?? null,
-        email: customer.data.email ?? null,
+        isLoggedIn: !!customerData,
+        firstName: customerData?.firstName ?? null,
+        lastName: customerData?.lastName ?? null,
+        email: customerData?.email ?? null,
       }}
     >
       <PageWrapper>

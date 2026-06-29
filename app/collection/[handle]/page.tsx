@@ -6,6 +6,7 @@ import {
   getCollectionByHandle,
   getFilters,
 } from "@/lib/shopify/api/collections";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 interface Props {
@@ -18,6 +19,31 @@ interface Props {
     order?: string;
   }>;
 }
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ handle: string }>;
+}): Promise<Metadata> {
+  const { handle } = await params;
+  const collection = await getCollectionByHandle(handle);
+
+  if (!collection.data) {
+    return {};
+  }
+
+  const data = collection.data;
+
+  return {
+    title: `${data.title} | Your Store`,
+    description: data.description?.slice(0, 160) || "",
+
+    alternates: {
+      canonical: `/collections/${handle}`,
+    },
+  };
+}
+
 export default async function Collection({ params, searchParams }: Props) {
   const { handle } = await params;
   const { available, minPrice, maxPrice, orderBy, order } = await searchParams;

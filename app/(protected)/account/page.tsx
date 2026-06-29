@@ -1,16 +1,19 @@
 import Dashboard from "@/components/Account/Dashboard/Dashboard";
 import { getCustomer } from "@/lib/shopify/api/customer";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export default async function Account() {
   const token = (await cookies()).get("customerAccessToken")?.value;
 
-  if (!token) redirect("/login");
+  let customerData = null;
 
-  const customer = await getCustomer(token);
+  if (token) {
+    const customer = await getCustomer(token);
 
-  if (!customer) redirect("/login");
+    if (customer.success && customer.data) {
+      customerData = customer.data;
+    }
+  }
 
-  return <Dashboard customer={customer.data ?? null} />;
+  return <Dashboard customer={customerData ?? null} />;
 }

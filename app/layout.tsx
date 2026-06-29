@@ -8,10 +8,6 @@ import { CartSlider } from "@/components/CartSlider/CartSlider";
 import { UIProvider } from "@/context/UserInterface";
 import { Footer } from "@/components/Footer/Footer";
 import { Suspense } from "react";
-import { cookies } from "next/headers";
-import { AuthProvider } from "@/context/Auth";
-import { getCustomer } from "@/lib/shopify/api/customer";
-import { CUSTOMER_TYPE } from "@/types/customer";
 
 const interFont = Inter({
   variable: "--font-google",

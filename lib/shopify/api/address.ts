@@ -14,7 +14,6 @@ import {
   CUSTOMER_REMOVE_ADDRESS_RESPONSE_SCHEMA,
   CUSTOMER_UPDATE_ADDRESS_RESPONSE_SCHEMA,
 } from "@/lib/schema/customer";
-import { success } from "zod";
 import { API_RESPONSE } from "@/types/response";
 import { ADDRESS_TYPE } from "@/types/address";
 
@@ -44,7 +43,7 @@ export const updateCustomerAddress = async (
     });
 
     if (errors) {
-      console.log("Graphql Errors", errors);
+      console.error("Graphql Errors", errors);
       return {
         success: false,
         data: null,
@@ -56,6 +55,7 @@ export const updateCustomerAddress = async (
     const parsed = CUSTOMER_UPDATE_ADDRESS_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
+      console.error("Zod Error Validation");
       return {
         success: false,
         data: null,
@@ -66,6 +66,7 @@ export const updateCustomerAddress = async (
     const userErrors = parsed.data.customerUserErrors ?? [];
 
     if (userErrors.length > 0) {
+      console.error("User error");
       return {
         success: false,
         data: null,
@@ -118,7 +119,7 @@ export const createCustomerAddress = async (
     });
 
     if (errors) {
-      console.log("Graphql Errors", errors);
+      console.error("Graphql Errors", errors);
       return {
         success: false,
         data: null,
@@ -130,6 +131,7 @@ export const createCustomerAddress = async (
     const parsed = CUSTOMER_ADD_ADDRESS_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
+      console.error("Zod Error Validation");
       return {
         success: false,
         data: null,
@@ -141,6 +143,7 @@ export const createCustomerAddress = async (
       parsed.data.customerAddressCreate.customerUserErrors ?? [];
 
     if (userErrors.length > 0) {
+      console.error("User error");
       return {
         success: false,
         data: null,
@@ -185,7 +188,7 @@ export const setDefaultCustomerAddress = async (
     );
 
     if (errors) {
-      console.log("Graphql Errors", errors);
+      console.error("Graphql Errors", errors);
       return {
         success: false,
         data: null,
@@ -197,6 +200,7 @@ export const setDefaultCustomerAddress = async (
     const parsed = CUSTOMER_SET_DEFAULT_ADDRESS_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
+      console.error("Zod Error Validation");
       return {
         success: false,
         data: null,
@@ -207,6 +211,7 @@ export const setDefaultCustomerAddress = async (
     const userErrors = parsed.data.customerUserErrors ?? [];
 
     if (userErrors.length > 0) {
+      console.error("User error");
       return {
         success: false,
         data: null,
@@ -246,7 +251,7 @@ export const removeCustomerAddress = async (
     });
 
     if (errors) {
-      console.log("Graphql Errors", errors);
+      console.error("Graphql Errors", errors);
       return {
         success: false,
         data: null,
@@ -258,6 +263,7 @@ export const removeCustomerAddress = async (
     const parsed = CUSTOMER_REMOVE_ADDRESS_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
+      console.error("Zod Error Validation");
       return {
         success: false,
         errors: normalizeError(parsed.error),
@@ -268,6 +274,7 @@ export const removeCustomerAddress = async (
     const userErrors = parsed.data.customerUserErrors ?? [];
 
     if (userErrors.length > 0) {
+      console.error("User Error");
       return {
         success: false,
         data: null,

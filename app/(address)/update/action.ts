@@ -40,7 +40,7 @@ export const updateAddressAction = async (
     const res = await updateCustomerAddress(token, addressId, address);
 
     if (!res.success) {
-      console.log("There's something wrong in action");
+      console.error("There's something wrong in action");
       return {
         success: false,
         data: null,

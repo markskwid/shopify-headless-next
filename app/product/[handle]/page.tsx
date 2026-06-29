@@ -7,6 +7,7 @@ import {
   getProductByHandle,
   getProductRecommendation,
 } from "@/lib/shopify/api/products";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
@@ -15,13 +16,58 @@ interface Props {
   searchParams: Promise<{ size?: string }>;
 }
 
+export async function generateMetadata({ params }: any): Promise<Metadata> {
+  const { handle } = await params;
+  const product = await getProductByHandle(handle);
+
+  if (!product.data) {
+    return {};
+  }
+
+  const data = product.data;
+
+  const title = data.seo?.title || `${data.title} | Your Store`;
+
+  const description =
+    data.seo?.description || data.description?.slice(0, 160) || "";
+
+  const image = data.images.edges[0]?.node.url;
+
+  return {
+    title,
+    description,
+
+    alternates: {
+      canonical: `/products/${handle}`,
+    },
+
+    openGraph: {
+      title,
+      description,
+      images: image ? [image] : [],
+      type: "website",
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: image ? [image] : [],
+    },
+  };
+}
+
 export default async function ProductPage({ params, searchParams }: Props) {
   const { handle } = await params;
   const { size } = await searchParams;
-  const productResponse = await getProductByHandle(handle);
+
+  const [productResponse, productRecommendation] = await Promise.all([
+    getProductByHandle(handle),
+    getProductRecommendation(handle),
+  ]);
 
   if (productResponse.errors || !productResponse.data) {
-    console.log("Error", productResponse.errors);
+    console.error("Error", productResponse.errors);
     return notFound();
   }
 
@@ -34,8 +80,6 @@ export default async function ProductPage({ params, searchParams }: Props) {
     ({ node }) => node.id === selectedVariant.image?.id,
   );
 
-  //get product recommendation
-  const productRecommendation = await getProductRecommendation(productData.id);
   return (
     <PageWrapper>
       <>
@@ -53,12 +97,18 @@ export default async function ProductPage({ params, searchParams }: Props) {
             </>
           )}
         </section>
-        <>
-          <h2 className="text-4xl font-bold mb-10 mt-20">Related Products</h2>
-          <Suspense fallback={<ProductListSkeleton />}>
-            <ProductList products={productRecommendation?.data ?? []} isSlider={true} isCollection={false}/>
-          </Suspense>
-        </>
+        {productRecommendation.data && (
+          <>
+            <h2 className="text-4xl font-bold mb-10 mt-20">Related Products</h2>
+            <Suspense fallback={<ProductListSkeleton />}>
+              <ProductList
+                products={productRecommendation?.data ?? []}
+                isSlider={true}
+                isCollection={false}
+              />
+            </Suspense>
+          </>
+        )}
       </>
     </PageWrapper>
   );

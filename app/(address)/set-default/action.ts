@@ -20,7 +20,7 @@ export const setDefaultAddressAction = async (addressId: string) : Promise<API_R
     const res = await setDefaultCustomerAddress(token, addressId);
 
     if (!res.success) {
-      console.log("There's something wrong in action");
+      console.error("There's something wrong in action");
       return {
         success: false,
         data: null,

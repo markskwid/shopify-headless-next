@@ -18,7 +18,7 @@ export const addToCartAction = async (formData: FormData) => {
       const newCart = await createCart(customerAccessToken);
 
       if (!newCart.success || !newCart.data) {
-        console.log("Error creating a new cart");
+        console.error("Error creating a new cart");
         return {
           success: false,
           data: null,
@@ -45,7 +45,7 @@ export const addToCartAction = async (formData: FormData) => {
     });
 
     if (!updatedCart.success) {
-      console.log("Error adding new item on cart", updatedCart.errors);
+      console.error("Error adding new item on cart", updatedCart.errors);
 
       return {
         success: false,

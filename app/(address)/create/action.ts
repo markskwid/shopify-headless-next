@@ -38,7 +38,7 @@ export const createAddressAction = async (
     const isDefault = formData.get("defaultAddress") === "true";
 
     if (!res.success) {
-      console.log("There's something wrong in action");
+      console.error("There's something wrong in action");
       return {
         success: false,
         data: null,
@@ -54,7 +54,7 @@ export const createAddressAction = async (
       const setDefaultRes = await setDefaultAddressAction(addressId);
 
       if (!setDefaultRes.success) {
-        console.log("Failed to make the address as default");
+        console.error("Failed to make the address as default");
         return {
           success: true,
           data: res.data,
