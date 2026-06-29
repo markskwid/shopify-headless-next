@@ -17,6 +17,6 @@ export const METAOBJECT_SCHEMA = z.object({
 
 export const SOCIAL_MEDIA_RESPONSE_SCHEMA = z.object({
   metaobjects: z.object({
-    nodes: z.array(METAOBJECT_SCHEMA).default([]).nullable(),
+    nodes: z.array(METAOBJECT_SCHEMA).default([]),
   }),
 });

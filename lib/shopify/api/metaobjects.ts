@@ -4,8 +4,12 @@ import { normalizeError } from "@/utils/normalizeErrors";
 import { FETCH_SOCIAL_MEDIA } from "@/graphql/queries";
 import { cacheTag, cacheLife } from "next/cache";
 import { SOCIAL_MEDIA_RESPONSE_SCHEMA } from "@/lib/schema/metaobjects";
+import { API_RESPONSE } from "@/types/response";
+import { METAOBECTS_TYPE } from "@/types/metaobjects";
 
-export const getSocialMedias = async () => {
+export const getSocialMedias = async (): Promise<
+  API_RESPONSE<METAOBECTS_TYPE[]>
+> => {
   "use cache";
   cacheLife("weeks");
   cacheTag("social-medias");
@@ -18,8 +22,7 @@ export const getSocialMedias = async () => {
       return {
         success: false,
         data: null,
-        error: normalizeError(errors),
-        warning: null,
+        errors: normalizeError(errors),
       };
     }
 
@@ -30,18 +33,16 @@ export const getSocialMedias = async () => {
       return {
         success: false,
         data: null,
-        error: normalizeError(parsed.error),
-        warning: null,
+        errors: normalizeError(parsed.error),
       };
     }
 
-    const accounts = parsed.data.metaobjects.nodes;
+    const socialMedias = parsed.data.metaobjects.nodes;
 
     return {
-      success: !!accounts,
-      data: accounts ?? null,
+      success: true,
+      data: socialMedias,
       errors: null,
-      warning: null,
     };
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -51,8 +52,7 @@ export const getSocialMedias = async () => {
     return {
       success: false,
       data: null,
-      error: normalizeError(error),
-      warning: null,
+      errors: normalizeError(error),
     };
   }
 };
