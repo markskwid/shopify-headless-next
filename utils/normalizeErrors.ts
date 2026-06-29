@@ -9,6 +9,14 @@ export const normalizeError = (error: unknown): string[] => {
     );
   }
 
+  if (
+    Array.isArray(error) &&
+    error.length > 0 &&
+    "message" in (error[0] ?? {})
+  ) {
+    return error.map((e: any) => e.message ?? "Unknown error");
+  }
+
   if (error instanceof ZodError) {
     return error.issues.map((issue) => issue.message);
   }

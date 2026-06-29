@@ -66,15 +66,15 @@ export const createCustomer = async (input: {
     const userErrors =
       parsed.data.customerCreate?.customerUserErrors?.map((e) => e.message) ??
       [];
-    const userErrorCodes = parsed.data.customerCreate?.customerUserErrors
-      ?.map((e) => e?.code)
-      .filter((code): code is string => Boolean(code));
 
     if (userErrors?.length > 0 || !customer) {
       return {
         success: false,
         data: null,
-        errors: userErrorCodes ?? ["Unknown Error"],
+        errors:
+          userErrors.length > 0
+            ? normalizeError(userErrors)
+            : ["Unknown Error"],
       };
     }
 
@@ -132,16 +132,12 @@ export const loginCustomer = async (input: {
     const userErrors = parsed.data.customerAccessTokenCreate.customerUserErrors
       .map((e) => e?.message)
       .filter((msg): msg is string => !!msg);
-    const userErrorCodes =
-      parsed.data.customerAccessTokenCreate.customerUserErrors
-        .map((e) => e?.code)
-        .filter((code): code is string => Boolean(code));
-
+  
     if (userErrors.length > 0 || !customerToken) {
       return {
         success: false,
         data: null,
-        errors: userErrorCodes,
+        errors: userErrors.length > 0 ? normalizeError(userErrors) : ["Unknown Error"],
       };
     }
 
@@ -185,6 +181,7 @@ export const logoutCustomer = async (
     const parsed = CUSTOMER_LOGOUT_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
+      console.error("Zod Validation Error");
       return {
         success: false,
         data: null,
@@ -195,15 +192,16 @@ export const logoutCustomer = async (
     const userErrors = parsed.data.customerAccessTokenDelete.userErrors
       ?.map((e) => e?.message)
       .filter((msg): msg is string => !!msg);
-    const userErrorCodes = parsed.data.customerAccessTokenDelete.userErrors
-      ?.map((e) => e?.code)
-      .filter((code): code is string => Boolean(code));
 
     if (userErrors && userErrors.length > 0) {
+      console.error("User error");
       return {
         success: false,
         data: null,
-        errors: userErrorCodes ?? ["User errors on logout"],
+        errors:
+          userErrors.length > 0
+            ? normalizeError(userErrors)
+            : ["User errors on logout"],
       };
     }
 
@@ -236,6 +234,7 @@ export const getCustomer = async (
     });
 
     if (errors) {
+      console.error("Graphql error");
       return {
         success: false,
         data: null,
@@ -246,6 +245,7 @@ export const getCustomer = async (
     const parsed = GET_CUSTOMER_RESPONSE_SCHEMA.safeParse(data);
 
     if (!parsed.success) {
+      console.error("Zod Validation Error");
       return {
         success: false,
         data: null,
