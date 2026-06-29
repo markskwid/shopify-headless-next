@@ -6,6 +6,7 @@ import Link from "next/link";
 //styling
 import "./style.css";
 import { Navigation } from "./Navigation/Navigation";
+import StoreLogo from "./StoreLogo";
 
 export const Header = async () => {
   const menuResult: API_RESPONSE<MENU_TYPE[]> =
@@ -19,7 +20,7 @@ export const Header = async () => {
     <header className="sticky top-0 text-black backdrop-blur-md z-100">
       <div className="px-5 py-5 flex justify-between items-center max-w-360 mx-auto ">
         <Link href="/">
-          <span className="font-bold text-2xl text-black">Mark Store</span>
+          <StoreLogo />
         </Link>
 
         <Navigation menu={menu} />
