@@ -7,7 +7,7 @@ import {
   GET_PRODUCT_RECOMMENDATION,
 } from "@/graphql/queries";
 import { client } from "../client";
-
+import { serverConfig } from "@/config/server.config";
 import {
   PRODUCT_DETAIL_RESPONSE_SCHEMA,
   PRODUCT_LISTING_RESPONSE_SCHEMA,
@@ -23,7 +23,7 @@ export const getProducts = async (
   reverse?: boolean,
 ): Promise<API_RESPONSE<PRODUCT_LISTING_TYPE[]>> => {
   "use cache";
-  cacheLife("minutes");
+  cacheLife(serverConfig.cache.products);
   cacheTag(`homepage-products`);
   try {
     const { data, errors } = await client.request(FETCH_PRODUCTS, {
@@ -80,7 +80,7 @@ export const getProductRecommendation = async (
   productHandle: string,
 ): Promise<API_RESPONSE<PRODUCT_LISTING_TYPE[]>> => {
   "use cache";
-  cacheLife("minutes");
+  cacheLife(serverConfig.cache.products);
   cacheTag(`product-recommendation-${productHandle}`);
   try {
     const { data, errors } = await client.request(GET_PRODUCT_RECOMMENDATION, {
@@ -132,15 +132,17 @@ export const getProductByHandle = async (
   handle: string,
 ): Promise<API_RESPONSE<PRODUCT_DETAIL_TYPE>> => {
   "use cache";
-  cacheLife("minutes");
+  cacheLife(serverConfig.cache.products);
   cacheTag(`product-${handle}`);
 
   try {
     const { data, errors } = await client.request(FETCH_PRODUCT_BY_HANDLE, {
-      variables: { handle },
+      variables: {
+        handle,
+        imagesFirst: serverConfig.limits.productImages,
+        variantsFirst: serverConfig.limits.productVariants,
+      },
     });
-
-    console.log("Storefront title:", data.product?.title);
 
     if (errors) {
       console.error("Graphql Errors", errors);

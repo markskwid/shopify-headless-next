@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { AiOutlineHeart, AiOutlineLoading } from "react-icons/ai";
 import Image from "next/image";
+import { clientConfig } from "@/config/client.config";
 
 type SELECTED_VARIANT_TYPE = {
   variant: string;
@@ -61,14 +62,16 @@ export const ImageAndSwatches = ({
           <figcaption
             className={`h-full rounded-b-md absolute bottom-0 left-0 right-0 transition-transform duration-300 ease-out translate-y-0 group-hover:translate-y-0 group-hover:z-20`}
           >
-            <button
-              data-add-to-wishlist
-              className="absolute right-2 top-3 bg-neutral-500 p-2 rounded-full flex items-center overflow-hidden"
-            >
-              <i>
-                <AiOutlineHeart color="white" className="align-middle" />
-              </i>
-            </button>
+            {clientConfig.features.wishlist && (
+              <button
+                data-add-to-wishlist
+                className="absolute right-2 top-3 bg-neutral-500 p-2 rounded-full flex items-center overflow-hidden"
+              >
+                <i>
+                  <AiOutlineHeart color="white" className="align-middle" />
+                </i>
+              </button>
+            )}
             {selectedVariant.inStock && (
               <div className="p-3 bg-neutral-500/10 absolute bottom-0 left-0 right-0 translate-y-full transition-transform ease-out duration-200 group-hover:translate-y-0">
                 <button

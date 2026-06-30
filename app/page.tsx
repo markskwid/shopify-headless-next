@@ -7,6 +7,8 @@ import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Sort } from "@/components/ProductList/Sort";
+import CategoryBox from "@/components/Homepage/CategoryBox";
+import Banner from "@/components/Homepage/Banner";
 
 async function ProductSection({
   sortKey,
@@ -18,45 +20,31 @@ async function ProductSection({
   const products = await getProducts(sortKey, reverse);
   return (
     <>
-      <ProductList products={products.data ?? []} isSlider={false} isCollection={false}/>
+      <ProductList
+        products={products.data ?? []}
+        isSlider={false}
+        isCollection={false}
+      />
     </>
   );
 }
 
 async function CollectionsSection() {
   const collections = await getFeaturedCollections();
-  
+
   return (
     <section className="mt-20" aria-label="Featured Categories">
       <div className="flex-start items-start flex flex-col space-y-10 lg:flex-row lg:space-x-5">
         {collections.data &&
           collections.data.map((collection) => (
-            <Link
+            <CategoryBox
               key={collection.title}
-              href={`/collection/${collection.handle}`}
-              className="group category w-full lg:w-1/2"
-            >
-              <article>
-                <figure className="relative min-h-52 lg:min-h-180 w-full overflow-hidden rounded-md">
-                  <Image
-                    fill
-                    quality={100}
-                    className="object-cover object-center scale-110 transition-transform duration-200 ease-out group-hover:scale-100"
-                    src={collection.image?.url ?? ""}
-                    alt={collection.title}
-                    sizes="(max-width: 768px) 100vw, 400px"
-                    placeholder="blur"
-                    blurDataURL="https://cdn.shopify.com/s/files/1/0805/0642/1503/files/blur.avif?v=1773318451"
-                  />
-                </figure>
-                <h3 className="mt-5 font-bold text-xl text-neutral-600!">
-                  {collection.title}
-                </h3>
-                <p className="text-neutral-500! text-sm">
-                  {collection.description}
-                </p>
-              </article>
-            </Link>
+              title={collection.title}
+              imgUrl={collection.image?.url || ""}
+              description={collection.description || ""}
+              handle={collection.handle}
+              altText={collection.image?.altText || ""}
+            />
           ))}
       </div>
     </section>
@@ -81,40 +69,7 @@ export default async function Home({
   return (
     <PageWrapper>
       <>
-        <section
-          aria-label="Homepage banner"
-          className="rounded-md relative mb-10 w-full h-120 overflow-hidden"
-        >
-          <div className="w-full relative overflow-hidden h-full">
-            <Image
-              quality={100}
-              loading="eager"
-              preload={true}
-              className="object-cover"
-              alt="Banner image"
-              fill
-              src={
-                "https://cdn.shopify.com/s/files/1/0805/0642/1503/files/banner-image-for-with-light-caramelize-and-wavy-background-with-shirts-and-jacket-that-will-be-featured-and-positioned-in-the-right-side.png?v=1773900624"
-              }
-            />
-          </div>
-
-          <div className="z-50 absolute max-w-100 left-10 top-1/2 -translate-y-1/2">
-            <h1 className="font-bold text-5xl mb-2 leading-12">
-              Launch your store in minutes.
-            </h1>
-            <p className="text-xl text-neutral-700!">
-              Stripe-native. Built for the agentic future.
-            </p>
-
-            <Link
-              className="mt-4 block text-center w-max rounded-full bg-black text-white! py-2 px-5"
-              href={"#"}
-            >
-              Try it today
-            </Link>
-          </div>
-        </section>
+        <Banner />
         <>
           <div className="w-full mb-5 flex justify-end items-center px-2">
             <Sort />

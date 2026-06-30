@@ -18,13 +18,14 @@ import { normalizeError } from "@/utils/normalizeErrors";
 import { cacheLife, cacheTag } from "next/cache";
 import { FILTER_RESPONSE_SCHEMA } from "@/lib/schema/filters";
 import { FILTER_TYPE } from "@/types/filters";
+import { serverConfig } from "@/config/server.config";
 
 //Get all collections
 export const getCollections = async (): Promise<
   API_RESPONSE<COLLECTION_TYPE[]>
 > => {
   "use cache";
-  cacheLife("hours");
+  cacheLife(serverConfig.cache.collections);
   cacheTag("collections");
   try {
     const { data, errors } = await client.request(FETCH_COLLECTIONS);
@@ -91,7 +92,7 @@ export const getCollectionByHandle = async (
         handle,
         filters: filters ?? [],
         sortKey: sortKey ?? "CREATED",
-        reverse: reverse ?? false
+        reverse: reverse ?? false,
       },
     });
 
@@ -148,7 +149,7 @@ export const getFeaturedCollections = async (): Promise<
   API_RESPONSE<COLLECTION_TYPE[]>
 > => {
   "use cache";
-  cacheLife("hours");
+  cacheLife(serverConfig.cache.collections);
   cacheTag("featured-collections");
   try {
     const { data, errors } = await client.request(FETCH_FEATURED_COLLECTIONS);
@@ -203,7 +204,7 @@ export const getFilters = async (
   handle: string,
 ): Promise<API_RESPONSE<FILTER_TYPE[]>> => {
   "use cache";
-  cacheLife("hours");
+  cacheLife(serverConfig.cache.collections);
   cacheTag(`${handle}-filters`);
   try {
     const { data, errors } = await client.request(GET_COLLECTION_FILTER, {

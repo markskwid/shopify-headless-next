@@ -1,3 +1,4 @@
+
 import {
   FRAGMENT_PRODUCT_FIELDS,
   FRAGMENT_MENU_ITEMS,
@@ -26,7 +27,7 @@ export const FETCH_PRODUCTS = `
 
 // fetch product -- by handle (pdp)
 export const FETCH_PRODUCT_BY_HANDLE = `
-    query FetchProductByHandle($handle: String!) {
+    query FetchProductByHandle($handle: String!, $imagesFirst: Int!, $variantsFirst: Int!) {
         product(handle: $handle) {
             id
             title
@@ -40,7 +41,7 @@ export const FETCH_PRODUCT_BY_HANDLE = `
               description
             }
 
-            images(first: 10) {
+            images(first: $imagesFirst) {
               edges {
                 node {
                   id
@@ -66,7 +67,7 @@ export const FETCH_PRODUCT_BY_HANDLE = `
               url
             }
 
-            variants(first: 20) {
+            variants(first: $variantsFirst) {
               nodes {
                 id
                 sku

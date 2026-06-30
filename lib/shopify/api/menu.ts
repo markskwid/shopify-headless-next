@@ -6,12 +6,13 @@ import { API_RESPONSE } from "@/types/response";
 import { MENU_TYPE } from "@/types/menu";
 import { normalizeError } from "@/utils/normalizeErrors";
 import { cacheLife, cacheTag } from "next/cache";
+import { serverConfig } from "@/config/server.config";
 
 export const getMenuByHandle = async (
   handle: string,
 ): Promise<API_RESPONSE<MENU_TYPE[]>> => {
   "use cache";
-  cacheLife("weeks");
+  cacheLife(serverConfig.cache.menu);
   cacheTag(`menu-${handle}`);
   try {
     const { data, errors } = await client.request(GET_MENU_BY_HANDLE, {

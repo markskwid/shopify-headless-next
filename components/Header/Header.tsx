@@ -7,10 +7,12 @@ import Link from "next/link";
 import "./style.css";
 import { Navigation } from "./Navigation/Navigation";
 import StoreLogo from "./StoreLogo";
+import { clientConfig } from "@/config/client.config";
 
 export const Header = async () => {
-  const menuResult: API_RESPONSE<MENU_TYPE[]> =
-    await getMenuByHandle("main-menu");
+  const menuResult: API_RESPONSE<MENU_TYPE[]> = await getMenuByHandle(
+    clientConfig.navigation.mainMenuHandle,
+  );
 
   if (!menuResult.success) return;
 

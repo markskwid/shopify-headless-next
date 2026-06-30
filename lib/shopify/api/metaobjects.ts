@@ -6,12 +6,13 @@ import { cacheTag, cacheLife } from "next/cache";
 import { SOCIAL_MEDIA_RESPONSE_SCHEMA } from "@/lib/schema/metaobjects";
 import { API_RESPONSE } from "@/types/response";
 import { METAOBECTS_TYPE } from "@/types/metaobjects";
+import { serverConfig } from "@/config/server.config";
 
 export const getSocialMedias = async (): Promise<
   API_RESPONSE<METAOBECTS_TYPE[]>
 > => {
   "use cache";
-  cacheLife("weeks");
+  cacheLife(serverConfig.cache.socialMedia);
   cacheTag("social-medias");
 
   try {
