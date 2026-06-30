@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
+import { serverConfig } from "@/config/server.config";
 import crypto from "crypto";
 
 export async function POST(req: NextRequest) {
@@ -7,7 +8,7 @@ export async function POST(req: NextRequest) {
   const hmac = req.headers.get("x-shopify-hmac-sha256") ?? "";
 
   const digest = crypto
-    .createHmac("sha256", process.env.SHOPIFY_WEBHOOK_SECRET!)
+    .createHmac("sha256", serverConfig.webhookSecret)
     .update(body)
     .digest("base64");
 
