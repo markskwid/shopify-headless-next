@@ -3,7 +3,7 @@ import { removeItemInCart } from "@/lib/shopify/api/cart";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 
-export const removeItemAction = async (formData: FormData) => {
+export const removeItemAction = async (lineId: string) => {
   try {
     const cookieStore = await cookies();
     const cartId = cookieStore.get("cartId")?.value;
@@ -16,8 +16,6 @@ export const removeItemAction = async (formData: FormData) => {
         data: null,
       };
     }
-
-    const lineId = formData.get("line-id");
 
     if (!lineId || typeof lineId !== "string") {
       return {

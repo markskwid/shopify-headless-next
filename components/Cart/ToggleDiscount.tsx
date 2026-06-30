@@ -7,11 +7,13 @@ export default function ToggleDiscount() {
   const [showForm, setShowForm] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target);
+    const code = formData.get("code") as string;
 
-    const result = await applyDiscountAction(formData);
+    const result = await applyDiscountAction(code);
 
     if (!result.success) {
       console.error(result.errors);

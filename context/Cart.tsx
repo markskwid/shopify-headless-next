@@ -59,10 +59,7 @@ export const CartProvider = ({
 
   const deleteItem = async (id: string) => {
     try {
-      const formData = new FormData();
-      formData.append("line-id", id);
-
-      const res = await removeItemAction(formData);
+      const res = await removeItemAction(id);
 
       if (!res.success || !res.data) {
         console.error(res.errors);
@@ -82,17 +79,15 @@ export const CartProvider = ({
   ) => {
     try {
       setUpdatingVariant(id);
-      const formData = new FormData();
-      formData.append("line-id", id);
+      
       let newQuantity = Number(quantity);
       if (action === "dec") {
         newQuantity -= 1;
       } else {
         newQuantity += 1;
       }
-      formData.append("quantity", newQuantity.toString());
 
-      const res = await updateItemAction(formData);
+      const res = await updateItemAction(id, newQuantity);
 
       if (res.success && res.data) setCart(res.data);
     } catch (error) {

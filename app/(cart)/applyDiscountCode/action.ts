@@ -3,10 +3,9 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { applyDiscountCode } from "@/lib/shopify/api/cart";
 
-export const applyDiscountAction = async (formData: FormData) => {
+export const applyDiscountAction = async (code: string) => {
   try {
     const cookieStore = await cookies();
-    const code = formData.get("code") as string;
     const cartId = cookieStore.get("cartId")?.value;
 
     if (!cartId) {

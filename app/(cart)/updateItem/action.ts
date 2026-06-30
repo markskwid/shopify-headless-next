@@ -3,7 +3,7 @@ import { updateItemInCart } from "@/lib/shopify/api/cart";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 
-export const updateItemAction = async (formData: FormData) => {
+export const updateItemAction = async (lineId: string, quantity: number) => {
   try {
     const cookieStore = await cookies();
     const cartId = cookieStore.get("cartId")?.value;
@@ -17,12 +17,10 @@ export const updateItemAction = async (formData: FormData) => {
       };
     }
 
-    const lineId = formData.get("line-id") as string;
-    const newQuantity = Number(formData.get("quantity"));
 
     const result = await updateItemInCart(cartId, {
       id: lineId,
-      quantity: newQuantity,
+      quantity,
     });
 
     if (!result.success) {
