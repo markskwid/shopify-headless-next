@@ -1,8 +1,9 @@
 "use server";
 import { updateCartNote } from "@/lib/shopify/api/cart";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 
-export const updateCartNoteAction = async (formData: FormData) => {
+export const updateCartNoteAction = async (note: string) => {
   try {
     const cookieStore = await cookies();
     const cartId = cookieStore.get("cartId")?.value;
@@ -16,8 +17,6 @@ export const updateCartNoteAction = async (formData: FormData) => {
       };
     }
 
-    const note = formData.get("cart-note") as string;
-
     const result = await updateCartNote(cartId, note);
 
     if (!result.success) {
@@ -29,6 +28,8 @@ export const updateCartNoteAction = async (formData: FormData) => {
         errors: result.errors,
       };
     }
+
+    revalidatePath("/cart")
 
     return {
       data: result.data,

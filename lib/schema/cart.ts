@@ -32,6 +32,7 @@ export const CART_SCHEMA = z.object({
   id: z.string(),
   checkoutUrl: z.string(),
   totalQuantity: z.number(),
+  note: z.string(),
   discountCodes: z.array(
     z.object({
       code: z.string(),

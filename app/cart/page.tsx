@@ -1,6 +1,7 @@
 import DiscountCode from "@/components/Cart/DiscountCode";
 import Item from "@/components/Cart/Item";
 import ToggleDiscount from "@/components/Cart/ToggleDiscount";
+import ToggleNote from "@/components/Cart/ToggleNote";
 import { PageWrapper } from "@/components/PageWrapper";
 import { getCart } from "@/lib/shopify/api/cart";
 import { formatPrice } from "@/utils/formatPricing";
@@ -62,6 +63,7 @@ export default async function Cart() {
                 </div>
 
                 <ToggleDiscount />
+                <ToggleNote note={cart.data?.note || ""}/>
 
                 {appliedDiscount && (
                   <>

@@ -70,7 +70,7 @@ fragment CART_FIELD on Cart {
   note
   totalQuantity
   checkoutUrl
-
+  note
   discountCodes{
     code
     applicable
