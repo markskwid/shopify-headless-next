@@ -28,6 +28,7 @@ export const getProducts = async (
   try {
     const { data, errors } = await client.request(FETCH_PRODUCTS, {
       variables: {
+        firstProducts: serverConfig.limits.productsPerPage,
         sortKey,
         reverse,
       },

@@ -9,8 +9,8 @@ import {
 export const FETCH_PRODUCTS = `
     ${FRAGMENT_PRODUCT_FIELDS}
 
-    query FetchProducts($sortKey: ProductSortKeys, $reverse: Boolean) {
-    products(first: 12, sortKey: $sortKey, reverse: $reverse) {
+    query FetchProducts($sortKey: ProductSortKeys, $reverse: Boolean, $firstProducts: Int!) {
+    products(first: $firstProducts, sortKey: $sortKey, reverse: $reverse) {
         edges {
         node {
             ...ProductFields
@@ -123,8 +123,8 @@ export const GET_MENU_BY_HANDLE = `
 
 //get collections
 export const FETCH_COLLECTIONS = `
-    query GET_COLLECTIONS {
-        collections(first: 10) {
+    query GET_COLLECTIONS($firstCollections: Int!) {
+        collections(first: $firstCollections) {
             edges {
             node {
                 title

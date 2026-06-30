@@ -28,7 +28,11 @@ export const getCollections = async (): Promise<
   cacheLife(serverConfig.cache.collections);
   cacheTag("collections");
   try {
-    const { data, errors } = await client.request(FETCH_COLLECTIONS);
+    const { data, errors } = await client.request(FETCH_COLLECTIONS, {
+      variables: {
+        firstCollections: serverConfig.limits.collectionProductsPerPage,
+      },
+    });
 
     if (errors) {
       console.error("Graphql Errors", errors);
