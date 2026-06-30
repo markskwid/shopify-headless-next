@@ -105,7 +105,7 @@ export const SearchBar = () => {
                 {searchData.map((item: PRODUCT_SEARCH_TYPE) => (
                   <Link
                     key={item.id}
-                    href={item.handle}
+                    href={`/product/${item.handle}`}
                     className="flex justify-start items-center my-2 min-h-10"
                   >
                     <div className="relative mr-2">

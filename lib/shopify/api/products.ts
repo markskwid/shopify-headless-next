@@ -134,10 +134,13 @@ export const getProductByHandle = async (
   "use cache";
   cacheLife("minutes");
   cacheTag(`product-${handle}`);
+
   try {
     const { data, errors } = await client.request(FETCH_PRODUCT_BY_HANDLE, {
       variables: { handle },
     });
+
+    console.log("Storefront title:", data.product?.title);
 
     if (errors) {
       console.error("Graphql Errors", errors);

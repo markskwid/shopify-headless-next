@@ -4,7 +4,6 @@ import crypto from "crypto";
 
 export async function POST(req: NextRequest) {
   const body = await req.text();
-
   const hmac = req.headers.get("x-shopify-hmac-sha256") ?? "";
 
   const digest = crypto
