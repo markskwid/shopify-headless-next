@@ -80,7 +80,6 @@ All client-specific configuration is centralized in [`config/client.config.ts`](
 | `NEXT_PUBLIC_CURRENCY` | – | Fallback currency code (default: `USD`) |
 | `NEXT_PUBLIC_MAIN_MENU_HANDLE` | – | Shopify menu handle for primary nav (default: `main-menu`) |
 | `NEXT_PUBLIC_FOOTER_MENU_HANDLE` | – | Shopify menu handle for footer nav (default: `footer`) |
-| `NEXT_PUBLIC_BANNER_BLUR_URL` | – | Base64 blur placeholder shown while banner image loads |
 | `NEXT_PUBLIC_HOMEPAGE_BANNER_TYPE` | – | Metaobject type for homepage banner slides (default: `homepage_banner`) |
 | `NEXT_PUBLIC_FEATURED_COLLECTIONS_TYPE` | – | Metaobject type for featured collections (default: `featured_collections`) |
 | `NEXT_PUBLIC_PRODUCTS_PER_PAGE` | – | Products shown on homepage listing (default: `12`) |

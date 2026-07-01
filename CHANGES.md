@@ -16,6 +16,7 @@ All notable changes to this project are documented here, grouped by feature area
 - `homePageBannerMetaobjectType` added to `serverConfig` (`NEXT_PUBLIC_HOMEPAGE_BANNER_TYPE` env var, default: `homepage_banner`)
 - `homepageBanner` cache TTL profile added to `serverConfig.cache`
 - `.env.example` file — documents all required and optional environment variables for onboarding new clients
+- `shimmer.ts` file added to use as blurDataURL on any next image
 
 ### Changed
 - `Banner` component split into two files following the Next.js server/client boundary:
