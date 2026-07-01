@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { shimmer, toBase64 } from "@/utils/shimmer";
 
 interface Props {
   title: string;
@@ -32,7 +33,7 @@ export default function CategoryBox({
             alt={altText ?? title}
             sizes="(max-width: 768px) 100vw, 400px"
             placeholder="blur"
-            blurDataURL="https://cdn.shopify.com/s/files/1/0805/0642/1503/files/blur.avif?v=1773318451"
+            blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(800, 600))}`}
           />
         </figure>
         <h3 className="mt-5 font-bold text-xl text-neutral-600!">{title}</h3>

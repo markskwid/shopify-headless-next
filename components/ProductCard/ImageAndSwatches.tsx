@@ -7,6 +7,7 @@ import { useState } from "react";
 import { AiOutlineHeart, AiOutlineLoading } from "react-icons/ai";
 import Image from "next/image";
 import { clientConfig } from "@/config/client.config";
+import { shimmer, toBase64 } from "@/utils/shimmer";
 
 type SELECTED_VARIANT_TYPE = {
   variant: string;
@@ -56,7 +57,7 @@ export const ImageAndSwatches = ({
               alt={product.title}
               sizes="(max-width: 768px) 100vw, 400px"
               placeholder="blur"
-              blurDataURL="https://cdn.shopify.com/s/files/1/0805/0642/1503/files/blur.avif?v=1773318451"
+              blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(800, 600))}`}
             />
           </div>
           <figcaption

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
+import { shimmer, toBase64 } from "@/utils/shimmer";
 
 type ProductImageType = {
   url: string;
@@ -78,7 +79,7 @@ export default function ProductImages({
                   alt={image.altText || "Product Main Image"}
                   sizes="(max-width: 768px) 100vw, 50vw"
                   placeholder="blur"
-                  blurDataURL="https://cdn.shopify.com/s/files/1/0805/0642/1503/files/blur.avif?v=1773318451"
+                  blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(800, 600))}`}
                 />
               </div>
             ))}
@@ -105,7 +106,7 @@ export default function ProductImages({
                   alt={image.altText || "Product Thumbnail"}
                   sizes="(max-width: 768px) 100vw, 100px"
                   placeholder="blur"
-                  blurDataURL="https://cdn.shopify.com/s/files/1/0805/0642/1503/files/blur.avif?v=1773318451"
+                  blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(800, 600))}`}
                 />
               </div>
             ))}

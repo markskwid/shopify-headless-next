@@ -2,6 +2,7 @@ import { PageWrapper } from "@/components/PageWrapper";
 import { getCollections } from "@/lib/shopify/api/collections";
 import Link from "next/link";
 import Image from "next/image";
+import { shimmer, toBase64 } from "@/utils/shimmer";
 
 export default async function Collections() {
   const collections = await getCollections();
@@ -13,7 +14,11 @@ export default async function Collections() {
         {collections.data && (
           <section className="grid grid-cols-2 lg:grid-cols-4 gap-5">
             {collections.data.map((collection) => (
-              <Link key={collection.handle} className="pointer-cursor" href={`/collection/${collection.handle}`}>
+              <Link
+                key={collection.handle}
+                className="pointer-cursor"
+                href={`/collection/${collection.handle}`}
+              >
                 <div className="relative w-full min-h-52">
                   {collection.image ? (
                     <Image
@@ -24,7 +29,7 @@ export default async function Collections() {
                       alt={collection.title}
                       sizes="(max-width: 768px) 100vw, 400px"
                       placeholder="blur"
-                      blurDataURL="https://cdn.shopify.com/s/files/1/0805/0642/1503/files/blur.avif?v=1773318451"
+                      blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(800, 600))}`}
                     />
                   ) : (
                     <Image
@@ -37,7 +42,7 @@ export default async function Collections() {
                       alt={collection.title}
                       sizes="(max-width: 768px) 100vw, 400px"
                       placeholder="blur"
-                      blurDataURL="https://cdn.shopify.com/s/files/1/0805/0642/1503/files/blur.avif?v=1773318451"
+                      blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(800, 600))}`}
                     />
                   )}
                 </div>

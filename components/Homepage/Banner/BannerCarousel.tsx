@@ -2,6 +2,7 @@
 
 import { clientConfig } from "@/config/client.config";
 import { BANNER_TYPE } from "@/types/metaobjects";
+import { shimmer, toBase64 } from "@/utils/shimmer";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -43,7 +44,7 @@ export default function BannerCarousel({ slides }: { slides: BANNER_TYPE[] }) {
                   priority={index === 0}
                   loading={index === 0 ? "eager" : "lazy"}
                   placeholder="blur"
-                  blurDataURL={clientConfig.homepage.bannerBlurDataUrl}
+                  blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(800, 600))}`}
                   className="object-cover"
                 />
               )}
