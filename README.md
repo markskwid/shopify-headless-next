@@ -141,6 +141,9 @@ utils/
   normalizeErrors.ts     Unified error normalizer for GraphQL, Zod, and runtime errors
   normalizeBannerFields.ts  Maps Shopify metaobject field array → typed BANNER_TYPE
   formatPricing.ts       Locale-aware price formatter
+  formatLoginError.ts    Translate user errors into readable error
+  country.ts             Used in account page to convert country and state ISO code to full name (vice versa)
+  shimmer.ts             SVG base placeholder for Next Image
 
 config/
   client.config.ts       Browser-safe config — locale, store name, feature flags
