@@ -17,7 +17,6 @@ export const clientConfig = {
 
   homepage: {
     bannerImageUrl: process.env.NEXT_PUBLIC_BANNER_IMAGE_URL ?? "",
-    bannerBlurDataUrl: process.env.NEXT_PUBLIC_BANNER_BLUR_URL ?? "",
     featuredCollectionsMetaobjectType:
       process.env.NEXT_PUBLIC_FEATURED_COLLECTIONS_TYPE ??
       "featured_collections",
