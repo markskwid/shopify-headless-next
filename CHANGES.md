@@ -17,6 +17,7 @@ All notable changes to this project are documented here, grouped by feature area
 - `homepageBanner` cache TTL profile added to `serverConfig.cache`
 - `.env.example` file — documents all required and optional environment variables for onboarding new clients
 - `shimmer.ts` file added to use as blurDataURL on any next image
+- `Search.tsx` is now wired up with predictive search option in local environment 
 
 ### Changed
 - `Banner` component split into two files following the Next.js server/client boundary:

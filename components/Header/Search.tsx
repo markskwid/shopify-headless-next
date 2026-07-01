@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import { AiOutlineArrowRight, AiOutlineSearch } from "react-icons/ai";
 import Image from "next/image";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { clientConfig } from "@/config/client.config";
 
 export const SearchBar = ({
   predictiveSearch,
