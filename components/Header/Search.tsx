@@ -5,8 +5,13 @@ import { useEffect, useRef, useState } from "react";
 import { AiOutlineArrowRight, AiOutlineSearch } from "react-icons/ai";
 import Image from "next/image";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { clientConfig } from "@/config/client.config";
 
-export const SearchBar = () => {
+export const SearchBar = ({
+  predictiveSearch,
+}: {
+  predictiveSearch: boolean;
+}) => {
   const router = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
@@ -19,30 +24,36 @@ export const SearchBar = () => {
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!searchQuery) {
+    if (!predictiveSearch) {
+      setSearchData(null);
+      setError(null);
+      return;
+    }
+
+    setError(null);
+
+    if (!searchQuery.trim()) {
       setSearchData(null);
       return;
     }
 
-    const getSearchData = async () => {
+    const timeout = setTimeout(async () => {
       const res = await searchResults(searchQuery);
-      if (!res.success && !res.data) {
+
+      if (!res.success || !res.data) {
         setError("Something went wrong. Try again!");
         return;
       }
-      setSearchData(res.data);
-    };
 
-    const timeout = setTimeout(() => {
-      getSearchData();
+      setSearchData(res.data);
     }, 300);
 
     return () => clearTimeout(timeout);
-  }, [searchQuery]);
+  }, [searchQuery, predictiveSearch]);
 
   //useEffect to handle click outisde of search result
   useEffect(() => {
-    if (!searchData) return;
+    if (!predictiveSearch || !searchData) return;
 
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -59,7 +70,7 @@ export const SearchBar = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [searchData]);
+  }, [searchData, predictiveSearch]);
 
   //useEffect to clear state query value when changing pages
   useEffect(() => {
@@ -76,7 +87,10 @@ export const SearchBar = () => {
   //form submit then redirect to search page
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push(`/search?q=${searchQuery}`);
+
+    if (!searchQuery.trim()) return;
+
+    router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
   };
   return (
     <div className="relative" ref={searchContainerRef}>
@@ -97,54 +111,55 @@ export const SearchBar = () => {
         </button>
       </form>
 
-      {!error ? (
-        searchData && (
-          <div className="search-result absolute bg-white w-full border border-gray-400 mt-2 rounded-md px-2 left-0 right-0">
-            {searchData.length > 0 ? (
-              <>
-                {searchData.map((item: PRODUCT_SEARCH_TYPE) => (
-                  <Link
-                    key={item.id}
-                    href={`/product/${item.handle}`}
-                    className="flex justify-start items-center my-2 min-h-10"
-                  >
-                    <div className="relative mr-2">
-                      <Image
-                        src={item.featuredImage?.url ?? ""}
-                        width="50"
-                        alt={item.title}
-                        height="50"
-                        loading={"lazy"}
-                      />
-                    </div>
-                    <p>{item.title}</p>
-                  </Link>
-                ))}
+      {predictiveSearch &&
+        (!error ? (
+          searchData && (
+            <div className="search-result absolute bg-white w-full border border-gray-400 mt-2 rounded-md px-2 left-0 right-0">
+              {searchData.length > 0 ? (
+                <>
+                  {searchData.map((item: PRODUCT_SEARCH_TYPE) => (
+                    <Link
+                      key={item.id}
+                      href={`/product/${item.handle}`}
+                      className="flex justify-start items-center my-2 min-h-10"
+                    >
+                      <div className="relative mr-2">
+                        <Image
+                          src={item.featuredImage?.url ?? ""}
+                          width="50"
+                          alt={item.title}
+                          height="50"
+                          loading={"lazy"}
+                        />
+                      </div>
+                      <p>{item.title}</p>
+                    </Link>
+                  ))}
 
-                <div className="border-t border-gray-200 mt-2">
-                  <button
-                    type="submit"
-                    form="search-form"
-                    className="flex justify-center items-center text-center w-full gap-2 p-2 cursor-pointer hover:bg-gray-50"
-                  >
-                    See All Results <AiOutlineArrowRight size={15} />
-                  </button>
+                  <div className="border-t border-gray-200 mt-2">
+                    <button
+                      type="submit"
+                      form="search-form"
+                      className="flex justify-center items-center text-center w-full gap-2 p-2 cursor-pointer hover:bg-gray-50"
+                    >
+                      See All Results <AiOutlineArrowRight size={15} />
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="flex justify-start items-center my-2 min-h-10">
+                  No item found. Try other keywords
                 </div>
-              </>
-            ) : (
-              <div className="flex justify-start items-center my-2 min-h-10">
-                No item found. Try other keywords
-              </div>
-            )}
+              )}
+            </div>
+          )
+        ) : (
+          <div className="search-result absolute bg-white w-full border border-gray-400 mt-2 rounded-md px-2 left-0 right-0">
+            <div className="flex justify-start items-center my-2 min-h-10">
+              {error}
+            </div>
           </div>
-        )
-      ) : (
-        <div className="search-result absolute bg-white w-full border border-gray-400 mt-2 rounded-md px-2 left-0 right-0">
-          <div className="flex justify-start items-center my-2 min-h-10">
-            {error}
-          </div>
-        </div>
-      )}
+        ))}
     </div>
   );
 };

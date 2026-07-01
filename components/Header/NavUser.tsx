@@ -12,6 +12,7 @@ import { SearchBar } from "./Search";
 import { usePathname } from "next/navigation";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import Link from "next/link";
+import { clientConfig } from "@/config/client.config";
 
 export const NavUser = () => {
   const pathName = usePathname();
@@ -31,7 +32,7 @@ export const NavUser = () => {
         className={`transition-none ${isMobile ? (isSearchBarOpen ? "max-md:pointer-events-auto max-md:opacity-100 max-md:translate-y-0 max-md:duration-75 max-md:delay-0" : "max-md:opacity-0 max-md:-translate-y-full max-md:duration-100 max-md:delay-75 max-md:pointer-events-none") : ""} 
           max-md:transition-[scale, transform] max-md:absolute max-md:-bottom-10 max-md:w-[92%] max-md:left-1/2 max-md:-translate-x-1/2`}
       >
-        <SearchBar />
+        <SearchBar predictiveSearch={clientConfig.features.predictiveSearch} />
       </div>
       <button onClick={toggleSearchBar} className="md:hidden align-middle">
         <i>
