@@ -8,7 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Sort } from "@/components/ProductList/Sort";
 import CategoryBox from "@/components/Homepage/CategoryBox";
-import Banner from "@/components/Homepage/Banner";
+import Banner from "@/components/Homepage/Banner/Banner";
 
 async function ProductSection({
   sortKey,

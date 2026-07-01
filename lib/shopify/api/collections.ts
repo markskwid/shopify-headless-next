@@ -97,6 +97,7 @@ export const getCollectionByHandle = async (
         filters: filters ?? [],
         sortKey: sortKey ?? "CREATED",
         reverse: reverse ?? false,
+        productsFirst: serverConfig.limits.collectionProductsPerPage,
       },
     });
 

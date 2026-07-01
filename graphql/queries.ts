@@ -154,14 +154,24 @@ export const FETCH_COLLECTIONS = `
  */
 
 export const FETCH_HOMEPAGE_BANNER = `
-query HomepageBanner {
-  metaobjects(type: "homepage_banner", first: 10) {
+query HomepageBanner($name: String!) {
+  metaobjects(type: $name, first: 3) {
     nodes {
       id
       handle
       fields {
         key
         value
+        reference {
+            ... on MediaImage {
+              image {
+                url
+                width
+                height
+                altText
+              }
+            }
+          }
       }
     }
   }
@@ -224,7 +234,7 @@ query FeaturedCollections {
 //get collection by handle
 export const FETCH_COLLECTION_BY_HANDLE = `
 ${FRAGMENT_PRODUCT_FIELDS}
-query GET_COLLECTION_BY_HANDLE($handle: String!, $filters: [ProductFilter!], $sortKey: ProductCollectionSortKeys, $reverse: Boolean) {
+query GET_COLLECTION_BY_HANDLE($productsFirst: Int!, $handle: String!, $filters: [ProductFilter!], $sortKey: ProductCollectionSortKeys, $reverse: Boolean) {
     collection(handle: $handle) {
         title
         description
@@ -233,7 +243,7 @@ query GET_COLLECTION_BY_HANDLE($handle: String!, $filters: [ProductFilter!], $so
             altText
             url
         }
-        products(first: 15, filters: $filters, sortKey: $sortKey, reverse: $reverse) {
+        products(first: $productsFirst, filters: $filters, sortKey: $sortKey, reverse: $reverse) {
             nodes {
                 ...ProductFields
             }

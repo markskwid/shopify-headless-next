@@ -142,6 +142,7 @@ export const getProductByHandle = async (
         handle,
         imagesFirst: serverConfig.limits.productImages,
         variantsFirst: serverConfig.limits.productVariants,
+        
       },
     });
 

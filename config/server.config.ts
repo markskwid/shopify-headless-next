@@ -9,12 +9,14 @@ export const serverConfig = {
   },
 
   webhookSecret: process.env.SHOPIFY_WEBHOOK_SECRET!,
+  homePageBannerMetaobjectType: process.env.NEXT_PUBLIC_HOMEPAGE_BANNER_TYPE ?? "homepage_banner",
 
   cache: {
     products: "minutes" as const,
     collections: "hours" as const,
     menu: "hours" as const,
     socialMedia: "weeks" as const,
+    homepageBanner: "hours" as const,
   },
 
   limits: {
