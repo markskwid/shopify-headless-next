@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { AiOutlineArrowRight, AiOutlineSearch } from "react-icons/ai";
 import Image from "next/image";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { shimmer, toBase64 } from "@/utils/shimmer";
 
 export const SearchBar = ({
   predictiveSearch,
@@ -98,7 +99,7 @@ export const SearchBar = ({
           onChange={handleInputChange}
           type="text"
           value={searchQuery}
-          tabIndex={1}
+          tabIndex={0}
           className="border bg-gray-300/50 rounded-md py-1 px-2 shadow-2xl w-full md:w-72"
           placeholder="Search item"
         />
@@ -122,13 +123,15 @@ export const SearchBar = ({
                       href={`/product/${item.handle}`}
                       className="flex justify-start items-center my-2 min-h-10"
                     >
-                      <div className="relative mr-2">
+                      <div className="relative mr-2 h-full">
                         <Image
                           src={item.featuredImage?.url ?? ""}
                           width="50"
                           alt={item.title}
                           height="50"
                           loading={"lazy"}
+                          placeholder="blur"
+                          blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(800, 600))}`}
                         />
                       </div>
                       <p>{item.title}</p>
