@@ -2,7 +2,6 @@ import { PageWrapper } from "@/components/PageWrapper";
 import { ProductList } from "@/components/ProductList/ProductList";
 import { Sort } from "@/components/ProductList/Sort";
 import { searchResultsPage } from "@/lib/shopify/api/search";
-import { notFound } from "next/navigation";
 
 interface Props {
   searchParams: Promise<{ q?: string; orderBy: string; order: string }>;
@@ -11,8 +10,16 @@ export default async function Search({ searchParams }: Props) {
   const { q, order, orderBy } = await searchParams;
 
   if (!q) {
-    console.error("No query input");
-    return notFound();
+    return (
+      <PageWrapper>
+        <>
+          <h1 className="text-4xl font-bold mb-2">Search Result</h1>
+          <span className="mb-10">
+            Please enter a search query to see results.
+          </span>
+        </>
+      </PageWrapper>
+    );
   }
 
   const sortKey = orderBy === "price" ? "PRICE" : orderBy === "createdAt" ? "CREATED_AT" : "RELEVANCE";
