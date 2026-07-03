@@ -94,7 +94,7 @@ export const SearchBar = ({
   };
   return (
     <div className="relative" ref={searchContainerRef}>
-      <form id="search-form" method="POST" className="" onSubmit={handleSubmit}>
+      <form id="search-form" className="" onSubmit={handleSubmit}>
         <input
           onChange={handleInputChange}
           type="text"
