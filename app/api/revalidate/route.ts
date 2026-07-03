@@ -48,6 +48,15 @@ export async function POST(req: NextRequest) {
       revalidateTag("products", "max");
       break;
     }
+
+    case "metaobjects/update":
+    case "metaobjects/create":
+    case "metaobjects/delete": {
+      revalidateTag("social-medias", "max");
+      revalidateTag("homepage-banners", "max");
+
+      break;
+    }
   }
 
   return NextResponse.json({ revalidated: true });

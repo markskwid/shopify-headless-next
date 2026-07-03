@@ -67,7 +67,7 @@ export const getHomepageBanner = async (): Promise<
 > => {
   "use cache";
   cacheLife(serverConfig.cache.socialMedia);
-  cacheTag("homepage-banner");
+  cacheTag("homepage-banners");
 
   try {
     const { data, errors } = await client.request(FETCH_HOMEPAGE_BANNER, {
