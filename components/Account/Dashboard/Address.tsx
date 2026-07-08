@@ -31,7 +31,7 @@ export default function Address({
 
   return (
     <div
-      className="border p-4 rounded-md mt-4 flex-[46%] lg:flex-[20%] grow-0"
+      className="border p-4 rounded-md mt-4 flex-[46%] lg:flex-[20%] grow-0 shrink-0"
       id={address.id}
       key={address.id}
     >

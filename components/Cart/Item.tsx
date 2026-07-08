@@ -14,7 +14,7 @@ export default function Item({ item }: { item: CART_LINE_TYPE }) {
       className={`${updatingVariant === item.id ? "bg-neutral-500/20 pointer-events-none" : ""}`}
     >
       <td className="w-[40%]">
-        <div className="flex space-x-5 relative">
+        <div className="flex flex-col md:flex-row space-x-5 relative">
           <button
             onClick={() => deleteItem(item.id)}
             className="rounded-full w-8 h-8 flex items-center justify-center bg-red-600 border absolute -left-3 top-0"

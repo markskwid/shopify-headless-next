@@ -4,7 +4,6 @@ import { cookies } from "next/headers";
 
 export default async function Account() {
   const token = (await cookies()).get("customerAccessToken")?.value;
-
   let customerData = null;
 
   if (token) {
