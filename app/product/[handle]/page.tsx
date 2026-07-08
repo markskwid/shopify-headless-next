@@ -16,8 +16,6 @@ interface Props {
   searchParams: Promise<{ size?: string }>;
 }
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export async function generateMetadata({ params }: any): Promise<Metadata> {
   const { handle } = await params;
   const product = await getProductByHandle(handle);
@@ -60,7 +58,6 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
 }
 
 export default async function ProductPage({ params, searchParams }: Props) {
-    await sleep(10000);
   const { handle } = await params;
   const { size } = await searchParams;
 
