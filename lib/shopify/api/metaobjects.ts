@@ -66,7 +66,7 @@ export const getHomepageBanner = async (): Promise<
   API_RESPONSE<BANNER_TYPE[]>
 > => {
   "use cache";
-  cacheLife(serverConfig.cache.socialMedia);
+  cacheLife(serverConfig.cache.homepageBanner);
   cacheTag("homepage-banners");
 
   try {
