@@ -22,13 +22,8 @@ export const metadata: Metadata = {
 };
 
 async function CartInitializer({ children }: { children: React.ReactNode }) {
-  const cart = await getCartAction();
-  if (!cart.success || !cart.data) {
-  }
-
-  const initialCartData = cart.data;
   return (
-    <CartProvider initialCart={initialCartData}>
+    <CartProvider initialCart={null}>
       <Header />
       <CartSlider />
       {children}

@@ -3,8 +3,9 @@ import { addToCartAction } from "@/app/(cart)/addToCart/action";
 import { removeItemAction } from "@/app/(cart)/removeItem/action";
 import { updateItemAction } from "@/app/(cart)/updateItem/action";
 import { CART_TYPE } from "@/types/cart";
-import { createContext, useContext, ReactNode, useState } from "react";
+import { createContext, useContext, ReactNode, useState, useEffect } from "react";
 import { useUI } from "./UserInterface";
+import { getCartAction } from "@/app/(cart)/getCart/action";
 
 type CART_CONTEXT_TYPE = {
   cart: CART_TYPE | null;
@@ -36,6 +37,26 @@ export const CartProvider = ({
   const [updatingVariant, setUpdatingVariant] = useState<string | null>(null);
 
   const { toggleCart } = useUI();
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadCart = async () => {
+      const res = await getCartAction();
+
+      if (!mounted) return;
+
+      if (res.success && res.data) {
+        setCartState(res.data);
+      }
+    };
+
+    loadCart();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const addItem = async (id: string, quantity?: number) => {
     try {
@@ -79,7 +100,7 @@ export const CartProvider = ({
   ) => {
     try {
       setUpdatingVariant(id);
-      
+
       let newQuantity = Number(quantity);
       if (action === "dec") {
         newQuantity -= 1;
