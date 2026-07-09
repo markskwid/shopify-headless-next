@@ -47,3 +47,4 @@ export default async function Search({ searchParams }: Props) {
     </PageWrapper>
   );
 }
+
