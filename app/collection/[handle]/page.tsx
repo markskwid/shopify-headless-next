@@ -44,7 +44,10 @@ export async function generateMetadata({
   };
 }
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export default async function Collection({ params, searchParams }: Props) {
+  await sleep(10000);
   const { handle } = await params;
   const { available, minPrice, maxPrice, orderBy, order } = await searchParams;
 
