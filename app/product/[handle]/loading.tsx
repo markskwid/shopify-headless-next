@@ -78,7 +78,7 @@ export default function Loading() {
                 key={index}
                 className="shrink-0 basis-[80%] sm:basis-[45%] md:basis-[30%] lg:basis-[23%]"
               >
-                <div className="aspect-[3/4] w-full rounded-md bg-neutral-300" />
+                <div className="aspect-3/4 w-full rounded-md bg-neutral-300" />
 
                 <div className="mt-4 space-y-3">
                   <div className="h-5 w-4/5 rounded-md bg-neutral-300" />

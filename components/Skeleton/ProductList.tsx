@@ -8,7 +8,7 @@ type ProductListSkeletonProps = {
 export const ProductCardSkeleton = () => {
   return (
     <div className="group w-full z-10 animate-pulse">
-      <div className="aspect-[3/4] w-full rounded-md bg-neutral-300" />
+      <div className="aspect-3/4 w-full rounded-md bg-neutral-300" />
 
       <div className="mt-3 flex justify-center gap-2">
         {Array.from({ length: 4 }).map((_, index) => (
