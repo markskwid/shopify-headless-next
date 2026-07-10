@@ -15,7 +15,7 @@ import {
 } from "../../schema/product";
 import { normalizeError } from "@/utils/normalizeErrors";
 import { PRODUCT_DETAIL_TYPE, PRODUCT_LISTING_TYPE } from "@/types/product";
-import { cacheLife, cacheTag, revalidateTag } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 
 //Get all products
 export const getProducts = async (
@@ -142,7 +142,7 @@ export const getProductByHandle = async (
         handle,
         imagesFirst: serverConfig.limits.productImages,
         variantsFirst: serverConfig.limits.productVariants,
-        
+
       },
     });
 
