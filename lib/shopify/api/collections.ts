@@ -185,7 +185,7 @@ export const getFeaturedCollections = async (): Promise<
       parsed.data.metaobjects.nodes[0].fields[0].references.nodes;
 
     return {
-      success: !!parsed.data,
+      success: true,
       data: featuredCollections ?? null,
       errors: null,
       warnings: null,

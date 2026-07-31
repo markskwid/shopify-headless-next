@@ -32,6 +32,8 @@ export const ProductCard = ({ product }: { product: PRODUCT_LISTING_TYPE }) => {
           </>
         )}
       </span>
+
+      
     </div>
   );
 };
