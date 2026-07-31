@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header/Header";
 import { CartProvider } from "@/context/Cart";
-import { getCartAction } from "./(cart)/getCart/action";
 import { CartSlider } from "@/components/CartSlider/CartSlider";
 import { UIProvider } from "@/context/UserInterface";
 import { Footer } from "@/components/Footer/Footer";

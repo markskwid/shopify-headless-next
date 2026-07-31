@@ -1,12 +1,12 @@
 import { MENU_TYPE } from "@/types/menu";
 import { MobileNavigation } from "./MobileNavigation";
 import { DesktopNavigation } from "./DesktopNavigation";
-
-export const Navigation = ({ menu }: { menu: MENU_TYPE }) => {
+import { NavigationData } from "@/types/navigation";
+export const Navigation = ({ menu }: { menu: NavigationData["header"] }) => {
   return (
     <>
       <DesktopNavigation menu={menu} />
-      <MobileNavigation menu={menu} />
+      {/* <MobileNavigation menu={menu} /> */}
     </>
   );
 };
